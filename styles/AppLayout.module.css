@@ -1,0 +1,43 @@
+.container {
+  width: 100vw;
+  height: 100vh;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  /*align-items: center;*/
+  /* background: url('../public/images/ELEMENTOS CAMI SISTEMA-02.svg') no-repeat center; */
+  background-color: #c4afaf;
+  background-size: cover;
+  overflow: hidden;
+}
+
+.container_marca {
+  width: 100vw;
+  height: 100vh;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  /*align-items: center;*/
+  /* background: url('../public/images/ELEMENTOS CAMI SISTEMA-02.svg') no-repeat center; */
+  background-color: #c4afaf;
+  background-size: cover;
+  overflow: hidden;
+}
+
+.main {
+  padding: 0;
+  padding-top: 6rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow-y: scroll;
+}
+
+.main::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}

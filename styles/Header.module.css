@@ -1,0 +1,15 @@
+.header {
+    background-color: #805e5e;
+    height: 4rem;
+}
+
+.navItems {
+    margin-bottom: 2rem;
+    padding: 0;
+    list-style: none;
+}
+
+.navItem {
+    display: inline-block;
+    margin-right: 1rem;
+}
