@@ -169,7 +169,7 @@ const DialogCrudUser = ({ active, setActive }) => {
             icon="pi pi-plus"
             className="p-button-success"
             label="Registrar Usuario"
-            onClick={() => router.push('/interfaz/registrarUsuario')}
+            onClick={() => router.push('/inicio/registrarUsuario')}
           />
         </div>
       </div>
@@ -183,14 +183,14 @@ const DialogCrudUser = ({ active, setActive }) => {
         header={header1}
         onHide={() => setActive(false)}
         contentStyle={{
-          backgroundColor: '#8FA691',
+          backgroundColor: '#ae8e8e',
           borderBottom: 'solid 4px #F9FADC',
           borderLeft: 'solid 4px #F9FADC',
           borderRight: 'solid 4px #F9FADC',
           overflowY: 'scroll'
         }}
         headerStyle={{
-          backgroundColor: '#8FA691',
+          backgroundColor: '#ae8e8e',
           borderTop: 'solid 4px #F9FADC',
           borderLeft: 'solid 4px #F9FADC',
           borderRight: 'solid 4px #F9FADC'

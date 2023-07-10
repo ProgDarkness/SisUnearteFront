@@ -102,8 +102,8 @@ export default function RegistrarUsuario() {
   return (
     <AppLayout>
       <Toast ref={toast} />
-      <div className="p-card px-8 py-4 -mt-20 bg-[#8FA691] shadow-2xl border-[#F9FADC] border-2">
-        <h6 className="text-center mb-5 text-2xl font-bold">
+      <div className="p-card px-8 py-4 -mt-20 bg-[#ae8e8e] shadow-2xl border-[#F9FADC] border-2">
+        <h6 className="text-center text-white mb-5 text-2xl font-bold">
           Registrar Usuario
         </h6>
         <div className="grid grid-cols-3 gap-4">

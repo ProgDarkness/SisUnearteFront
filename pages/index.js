@@ -62,7 +62,7 @@ export default function Index() {
           })
           sessionStorage.clear()
           sessionStorage.setItem('token', token)
-          router.push('/interfaz')
+          router.push('/inicio')
         } else {
           setSubmitting(false)
           toast.current.show({
