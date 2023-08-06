@@ -13,7 +13,7 @@ import { useSesion } from 'hooks/useSesion'
 
 const DialogCrudUser = ({ active, setActive }) => {
   const router = useRouter()
-  const { token } = useSesion()
+  const { token, rolUser } = useSesion()
   const { data, mutate } = useSWR(
     token ? [GQLPlantilla.GET_USUARIOS, {}, token] : null
   )
@@ -200,64 +200,74 @@ const DialogCrudUser = ({ active, setActive }) => {
         maximized={true}
         contentClassName="ocultarScroll"
       >
-        <Toast ref={toast} />
-        <div className="flex justify-center">
-          <div className="w-[98%]">
-            <DataTable
-              sortField="id_usuario"
-              sortOrder={1}
-              value={data?.getUsuarios}
-              responsiveLayout="scroll"
-              emptyMessage="No hay usuarios registrados."
-              filterDisplay="row"
-              id="filter"
-              header={header2}
+        {rolUser === 2 ? (
+          <>
+            <Toast ref={toast} />
+            <div className="flex justify-center">
+              <div className="w-[98%]">
+                <DataTable
+                  sortField="id_usuario"
+                  sortOrder={1}
+                  value={data?.getUsuarios}
+                  responsiveLayout="scroll"
+                  emptyMessage="No hay usuarios registrados."
+                  filterDisplay="row"
+                  id="filter"
+                  header={header2}
+                >
+                  <Column field="id_usuario" header="ID" sortable />
+                  <Column
+                    field="ced_usuario"
+                    header="Cedula"
+                    filterPlaceholder="Buscar"
+                    filter
+                    style={{ width: '12%' }}
+                  />
+                  <Column field="nomb_usuario" header="Nombre" />
+                  <Column field="ape_usuario" header="Apellido" />
+                  <Column field="user_name" header="Nombre De Usuario" />
+                  <Column body={(rowData) => bodyRol(rowData)} header="Rol" />
+                  <Column
+                    body={(rowData) => bodyStatus(rowData)}
+                    header="Estatus"
+                  />
+                  <Column
+                    body={(rowData) => bodyFecha(rowData)}
+                    header="Fecha De Creacion"
+                  />
+                  <Column
+                    body={(rowData) => bodyFechaActualizacion(rowData)}
+                    header="Fecha De Actualizacion"
+                  />
+                  <Column body={actionBodyTemplate} header="Acciones" />
+                </DataTable>
+              </div>
+            </div>
+            <Dialog
+              visible={deleteUsuarioDialog}
+              style={{ width: '450px' }}
+              header="Confirmar"
+              modal
+              footer={deleteUsuarioDialogFooter}
+              onHide={hideDeleteUsuarioDialog}
             >
-              <Column field="id_usuario" header="ID" sortable />
-              <Column
-                field="ced_usuario"
-                header="Cedula"
-                filterPlaceholder="Buscar"
-                filter
-                style={{ width: '12%' }}
-              />
-              <Column field="nomb_usuario" header="Nombre" />
-              <Column field="ape_usuario" header="Apellido" />
-              <Column field="user_name" header="Nombre De Usuario" />
-              <Column body={(rowData) => bodyRol(rowData)} header="Rol" />
-              <Column
-                body={(rowData) => bodyStatus(rowData)}
-                header="Estatus"
-              />
-              <Column
-                body={(rowData) => bodyFecha(rowData)}
-                header="Fecha De Creacion"
-              />
-              <Column
-                body={(rowData) => bodyFechaActualizacion(rowData)}
-                header="Fecha De Actualizacion"
-              />
-              <Column body={actionBodyTemplate} header="Acciones" />
-            </DataTable>
-          </div>
-        </div>
-        <Dialog
-          visible={deleteUsuarioDialog}
-          style={{ width: '450px' }}
-          header="Confirmar"
-          modal
-          footer={deleteUsuarioDialogFooter}
-          onHide={hideDeleteUsuarioDialog}
-        >
-          <div className="confirmation-content">
-            <i
-              className="pi pi-exclamation-triangle mr-3"
-              style={{ fontSize: '2rem' }}
-            />
+              <div className="confirmation-content">
+                <i
+                  className="pi pi-exclamation-triangle mr-3"
+                  style={{ fontSize: '2rem' }}
+                />
 
-            <span>¿Desea eliminar el Usuario?</span>
+                <span>¿Desea eliminar el Usuario?</span>
+              </div>
+            </Dialog>
+          </>
+        ) : (
+          <div>
+            <h1 className="text-4xl text-red-500 font-semibold">
+              No tiene permisos para este modulo.
+            </h1>
           </div>
-        </Dialog>
+        )}
       </Dialog>
       {/*  eslint-disable-next-line react/no-unknown-property */}
       <style jsx global>{`

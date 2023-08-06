@@ -89,7 +89,7 @@ export default function RegistrarUsuario() {
             })
             setUsuario('')
             setSubmitting(false)
-          } else if (status === 402) {
+          } else if (status === 402 || status === 403) {
             toast.current.show({
               severity: type,
               summary: 'Error',

@@ -7,6 +7,7 @@ import Image from 'next/image'
 import imageInicio from '../../public/images/inicio.png'
 import InscripcionElectiva from './inscripcionElectiva'
 import Postulaciones from './postulaciones'
+import CargaOfertaAcademica from './cargaOfertaAcademica'
 
 const VistasContext = createContext({})
 
@@ -15,7 +16,8 @@ export default function index() {
   const templateContext = {
     inscripcionElectiva: false,
     inscripcionesRegulares: false,
-    postulaciones: false
+    postulaciones: false,
+    cargaOfertaAcademica: false
   }
   const [mostrarVistas, setMostrarVistas] = useState(templateContext)
 
@@ -55,6 +57,7 @@ export default function index() {
               )}
               {mostrarVistas?.inscripcionElectiva && <InscripcionElectiva />}
               {mostrarVistas?.postulaciones && <Postulaciones />}
+              {mostrarVistas?.cargaOfertaAcademica && <CargaOfertaAcademica />}
             </Card>
             {/* eslint-disable-next-line react/no-unknown-property */}
             <style jsx global>{`
