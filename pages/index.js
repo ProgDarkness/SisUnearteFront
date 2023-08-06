@@ -36,6 +36,10 @@ export default function Index() {
     )
   }
 
+  const registrarse = () => {
+    router.push('inicio/registrarUsuario')
+  }
+
   const entrar = () => {
     if (inputLogin.usuario && inputLogin.clave) {
       login({ input: inputLogin }).then(({ login }) => {
@@ -154,6 +158,11 @@ export default function Index() {
                       className="rounded-full w-32 bg-[#4a9a66]"
                       label="Entrar"
                       onClick={entrar}
+                    />
+                    <Button
+                      className="rounded-full w-32 bg-[#4a9a66] ml-2"
+                      label="Registrarse"
+                      onClick={registrarse}
                     />
                   </div>
                 </div>

@@ -8,9 +8,11 @@ import { useSWRConfig } from 'swr'
 import { Button } from 'primereact/button'
 import { useState } from 'react'
 import DialogCrudUser from 'pages/inicio/crudUsuario'
+import { useSesion } from 'hooks/useSesion'
 
 export default function Header({ verMenu }) {
   const router = useRouter()
+  const { rolUser } = useSesion()
   const raiz = router.route
   const { cache } = useSWRConfig()
   const hoy = new Date()
@@ -66,13 +68,15 @@ export default function Header({ verMenu }) {
 
       {raiz !== '/' && (
         <div className="flex flex-row justify-end -mt-9 mr-2">
-          <Button
-            icon="pi pi-users"
-            className="p-button-rounded p-button-warning "
-            tooltip="Usuarios"
-            tooltipOptions={{ position: 'left' }}
-            onClick={() => setDialogUserCrud(true)}
-          />
+          {rolUser === 2 && (
+            <Button
+              icon="pi pi-users"
+              className="p-button-rounded p-button-warning "
+              tooltip="Usuarios"
+              tooltipOptions={{ position: 'left' }}
+              onClick={() => setDialogUserCrud(true)}
+            />
+          )}
           <Button
             icon="pi pi-sign-out"
             className="p-button-rounded p-button-danger ml-2"

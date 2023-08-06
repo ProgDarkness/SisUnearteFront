@@ -24,12 +24,16 @@ export default function RegistrarUsuario() {
   const [clave, setClave] = useState('')
   const [nombre, setNombre] = useState('')
   const [usuario, setUsuario] = useState('')
-  const [rol, setRol] = useState(null)
+  const [rol, setRol] = useState(!token ? 3 : null)
+  console.log(rol)
   const [apellido, setApellido] = useState('')
   const [cedula, setCedula] = useState('')
+  const [nacionalidad, setNacionalidad] = useState(null)
   const router = useRouter()
   const [submitting, setSubmitting] = useState(false)
   const [errorFrom, setErrorFrom] = useState(false)
+
+  const opcionesNacionalidad = [{ name: 'V' }, { name: 'E' }]
 
   const { data } = useSWR(token ? [GQLPlantilla.GET_ROLES, {}, token] : null)
 
@@ -44,8 +48,24 @@ export default function RegistrarUsuario() {
 
   const registra = () => {
     setSubmitting(true)
-    if (cedula && apellido && nombre && usuario && clave && rol) {
-      const usuarioInput = { cedula, nombre, apellido, usuario, clave, rol }
+    if (
+      cedula &&
+      apellido &&
+      nombre &&
+      usuario &&
+      clave &&
+      rol &&
+      nacionalidad
+    ) {
+      const usuarioInput = {
+        cedula,
+        nombre,
+        apellido,
+        usuario,
+        clave,
+        rol,
+        nacionalidad
+      }
       saveUsuario({ input: usuarioInput }).then(
         ({ saveUsuario: { status, message, type } }) => {
           if (status === 200) {
@@ -57,6 +77,9 @@ export default function RegistrarUsuario() {
             })
             setSubmitting(false)
             router.reload()
+            if (!token) {
+              router.push('/')
+            }
           } else if (status === 401) {
             toast.current.show({
               severity: type,
@@ -106,7 +129,35 @@ export default function RegistrarUsuario() {
         <h6 className="text-center text-white mb-5 text-2xl font-bold">
           Registrar Usuario
         </h6>
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-2 gap-4">
+          <div className="rounded-full ">
+            <div className="p-inputgroup">
+              <span
+                className={`p-inputgroup-addon ${
+                  errorFrom && (nacionalidad?.length < 1 || nacionalidad === '')
+                    ? 'border-red-600 bg-red-300'
+                    : ''
+                }`}
+              >
+                <FontAwesomeIcon icon={faAddressCard} />
+              </span>
+              <Dropdown
+                value={nacionalidad}
+                placeholder="NACIONALIDAD"
+                optionLabel="name"
+                optionValue="name"
+                options={opcionesNacionalidad}
+                onChange={({ target: { value } }) => {
+                  setNacionalidad(value)
+                }}
+                className={`${
+                  errorFrom && (nacionalidad?.length < 1 || nacionalidad === '')
+                    ? 'border-red-600 bg-red-300'
+                    : ''
+                }`}
+              />
+            </div>
+          </div>
           <div className="rounded-full ">
             <div className="p-inputgroup">
               <span
@@ -235,34 +286,43 @@ export default function RegistrarUsuario() {
               />
             </div>
           </div>
-          <div>
-            <div className="p-inputgroup">
-              <span
-                className={`p-inputgroup-addon ${
-                  errorFrom && rol === null ? 'border-red-600 bg-red-300' : ''
-                }`}
-              >
-                <FontAwesomeIcon icon={faUserGear} />
-              </span>
-              <Dropdown
-                value={rol}
-                options={data?.getRoles}
-                onChange={({ target: { value } }) => {
-                  setRol(value)
-                }}
-                optionLabel="nb_rol"
-                optionValue="id_rol"
-                placeholder="Selecciona Rol"
-                className={`${
-                  errorFrom && rol === null ? 'border-red-600 bg-red-300 ' : ''
-                }`}
-              />
+          {token && (
+            <div className="col-span-2">
+              <div className="p-inputgroup">
+                <span
+                  className={`p-inputgroup-addon${
+                    errorFrom && rol === null ? 'border-red-600 bg-red-300' : ''
+                  }`}
+                >
+                  <FontAwesomeIcon icon={faUserGear} />
+                </span>
+                <Dropdown
+                  value={rol}
+                  options={data?.getRoles}
+                  onChange={({ target: { value } }) => {
+                    setRol(value)
+                  }}
+                  optionLabel="nb_rol"
+                  optionValue="id_rol"
+                  placeholder="Selecciona Rol"
+                  className={`${
+                    errorFrom && rol === null
+                      ? 'border-red-600 bg-red-300 '
+                      : ''
+                  }`}
+                />
+              </div>
             </div>
-          </div>
+          )}
           <Button label="Volver" onClick={() => router.back()} />
-          <div></div>
           <Button label="Registrar" onClick={registra} disabled={submitting} />
         </div>
+        {/* eslint-disable-next-line react/no-unknown-property */}
+        <style jsx global>{`
+          .p-dropdown .p-dropdown-label.p-placeholder {
+            color: rgba(0, 0, 0, 0.45);
+          }
+        `}</style>
       </div>
     </AppLayout>
   )

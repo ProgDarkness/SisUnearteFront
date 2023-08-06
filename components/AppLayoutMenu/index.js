@@ -18,7 +18,7 @@ export default function Index({ children, verMenu = true }) {
               }`}
               onClick={() => {
                 const newVistas = {
-                  [`inscripcionElectiva`]: true
+                  [`inscripcionElectiva`]: !mostrarVistas?.inscripcionElectiva
                 }
                 setMostrarVistas((prevState) => ({
                   ...prevState,
@@ -40,7 +40,8 @@ export default function Index({ children, verMenu = true }) {
               }`}
               onClick={() => {
                 const newVistas = {
-                  [`inscripcionesRegulares`]: true
+                  [`inscripcionesRegulares`]:
+                    !mostrarVistas?.inscripcionesRegulares
                 }
                 setMostrarVistas((prevState) => ({
                   ...prevState,
@@ -53,6 +54,26 @@ export default function Index({ children, verMenu = true }) {
               }}
             >
               Inscripcion Regular
+            </h1>
+            <h1
+              className={`text-white font-medium rounded-md mt-2 cursor-pointer hover:bg-[#805e5e] ${
+                mostrarVistas?.postulaciones ? 'bg-[#805e5e]' : 'bg-[#ae8e8e]'
+              }`}
+              onClick={() => {
+                const newVistas = {
+                  [`postulaciones`]: !mostrarVistas?.postulaciones
+                }
+                setMostrarVistas((prevState) => ({
+                  ...prevState,
+                  ...newVistas,
+                  ...Object.keys(prevState).reduce((acc, key) => {
+                    if (key !== 'postulaciones') acc[key] = false
+                    return acc
+                  }, {})
+                }))
+              }}
+            >
+              Postulaciones
             </h1>
           </div>
         </div>

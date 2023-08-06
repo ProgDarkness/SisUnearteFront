@@ -6,6 +6,7 @@ import { useState, createContext } from 'react'
 import Image from 'next/image'
 import imageInicio from '../../public/images/inicio.png'
 import InscripcionElectiva from './inscripcionElectiva'
+import Postulaciones from './postulaciones'
 
 const VistasContext = createContext({})
 
@@ -13,7 +14,8 @@ export default function index() {
   const { token, error } = useSesion()
   const templateContext = {
     inscripcionElectiva: false,
-    inscripcionesRegulares: false
+    inscripcionesRegulares: false,
+    postulaciones: false
   }
   const [mostrarVistas, setMostrarVistas] = useState(templateContext)
 
@@ -51,9 +53,8 @@ export default function index() {
                   </div>
                 </div>
               )}
-              {mostrarVistas?.inscripcionElectiva && (
-                <InscripcionElectiva />
-              )}
+              {mostrarVistas?.inscripcionElectiva && <InscripcionElectiva />}
+              {mostrarVistas?.postulaciones && <Postulaciones />}
             </Card>
             {/* eslint-disable-next-line react/no-unknown-property */}
             <style jsx global>{`
