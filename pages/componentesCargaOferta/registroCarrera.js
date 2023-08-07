@@ -15,7 +15,7 @@ const RegistroCarrera = ({ cambioVista }) => {
         <Button
           label="Registrar Materias"
           icon="pi pi-plus"
-          className='mr-2'
+          className="mr-2"
           onClick={() => setDialogRegTrayecto(true)}
         />
         <Button

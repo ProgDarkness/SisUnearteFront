@@ -1,10 +1,27 @@
 import { Button } from 'primereact/button'
 import { Column } from 'primereact/column'
 import { DataTable } from 'primereact/datatable'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 const CargarOferta = ({ cambioVista }) => {
-  const [ofertas, setOfertas] = useState([])
+  const [ofertas, setOfertas] = useState(null)
+
+  useEffect(() => {
+    setOfertas([
+      {
+        carrera: 'Artes Plasticas',
+        status_carrera: 'Ofertada',
+        cant_cupos: 100
+      },
+      { carrera: 'Museologia', status_carrera: 'Ofertada', cant_cupos: 100 },
+      {
+        carrera: 'Dibujo Artistico',
+        status_carrera: 'Deshabilitada',
+        cant_cupos: 0
+      }
+    ])
+  }, [])
+
   return (
     <div className="grid grid-cols-5 gap-4 m-2 -mt-2">
       <div className="col-span-5 flex justify-between">
@@ -34,10 +51,9 @@ const CargarOferta = ({ cambioVista }) => {
       </h1>
       <div className="col-span-5">
         <DataTable value={ofertas} emptyMessage="No hay carreras registradas.">
-          <Column field="code" header="Periodo" />
-          <Column field="name" header="Horario" />
-          <Column field="category" header="Cant. Cupos" />
-          <Column field="quantity" header="Cant. Secciones" />
+          <Column field="carrera" header="Carrera" />
+          <Column field="status_carrera" header="Estatus" />
+          <Column field="cant_cupos" header="Cant. Cupos" />
           <Column />
         </DataTable>
       </div>

@@ -1,8 +1,19 @@
 import { InputText } from 'primereact/inputtext'
 import { Dropdown } from 'primereact/dropdown'
 import { Button } from 'primereact/button'
+import { useEffect, useState } from 'react'
 
 const Postulaciones = () => {
+  const [nacionalidad, setNacionalidad] = useState(null)
+  const [cedula, setCedula] = useState('')
+
+  useEffect(() => {
+    setNacionalidad({ name: 'V' })
+    setCedula('12586742')
+  }, [])
+
+  const optionsNacionalidad = [{ name: 'V' }, { name: 'E' }]
+
   return (
     <div className="grid grid-cols-5 gap-4 m-2 -mt-2">
       <div className="col-span-5 text-center">
@@ -12,11 +23,11 @@ const Postulaciones = () => {
         <Dropdown
           className="w-full"
           id="nacionalidad"
-          /* options={} */
-          /* value={} */
-          /*  onChange={(e) => {
-            setDatosEstudiante({ ...datosEstudiante, electiva: e.value })
-          }} */
+          options={optionsNacionalidad}
+          value={nacionalidad}
+          onChange={(e) => {
+            setNacionalidad(e.value)
+          }}
           optionLabel="name"
         />
         <label htmlFor="nacionalidad">Nacionalidad</label>
@@ -26,7 +37,8 @@ const Postulaciones = () => {
         <InputText
           className="w-full"
           id="cedula"
-          /* value={} */
+          value={cedula}
+          onChange={(e) => setCedula(e.target.value)}
           autoComplete="off"
         />
         <label htmlFor="cedula">Cédula</label>
