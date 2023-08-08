@@ -1,4 +1,3 @@
-import { InputText } from 'primereact/inputtext'
 import { useState } from 'react'
 import RegistroCarrera from 'pages/componentesCargaOferta/registroCarrera'
 import CargarOferta from 'pages/componentesCargaOferta/cargarOferta'

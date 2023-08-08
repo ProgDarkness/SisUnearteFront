@@ -2,22 +2,85 @@ import { InputText } from 'primereact/inputtext'
 import { Dropdown } from 'primereact/dropdown'
 import { Button } from 'primereact/button'
 import { useEffect, useState } from 'react'
+import { InputMask } from 'primereact/inputmask'
+import { ConfirmDialog } from 'primereact/confirmdialog'
 
 const Postulaciones = () => {
   const [nacionalidad, setNacionalidad] = useState(null)
   const [cedula, setCedula] = useState('')
+  const [optionsNacionalidad, setOptionsNacionalidad] = useState(null)
+  const [nombre, setNombre] = useState('')
+  const [segundo_Nombre, setSegundo_Nombre] = useState('')
+  const [apellido, setApellido] = useState('')
+  const [segundo_Apellido, setSegundo_Apellido] = useState('')
+  const [sexo, setSexo] = useState(null)
+  const [optionsSexo, setOptionsSexo] = useState(null)
+  const [fechanaci, setFechaNaci] = useState('')
+  const [discapacidad, setDiscapacidad] = useState(null)
+  const [optionsDiscapacidad, setOptionsDiscapacidad] = useState(null)
+  const [direccion, setDireccion] = useState('')
+  const [estado, setEstado] = useState(null)
+  const [optionsEstado, setOptionsEstado] = useState(null)
+  const [municipio, setMunicipio] = useState(null)
+  const [optionsMunicipio, setOptionsMunicipio] = useState(null)
+  const [parroquia, setParroquia] = useState(null)
+  const [optionsParroquia, setOptionsParroquia] = useState(null)
+  const [confirmRegistrar, setConfirmRegistrar] = useState(false)
+  const accept = () => {
+    console.log('aceptado')
+  }
+
+  const reject = () => {
+    setConfirmRegistrar(false)
+  }
 
   useEffect(() => {
     setNacionalidad({ name: 'V' })
     setCedula('12586742')
+    setOptionsNacionalidad([{ name: 'V' }, { name: 'E' }])
+    setNombre('Carlos')
+    setSegundo_Nombre('Raul')
+    setApellido('Salazar')
+    setSegundo_Apellido('Gonzalez')
+    setSexo({ name: 'Masculino' })
+    setOptionsSexo([{ name: 'Masculino' }, { name: 'Femenino' }])
+    setDiscapacidad({ name: 'Paralitico' })
+    setOptionsDiscapacidad([
+      { name: 'No soy discapacitado' },
+      { name: 'Paralitico' }
+    ])
+    setDireccion('Residencias Conjetura, Av. Angosta')
+    setEstado({ name: 'Distrito Capital' })
+    setOptionsEstado([
+      { name: 'Distrito Capital' },
+      { name: 'Carabobo' },
+      { name: 'Miranda' }
+    ])
+    setMunicipio({ name: 'Libertador' })
+    setOptionsMunicipio([
+      { name: 'Libertador' },
+      { name: 'Chacao' },
+      { name: 'Baruta' },
+      { name: 'Baruta' },
+      { name: 'Sucre' }
+    ])
+    setParroquia({ name: 'San Juan' })
+    setOptionsParroquia([
+      { name: 'San Juan' },
+      { name: 'Antímano' },
+      { name: 'Caricuao' },
+      { name: 'Macarao' },
+      { name: 'La Pastora' }
+    ])
   }, [])
-
-  const optionsNacionalidad = [{ name: 'V' }, { name: 'E' }]
 
   return (
     <div className="grid grid-cols-5 gap-4 m-2 -mt-2">
       <div className="col-span-5 text-center">
         <h1 className="text-3xl font-semibold text-white">Postulaciones</h1>
+      </div>
+      <div className="col-span-5">
+        <h2 className="text-2xl font-semibold text-white">Registro Previo</h2>
       </div>
       <span className="p-float-label field">
         <Dropdown
@@ -35,6 +98,8 @@ const Postulaciones = () => {
 
       <span className="p-float-label field">
         <InputText
+          keyfilter={'num'}
+          maxLength={9}
           className="w-full"
           id="cedula"
           value={cedula}
@@ -47,7 +112,8 @@ const Postulaciones = () => {
         <InputText
           className="w-full"
           id="nombre"
-          /* value={} */
+          value={nombre}
+          onChange={(e) => setNombre(e.target.value)}
           autoComplete="off"
         />
         <label htmlFor="nombre">Nombre</label>
@@ -56,7 +122,8 @@ const Postulaciones = () => {
         <InputText
           className="w-full"
           id="segundo_Nombre"
-          /* value={} */
+          value={segundo_Nombre}
+          onChange={(e) => setSegundo_Nombre(e.target.value)}
           autoComplete="off"
         />
         <label htmlFor="segundo_Nombre">Segundo Nombre</label>
@@ -65,7 +132,8 @@ const Postulaciones = () => {
         <InputText
           className="w-full"
           id="apellido"
-          /* value={} */
+          value={apellido}
+          onChange={(e) => setApellido(e.target.value)}
           autoComplete="off"
         />
         <label htmlFor="apellido">Apellido</label>
@@ -74,7 +142,8 @@ const Postulaciones = () => {
         <InputText
           className="w-full"
           id="segundo_Apellido"
-          /* value={} */
+          value={segundo_Apellido}
+          onChange={(e) => setSegundo_Apellido(e.target.value)}
           autoComplete="off"
         />
         <label htmlFor="segundo_Apellido">Segundo Apellido</label>
@@ -83,20 +152,24 @@ const Postulaciones = () => {
         <Dropdown
           className="w-full"
           id="sexo"
-          /* options={} */
-          /* value={} */
-          /*  onChange={(e) => {
-            setDatosEstudiante({ ...datosEstudiante, electiva: e.value })
-          }} */
+          options={optionsSexo}
+          value={sexo}
+          onChange={(e) => {
+            setSexo(e.value)
+          }}
           optionLabel="name"
         />
         <label htmlFor="sexo">Sexo</label>
       </span>
       <span className="p-float-label field">
-        <InputText
+        <InputMask
+          mask="99/99/9999"
           className="w-full"
           id="fechanaci"
-          /* value={} */
+          value={fechanaci}
+          onChange={(e) => {
+            setFechaNaci(e.value)
+          }}
           autoComplete="off"
         />
         <label htmlFor="fechanaci">Fecha de nacimiento</label>
@@ -105,11 +178,9 @@ const Postulaciones = () => {
         <Dropdown
           className="w-full"
           id="discapacidad"
-          /* options={} */
-          /* value={} */
-          /*  onChange={(e) => {
-            setDatosEstudiante({ ...datosEstudiante, electiva: e.value })
-          }} */
+          options={optionsDiscapacidad}
+          value={discapacidad}
+          onChange={(e) => setDiscapacidad(e.target.value)}
           optionLabel="name"
         />
         <label htmlFor="discapacidad">Discapacidad</label>
@@ -118,7 +189,8 @@ const Postulaciones = () => {
         <InputText
           className="w-full"
           id="direccion"
-          /* value={} */
+          value={direccion}
+          onChange={(e) => setDireccion(e.target.value)}
           autoComplete="off"
         />
         <label htmlFor="direccion">Dirección</label>
@@ -127,11 +199,9 @@ const Postulaciones = () => {
         <Dropdown
           className="w-full"
           id="estado"
-          /* options={} */
-          /* value={} */
-          /*  onChange={(e) => {
-            setDatosEstudiante({ ...datosEstudiante, electiva: e.value })
-          }} */
+          options={optionsEstado}
+          value={estado}
+          onChange={(e) => setEstado(e.target.value)}
           optionLabel="name"
         />
         <label htmlFor="estado">Estado</label>
@@ -140,11 +210,9 @@ const Postulaciones = () => {
         <Dropdown
           className="w-full"
           id="municipio"
-          /* options={} */
-          /* value={} */
-          /*  onChange={(e) => {
-            setDatosEstudiante({ ...datosEstudiante, electiva: e.value })
-          }} */
+          options={optionsMunicipio}
+          value={municipio}
+          onChange={(e) => setMunicipio(e.target.value)}
           optionLabel="name"
         />
         <label htmlFor="municipio">Municipio</label>
@@ -153,22 +221,92 @@ const Postulaciones = () => {
         <Dropdown
           className="w-full"
           id="parroquia"
-          /* options={} */
-          /* value={} */
-          /*  onChange={(e) => {
-            setDatosEstudiante({ ...datosEstudiante, electiva: e.value })
-          }} */
+          options={optionsParroquia}
+          value={parroquia}
+          onChange={(e) => setParroquia(e.target.value)}
           optionLabel="name"
         />
         <label htmlFor="parroquia">Parroquia</label>
       </span>
 
+      <ConfirmDialog
+        draggable={false}
+        resizable={false}
+        className="bg-[#805e5e]"
+        visible={confirmRegistrar}
+        acceptLabel="Si"
+        rejectLabel="No"
+        onHide={() => setConfirmRegistrar(false)}
+        message="Estas seguro que deseas confirmar la informacion ingresada?"
+        header="Confirmar"
+        icon="pi pi-exclamation-triangle"
+        accept={accept}
+        reject={reject}
+      />
       <Button
-        label="Postularse" /* onClick={registra} */ /* disabled={submitting} */
+        onClick={() => setConfirmRegistrar(true)}
+        icon="pi pi-check"
+        label="Registrarse" /* onClick={registra} */ /* disabled={submitting} */
+        disabled={
+          !nacionalidad ||
+          !cedula ||
+          !nombre ||
+          !segundo_Nombre ||
+          !apellido ||
+          !segundo_Apellido ||
+          !sexo ||
+          fechanaci.includes('_') ||
+          !fechanaci ||
+          !discapacidad ||
+          !direccion ||
+          !estado ||
+          !municipio ||
+          !parroquia
+        }
       />
 
       {/*  eslint-disable-next-line react/no-unknown-property */}
       <style jsx global>{`
+        .p-button.p-button-text:enabled:active,
+        .p-button.p-button-text:not(button):not(a):not(.p-disabled):active,
+        .p-button.p-button-outlined:enabled:active,
+        .p-button.p-button-outlined:not(button):not(a):not(.p-disabled):active {
+          background: rgb(204 57 23/75%);
+          color: white;
+        }
+        .p-button.p-button-text:enabled:hover,
+        .p-button.p-button-text:not(button):not(a):not(.p-disabled):hover {
+          background: #88250e;
+          color: #fff;
+          border-color: transparent;
+        }
+        .p-button.p-button-text {
+          background-color: #3452b4;
+          color: #ffffff;
+          border-color: transparent;
+        }
+        .p-dialog .p-dialog-footer {
+          border-top: 0 none;
+          background: #805e5e;
+          color: rgb(255 255 255);
+          padding: 0.75rem 1.25rem;
+          text-align: right;
+          border-bottom-right-radius: 4px;
+          border-bottom-left-radius: 4px;
+        }
+        .p-dialog .p-dialog-content {
+          background: #805e5e;
+          color: rgb(255 255 255);
+          padding: 0 1.25rem 1.25rem 1.25rem;
+        }
+        .p-dialog .p-dialog-header {
+          border-bottom: 0 none;
+          background: #805e5e;
+          color: rgb(255 251 251);
+          padding: 1.25rem;
+          border-top-right-radius: 4px;
+          border-top-left-radius: 4px;
+        }
         .p-float-label input:focus ~ label,
         .p-float-label .p-inputwrapper-focus ~ label {
           color: #ffffff;
