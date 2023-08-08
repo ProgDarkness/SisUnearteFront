@@ -20,7 +20,7 @@ export default {
         bl_status
         rol
         ced_usuario
-        nomb_usuario
+        nb_usuario
         ape_usuario
         created_at
         updated_at

@@ -25,7 +25,6 @@ export default function RegistrarUsuario() {
   const [nombre, setNombre] = useState('')
   const [usuario, setUsuario] = useState('')
   const [rol, setRol] = useState(!token ? 3 : null)
-  console.log(rol)
   const [apellido, setApellido] = useState('')
   const [cedula, setCedula] = useState('')
   const [nacionalidad, setNacionalidad] = useState(null)
@@ -63,7 +62,7 @@ export default function RegistrarUsuario() {
         apellido,
         usuario,
         clave,
-        rol,
+        id_rol: rol,
         nacionalidad
       }
       saveUsuario({ input: usuarioInput }).then(
@@ -76,9 +75,10 @@ export default function RegistrarUsuario() {
               life: 3000
             })
             setSubmitting(false)
-            router.reload()
             if (!token) {
-              router.push('/')
+              setTimeout(() => {
+                router.push('/')
+              }, 2500)
             }
           } else if (status === 401) {
             toast.current.show({
@@ -96,7 +96,6 @@ export default function RegistrarUsuario() {
               detail: message,
               life: 3000
             })
-            console.log(status)
             setCedula('')
             setSubmitting(false)
           } else {

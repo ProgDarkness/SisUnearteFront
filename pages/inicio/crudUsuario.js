@@ -34,7 +34,7 @@ const DialogCrudUser = ({ active, setActive }) => {
   }
   const bodyRol = (rowData) => {
     let statusColor = ''
-    if (rowData.rol === 'Inventario') {
+    if (rowData.rol === 'Administración') {
       statusColor = '#3d9edf'
     } else {
       statusColor = '#dcdf50'
@@ -223,7 +223,7 @@ const DialogCrudUser = ({ active, setActive }) => {
                     filter
                     style={{ width: '12%' }}
                   />
-                  <Column field="nomb_usuario" header="Nombre" />
+                  <Column field="nb_usuario" header="Nombre" />
                   <Column field="ape_usuario" header="Apellido" />
                   <Column field="user_name" header="Nombre De Usuario" />
                   <Column body={(rowData) => bodyRol(rowData)} header="Rol" />
