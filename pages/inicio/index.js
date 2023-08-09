@@ -61,7 +61,7 @@ export default function index() {
             </Card>
             {/* eslint-disable-next-line react/no-unknown-property */}
             <style jsx global>{`
-              .ocultarScroll::-webkit-scrollbar {
+              ::-webkit-scrollbar {
                 width: 0;
                 height: 0;
               }
@@ -95,6 +95,16 @@ export default function index() {
                 background: #ae8e8e;
                 color: rgb(255 255 255 / 92%);
                 transition: none;
+              }
+
+              .p-dialog .p-dialog-footer {
+                border-top: 0 none;
+                background: #ae8e8e;
+                color: rgb(255 255 255);
+                padding: 0.75rem 1.25rem;
+                text-align: right;
+                border-bottom-right-radius: 4px;
+                border-bottom-left-radius: 4px;
               }
 
               .p-dialog .p-dialog-content {

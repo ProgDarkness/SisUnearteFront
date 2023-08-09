@@ -453,67 +453,8 @@ const Postulaciones = () => {
           color: #ffffff;
           border-color: transparent;
         }
-        .p-dialog .p-dialog-footer {
-          border-top: 0 none;
-          background: #805e5e;
-          color: rgb(255 255 255);
-          padding: 0.75rem 1.25rem;
-          text-align: right;
-          border-bottom-right-radius: 4px;
-          border-bottom-left-radius: 4px;
-        }
-        .p-dialog .p-dialog-content {
-          background: #805e5e;
-          color: rgb(255 255 255);
-          padding: 0 1.25rem 1.25rem 1.25rem;
-        }
-        .p-dialog .p-dialog-header {
-          border-bottom: 0 none;
-          background: #805e5e;
-          color: rgb(255 251 251);
-          padding: 1.25rem;
-          border-top-right-radius: 4px;
-          border-top-left-radius: 4px;
-        }
-        .p-float-label input:focus ~ label,
-        .p-float-label .p-inputwrapper-focus ~ label {
-          color: #ffffff;
-        }
 
-        .p-float-label input:focus ~ label,
-        .p-float-label input.p-filled ~ label,
-        .p-float-label textarea:focus ~ label,
-        .p-float-label textarea.p-filled ~ label,
-        .p-float-label .p-inputwrapper-focus ~ label,
-        .p-float-label .p-inputwrapper-filled ~ label {
-          top: -0.5rem !important;
-          border-radius: 1rem;
-          background-color: #3f51b5;
-          padding: 2px 4px;
-          margin-left: -4px;
-          margin-top: 0;
-        }
-
-        .p-float-label input:focus ~ label,
-        .p-float-label input.p-filled ~ label,
-        .p-float-label textarea:focus ~ label,
-        .p-float-label textarea.p-filled ~ label,
-        .p-float-label .p-inputwrapper-focus ~ label,
-        .p-float-label .p-inputwrapper-filled ~ label {
-          top: -0.5rem !important;
-          -webkit-border-radius: 1rem;
-          -moz-border-radius: 1rem;
-          border-radius: 1rem;
-          background-color: #3f51b5;
-          padding: 2px 4px;
-          margin-left: -4px;
-          margin-top: 0;
-          color: white;
-        }
-
-        .p-divider.p-divider-horizontal:before {
-          border-top: solid 1px rgb(255 255 255);
-        }
+        
       `}</style>
     </div>
   )
