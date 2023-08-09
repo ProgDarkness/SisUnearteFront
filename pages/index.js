@@ -42,6 +42,11 @@ export default function Index() {
 
   const entrar = () => {
     if (inputLogin.usuario && inputLogin.clave) {
+      inputLogin.clave = CryptoJS.AES.encrypt(
+        inputLogin.clave,
+        process.env.NEXT_PUBLIC_SECRET_KEY
+      ).toString()
+
       login({ input: inputLogin }).then(({ login }) => {
         const loginJson = JSON.parse(
           CryptoJS.AES.decrypt(

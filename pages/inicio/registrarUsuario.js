@@ -16,6 +16,7 @@ import request from 'graphql-request'
 import { Dropdown } from 'primereact/dropdown'
 import { Toast } from 'primereact/toast'
 import useSWR from 'swr'
+import CryptoJS from 'crypto-js'
 import { useSesion } from 'hooks/useSesion'
 
 export default function RegistrarUsuario() {
@@ -61,7 +62,10 @@ export default function RegistrarUsuario() {
         nombre,
         apellido,
         usuario,
-        clave,
+        clave: CryptoJS.AES.encrypt(
+          clave,
+          process.env.NEXT_PUBLIC_SECRET_KEY
+        ).toString(),
         id_rol: rol,
         nacionalidad
       }
