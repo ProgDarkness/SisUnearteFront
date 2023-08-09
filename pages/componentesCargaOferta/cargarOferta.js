@@ -1,17 +1,16 @@
 import { Button } from 'primereact/button'
 import { Column } from 'primereact/column'
 import { DataTable } from 'primereact/datatable'
-import { Dialog } from 'primereact/dialog'
-import { Dropdown } from 'primereact/dropdown'
-import { InputText } from 'primereact/inputtext'
 import { useEffect, useState } from 'react'
+import DialogEditarOferta from './dialogEditarOferta'
+import DialogVerOferta from './dialogVerOferta'
 
 const CargarOferta = ({ cambioVista }) => {
   const [ofertas, setOfertas] = useState(null)
-  const [verOferta, setDialogVerOferta] = useState(false)
-  const [editarOferta, setDialogEditarOferta] = useState(false)
+  const [activeDialogVerOferta, setActiveDialogVerOferta] = useState(false)
+  const [dialogEditarOferta, setDialogEditarOferta] = useState(false)
   const [datosEditarOferta, setDatosEditarOferta] = useState(null)
-  const [opcionStatusOferta, setOpcionStatusOferta] = useState(null)
+  const [datosVerOferta, setDatosVerOferta] = useState(null)
 
   useEffect(() => {
     setOfertas([
@@ -27,99 +26,7 @@ const CargarOferta = ({ cambioVista }) => {
         cant_cupos: 0
       }
     ])
-    setOpcionStatusOferta([{ name: 'Habilitada' }, { name: 'Desahabilitar' }])
   }, [])
-
-  const DialogVerOferta = () => {
-    return (
-      <Dialog
-        visible={verOferta}
-        onHide={() => setDialogVerOferta(false)}
-        header="Trayectos"
-        resizable={false}
-        draggable={false}
-      >
-        <div className="grid grid-cols-3 gap-4 m-2">
-          <span className="p-float-label field">
-            <InputText
-              className="w-full"
-              id="cod_carrera"
-              /* value={datosEstudiante?.cedula} */
-              autoComplete="off"
-            />
-            <label htmlFor="cod_carrera">Nombre de Trayecto</label>
-          </span>
-          <span className="p-float-label field">
-            <InputText
-              className="w-full"
-              id="cod_carrera"
-              /* value={datosEstudiante?.cedula} */
-              autoComplete="off"
-            />
-            <label htmlFor="cod_carrera">Nombre de Semestre</label>
-          </span>
-        </div>
-      </Dialog>
-    )
-  }
-
-  const DialogEditarOferta = () => {
-    return (
-      <Dialog
-        visible={editarOferta}
-        onHide={() => setDialogEditarOferta(false)}
-        header="Trayectos"
-        resizable={false}
-        draggable={false}
-      >
-        <div className="grid grid-cols-3 gap-4 m-2">
-          <span className="p-float-label field">
-            <InputText
-              className="w-full"
-              id="cod_carrera_ed"
-              value={datosEditarOferta?.carrera}
-              autoComplete="off"
-            />
-            <label htmlFor="cod_carrera_ed">Carrera</label>
-          </span>
-          <span className="p-float-label field">
-            <Dropdown
-              options={opcionStatusOferta}
-              className="w-full"
-              optionLabel="name"
-              optionValue="name"
-              id="status_oferta"
-              value={datosEditarOferta?.status_carrera}
-              onChange={(e) =>
-                setDatosEditarOferta({
-                  ...datosEditarOferta,
-                  status_carrera: e.value
-                })
-              }
-              autoComplete="off"
-            />
-            <label htmlFor="status_oferta">Estatus</label>
-          </span>
-          <span className="p-float-label field">
-            <InputText
-              className="w-full"
-              id="cant_cupos"
-              value={datosEditarOferta?.cant_cupos}
-              autoComplete="off"
-            />
-            <label htmlFor="cant_cupos">Cant. Cupos</label>
-          </span>
-          <div className="col-span-3 flex justify-center">
-            <Button
-              label="Modificar"
-              icon="pi pi-plus"
-              onClick={() => setDialogEditarOferta(false)}
-            />
-          </div>
-        </div>
-      </Dialog>
-    )
-  }
 
   const accionBodyTemplate = (rowData) => {
     return (
@@ -129,7 +36,10 @@ const CargarOferta = ({ cambioVista }) => {
           className="p-button-info mr-1"
           tooltip="Ver"
           tooltipOptions={{ position: 'top' }}
-          onClick={() => setDialogVerOferta(true)}
+          onClick={() => {
+            setDatosVerOferta(rowData)
+            setActiveDialogVerOferta(true)
+          }}
         />
         <Button
           icon="pi pi-pencil"
@@ -191,8 +101,18 @@ const CargarOferta = ({ cambioVista }) => {
           }}
         />
       </div>
-      <DialogVerOferta />
-      <DialogEditarOferta />
+      <DialogVerOferta
+        setActiveDialogVerOferta={setActiveDialogVerOferta}
+        activeDialogVerOferta={activeDialogVerOferta}
+        datosVerOferta={datosVerOferta}
+        setDatosVerOferta={setDatosVerOferta}
+      />
+      <DialogEditarOferta
+        datosEditarOferta={datosEditarOferta}
+        setDatosEditarOferta={setDatosEditarOferta}
+        dialogEditarOferta={dialogEditarOferta}
+        setDialogEditarOferta={setDialogEditarOferta}
+      />
       <div className="col-span-5">
         <DataTable value={ofertas} emptyMessage="No hay carreras registradas.">
           <Column field="carrera" header="Carrera" />
