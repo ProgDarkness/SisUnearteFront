@@ -1,3 +1,4 @@
+/* eslint-disable no-useless-escape */
 import { DataTable } from 'primereact/datatable'
 import { Column } from 'primereact/column'
 import GQLPlantilla from 'graphql/plantilla'
@@ -278,6 +279,22 @@ const DialogCrudUser = ({ active, setActive }) => {
         .ocultarScroll::-webkit-scrollbar {
           width: 0;
           height: 0;
+        }
+        .p-datatable .p-sortable-column.p-highlight {
+          background: #ae8e8e;
+          color: #ffffff;
+        }
+        .p-datatable .p-datatable-header {
+          background: #ae8e8e;
+          color: rgb(255 255 255);
+          border: 1px solid #e4e4e4;
+          border-width: 0 0 1px 0;
+          padding: 0.75rem 0.75rem;
+          font-weight: 500;
+        }
+        .text-\[\#8fa691\] {
+          --tw-text-opacity: 1;
+          color: white;
         }
       `}</style>
     </>
