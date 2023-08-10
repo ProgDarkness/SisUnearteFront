@@ -7,7 +7,8 @@ import { ConfirmDialog } from 'primereact/confirmdialog'
 import { BlockUI } from 'primereact/blockui'
 import { DataTable } from 'primereact/datatable'
 import { Column } from 'primereact/column'
-import { Dialog } from 'primereact/dialog'
+import DialogVerOferta from 'pages/componentesCargaOferta/dialogVerOferta'
+import { useSesion } from 'hooks/useSesion'
 
 const Postulaciones = () => {
   const [nacionalidad, setNacionalidad] = useState(null)
@@ -31,17 +32,24 @@ const Postulaciones = () => {
   const [optionsParroquia, setOptionsParroquia] = useState(null)
   const [confirmRegistrar, setConfirmRegistrar] = useState(false)
   const [ofertas, setOfertas] = useState(null)
-  const [verOferta, setDialogVerOferta] = useState(false)
-  const [editarOferta, setDialogEditarOferta] = useState(false)
-  const [datosEditarOferta, setDatosEditarOferta] = useState(null)
-  const [opcionStatusOferta, setOpcionStatusOferta] = useState(null)
   const [blockedPanel, setBlockedPanel] = useState(false)
+  const [activeDialogVerOferta, setActiveDialogVerOferta] = useState(false)
+  const [datosVerOferta, setDatosVerOferta] = useState(null)
+  const { rolUser } = useSesion()
+  const [confirmPostulacion, setConfirmPostulacion] = useState(false)
   const accept = () => {
     setBlockedPanel(true)
   }
 
   const reject = () => {
     setConfirmRegistrar(false)
+  }
+
+  const acceptPostu = () => {
+    setConfirmPostulacion(true)
+  }
+  const rechazarPostu = () => {
+    setConfirmPostulacion(false)
   }
 
   useEffect(() => {
@@ -58,7 +66,6 @@ const Postulaciones = () => {
         cant_cupos: 0
       }
     ])
-    setOpcionStatusOferta([{ name: 'Habilitada' }, { name: 'Desahabilitar' }])
   }, [])
 
   useEffect(() => {
@@ -101,110 +108,29 @@ const Postulaciones = () => {
     ])
   }, [])
 
-  const DialogVerOferta = () => {
-    return (
-      <Dialog
-        visible={verOferta}
-        onHide={() => setDialogVerOferta(false)}
-        header="Trayectos"
-        resizable={false}
-        draggable={false}
-      >
-        <div className="grid grid-cols-3 gap-4 m-2">
-          <span className="p-float-label field">
-            <InputText
-              className="w-full"
-              id="cod_carrera"
-              /* value={datosEstudiante?.cedula} */
-              autoComplete="off"
-            />
-            <label htmlFor="cod_carrera">Nombre de Trayecto</label>
-          </span>
-          <span className="p-float-label field">
-            <InputText
-              className="w-full"
-              id="cod_carrera"
-              /* value={datosEstudiante?.cedula} */
-              autoComplete="off"
-            />
-            <label htmlFor="cod_carrera">Nombre de Semestre</label>
-          </span>
-        </div>
-      </Dialog>
-    )
-  }
-
-  const DialogEditarOferta = () => {
-    return (
-      <Dialog
-        visible={editarOferta}
-        onHide={() => setDialogEditarOferta(false)}
-        header="Trayectos"
-        resizable={false}
-        draggable={false}
-      >
-        <div className="grid grid-cols-3 gap-4 m-2">
-          <span className="p-float-label field">
-            <InputText
-              className="w-full"
-              id="cod_carrera_ed"
-              value={datosEditarOferta?.carrera}
-              autoComplete="off"
-            />
-            <label htmlFor="cod_carrera_ed">Carrera</label>
-          </span>
-          <span className="p-float-label field">
-            <Dropdown
-              options={opcionStatusOferta}
-              className="w-full"
-              optionLabel="name"
-              optionValue="name"
-              id="status_oferta"
-              value={datosEditarOferta?.status_carrera}
-              onChange={(e) =>
-                setDatosEditarOferta({
-                  ...datosEditarOferta,
-                  status_carrera: e.value
-                })
-              }
-              autoComplete="off"
-            />
-            <label htmlFor="status_oferta">Estatus</label>
-          </span>
-          <span className="p-float-label field">
-            <InputText
-              className="w-full"
-              id="cant_cupos"
-              value={datosEditarOferta?.cant_cupos}
-              autoComplete="off"
-            />
-            <label htmlFor="cant_cupos">Cant. Cupos</label>
-          </span>
-          <div className="col-span-3 flex justify-center">
-            <Button
-              label="Modificar"
-              icon="pi pi-plus"
-              onClick={() => setDialogEditarOferta(false)}
-            />
-          </div>
-        </div>
-      </Dialog>
-    )
-  }
-
   const accionBodyTemplate = (rowData) => {
     return (
       <div className="flex justify-center">
         <Button
-          icon="pi pi-pencil"
-          className="p-button-help mr-1"
-          tooltip="Postularse"
-          onClick={() => {
-            setDatosEditarOferta(rowData)
-            setDialogEditarOferta(true)
-          }}
+          icon="pi pi-search"
+          className="p-button-info mr-1"
+          tooltip="Ver"
           tooltipOptions={{ position: 'top' }}
+          onClick={() => {
+            setDatosVerOferta(rowData)
+            setActiveDialogVerOferta(true)
+          }}
         />
+        {rolUser === 3 && (
+          <Button
+            icon="pi pi-check"
+            tooltip="Postularse"
+            className="p-button-success"
+            onClick={() => {
+              setConfirmPostulacion(true)
+            }}
+          />
+        )}
       </div>
     )
   }
@@ -391,6 +317,21 @@ const Postulaciones = () => {
               reject={reject}
             />
 
+            <ConfirmDialog
+              draggable={false}
+              resizable={false}
+              className="bg-[#805e5e]"
+              visible={confirmPostulacion}
+              acceptLabel="Si"
+              rejectLabel="No"
+              onHide={() => setConfirmPostulacion(false)}
+              message="Estas seguro que deseas confirmar la postulación?"
+              header="Confirmar"
+              icon="pi pi-exclamation-triangle"
+              accept={acceptPostu}
+              reject={rechazarPostu}
+            />
+
             <Button
               onClick={() => setConfirmRegistrar(true)}
               icon="pi pi-check"
@@ -416,9 +357,13 @@ const Postulaciones = () => {
         </div>
       </BlockUI>
 
-      <DialogVerOferta />
-      <DialogEditarOferta />
-      {blockedPanel &&
+      <DialogVerOferta
+        setActiveDialogVerOferta={setActiveDialogVerOferta}
+        activeDialogVerOferta={activeDialogVerOferta}
+        datosVerOferta={datosVerOferta}
+        setDatosVerOferta={setDatosVerOferta}
+      />
+      {blockedPanel && (
         <div className="mt-3">
           <div className="col-span-5">
             <DataTable
@@ -431,7 +376,7 @@ const Postulaciones = () => {
             </DataTable>
           </div>
         </div>
-      }
+      )}
 
       {/*  eslint-disable-next-line react/no-unknown-property */}
       <style jsx global>{`
@@ -453,8 +398,6 @@ const Postulaciones = () => {
           color: #ffffff;
           border-color: transparent;
         }
-
-        
       `}</style>
     </div>
   )
