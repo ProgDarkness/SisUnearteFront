@@ -8,10 +8,12 @@ import imageInicio from '../../public/images/inicio.png'
 import InscripcionElectiva from './inscripcionElectiva'
 import Postulaciones from './postulaciones'
 import CargaOfertaAcademica from './cargaOfertaAcademica'
+import request from 'graphql-request'
+import GQLConsultasGenerales from 'graphql/consultasGenerales'
 
 const VistasContext = createContext({})
 
-export default function index() {
+export default function index({ data }) {
   const { token, error } = useSesion()
   const templateContext = {
     inscripcionElectiva: false,
@@ -56,7 +58,7 @@ export default function index() {
                 </div>
               )}
               {mostrarVistas?.inscripcionElectiva && <InscripcionElectiva />}
-              {mostrarVistas?.postulaciones && <Postulaciones />}
+              {mostrarVistas?.postulaciones && <Postulaciones data={data} />}
               {mostrarVistas?.cargaOfertaAcademica && <CargaOfertaAcademica />}
             </Card>
             {/* eslint-disable-next-line react/no-unknown-property */}
@@ -170,3 +172,16 @@ export default function index() {
 }
 
 export { VistasContext }
+
+export async function getStaticProps() {
+  const data = await request(
+    process.env.NEXT_PUBLIC_URL_BACKEND,
+    GQLConsultasGenerales.GET_SEXO
+  )
+
+  return {
+    props: {
+      data
+    }
+  }
+}

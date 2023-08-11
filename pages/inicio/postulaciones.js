@@ -10,7 +10,7 @@ import { Column } from 'primereact/column'
 import DialogVerOferta from 'pages/componentesCargaOferta/dialogVerOferta'
 import { useSesion } from 'hooks/useSesion'
 
-const Postulaciones = () => {
+const Postulaciones = ({ data }) => {
   const [nacionalidad, setNacionalidad] = useState(null)
   const [cedula, setCedula] = useState('')
   const [optionsNacionalidad, setOptionsNacionalidad] = useState(null)
@@ -19,8 +19,7 @@ const Postulaciones = () => {
   const [apellido, setApellido] = useState('')
   const [segundo_Apellido, setSegundo_Apellido] = useState('')
   const [sexo, setSexo] = useState(null)
-  const [optionsSexo, setOptionsSexo] = useState(null)
-  const [fechanaci, setFechaNaci] = useState('')
+  const [fechanaci, setFechaNaci] = useState(null)
   const [discapacidad, setDiscapacidad] = useState(null)
   const [optionsDiscapacidad, setOptionsDiscapacidad] = useState(null)
   const [direccion, setDireccion] = useState('')
@@ -37,6 +36,7 @@ const Postulaciones = () => {
   const [datosVerOferta, setDatosVerOferta] = useState(null)
   const { rolUser } = useSesion()
   const [confirmPostulacion, setConfirmPostulacion] = useState(false)
+
   const accept = () => {
     setBlockedPanel(true)
   }
@@ -76,8 +76,7 @@ const Postulaciones = () => {
     setSegundo_Nombre('Raul')
     setApellido('Salazar')
     setSegundo_Apellido('Gonzalez')
-    setSexo({ name: 'Masculino' })
-    setOptionsSexo([{ name: 'Masculino' }, { name: 'Femenino' }])
+    setSexo({ id: '2', nombre: 'Masculino' })
     setDiscapacidad({ name: 'Paralitico' })
     setOptionsDiscapacidad([
       { name: 'No soy discapacitado' },
@@ -106,6 +105,7 @@ const Postulaciones = () => {
       { name: 'Macarao' },
       { name: 'La Pastora' }
     ])
+    setFechaNaci('19/11/2023')
   }, [])
 
   const accionBodyTemplate = (rowData) => {
@@ -144,7 +144,6 @@ const Postulaciones = () => {
       </div>
       <BlockUI
         blocked={blockedPanel}
-        onHide={() => setBlockedPanel(false)}
         template={
           <i
             className="pi pi-lock"
@@ -225,12 +224,12 @@ const Postulaciones = () => {
               <Dropdown
                 className="w-full"
                 id="sexo"
-                options={optionsSexo}
+                options={data?.obtenerSexos.response}
                 value={sexo}
                 onChange={(e) => {
                   setSexo(e.value)
                 }}
-                optionLabel="name"
+                optionLabel="nombre"
               />
               <label htmlFor="sexo">Sexo</label>
             </span>

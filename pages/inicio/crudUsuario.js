@@ -110,16 +110,14 @@ const DialogCrudUser = ({ active, setActive }) => {
       setDeleteUsuarioDialog(false)
     })
   }
-  const hideDeleteUsuarioDialog = () => {
-    setDeleteUsuarioDialog(false)
-  }
+
   const deleteUsuarioDialogFooter = (
     <Fragment>
       <Button
         label="No"
         icon="pi pi-times"
         className="p-button-text"
-        onClick={hideDeleteUsuarioDialog}
+        onClick={() => setDeleteUsuarioDialog(false)}
       />
       <Button
         label="Sí"
@@ -250,7 +248,7 @@ const DialogCrudUser = ({ active, setActive }) => {
               header="Confirmar"
               modal
               footer={deleteUsuarioDialogFooter}
-              onHide={hideDeleteUsuarioDialog}
+              onHide={() => setDeleteUsuarioDialog(false)}
             >
               <div className="confirmation-content">
                 <i

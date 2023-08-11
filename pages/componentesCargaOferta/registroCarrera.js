@@ -3,11 +3,15 @@ import { Column } from 'primereact/column'
 import { DataTable } from 'primereact/datatable'
 import { Dialog } from 'primereact/dialog'
 import { InputText } from 'primereact/inputtext'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 const RegistroCarrera = ({ cambioVista }) => {
   const [products, setProducts] = useState([])
   const [dialogRegTrayecto, setDialogRegTrayecto] = useState(false)
+
+  useEffect(() => {
+    setProducts([])
+  }, [])
 
   const HeaderTrayectos = () => {
     return (
@@ -120,7 +124,10 @@ const RegistroCarrera = ({ cambioVista }) => {
       </span>
       <div className="col-span-5">
         <HeaderTrayectos />
-        <DataTable value={products} emptyMessage="No se encuentran trayectos registrados.">
+        <DataTable
+          value={products}
+          emptyMessage="No se encuentran trayectos registrados."
+        >
           <Column field="code" header="Nombre de Trayecto" />
           <Column field="name" header="Nombre Semestre" />
           <Column />
