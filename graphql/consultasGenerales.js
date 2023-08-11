@@ -10,5 +10,16 @@ export default {
         }
       }
     }
+  `,
+  GET_NACIONALIDADES: gql`
+    query nacionalidades {
+      obtenerNacionalidades {
+        response {
+          id
+          codigo
+          nombre
+        }
+      }
+    }
   `
 }

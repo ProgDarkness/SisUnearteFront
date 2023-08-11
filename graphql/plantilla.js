@@ -1,17 +1,6 @@
 import { gql } from 'graphql-request'
 
 export default {
-  GET_PERSONAS: gql`
-    query GetPersonas {
-      personas: getPersonas {
-        id_persona
-        nb_persona
-        grupo
-        id_grupo
-        telefono
-      }
-    }
-  `,
   GET_USUARIOS: gql`
     query getUsuarios {
       getUsuarios {
@@ -27,19 +16,6 @@ export default {
       }
     }
   `,
-  GET_GRUPOS: gql`
-    query GetGrupos {
-      grupos: getGrupos {
-        id_grupo
-        grupo
-      }
-    }
-  `,
-  SAVE_PERSONA: gql`
-    mutation SavePersona($input: InputPersona!) {
-      savePersona(input: $input)
-    }
-  `,
   SAVE_USUARIO: gql`
     mutation saveUsuario($input: InputSaveUser!) {
       saveUsuario(input: $input) {
@@ -47,16 +23,6 @@ export default {
         type
         message
       }
-    }
-  `,
-  DELETE_PERSONA: gql`
-    mutation DeletePersona($id: ID!) {
-      deletePersona(id: $id)
-    }
-  `,
-  DELETE_PERSONAS: gql`
-    mutation DeletePersonas($ids: [ID]!) {
-      deletePersonas(ids: $ids)
     }
   `,
   GET_ROLES: gql`

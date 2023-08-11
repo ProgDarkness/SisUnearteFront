@@ -12,6 +12,7 @@ import {
   faSignature
 } from '@fortawesome/free-solid-svg-icons'
 import GQLPlantilla from 'graphql/plantilla'
+import GQLConsultasGenerales from 'graphql/consultasGenerales'
 import request from 'graphql-request'
 import { Dropdown } from 'primereact/dropdown'
 import { Toast } from 'primereact/toast'
@@ -33,9 +34,11 @@ export default function RegistrarUsuario() {
   const [submitting, setSubmitting] = useState(false)
   const [errorFrom, setErrorFrom] = useState(false)
 
-  const opcionesNacionalidad = [{ name: 'V' }, { name: 'E' }]
-
   const { data } = useSWR(token ? [GQLPlantilla.GET_ROLES, {}, token] : null)
+
+  const { data: nacionalidadOpcion } = useSWR(
+    [GQLConsultasGenerales.GET_NACIONALIDADES, {}] || null
+  )
 
   const saveUsuario = (variables) => {
     return request(
@@ -44,6 +47,12 @@ export default function RegistrarUsuario() {
       variables,
       { authorization: `Bearer ${token}` }
     )
+  }
+
+  const onEnter = (e) => {
+    if (e.keyCode === 13 || e.charCode === 13) {
+      document.querySelector('#Regis').click()
+    }
   }
 
   const registra = () => {
@@ -67,7 +76,7 @@ export default function RegistrarUsuario() {
           process.env.NEXT_PUBLIC_SECRET_KEY
         ).toString(),
         id_rol: rol,
-        nacionalidad
+        nacionalidad: parseInt(nacionalidad)
       }
       saveUsuario({ input: usuarioInput }).then(
         ({ saveUsuario: { status, message, type } }) => {
@@ -137,7 +146,7 @@ export default function RegistrarUsuario() {
             <div className="p-inputgroup">
               <span
                 className={`p-inputgroup-addon ${
-                  errorFrom && (nacionalidad?.length < 1 || nacionalidad === '')
+                  errorFrom && nacionalidad === null
                     ? 'border-red-600 bg-red-300'
                     : ''
                 }`}
@@ -147,14 +156,14 @@ export default function RegistrarUsuario() {
               <Dropdown
                 value={nacionalidad}
                 placeholder="NACIONALIDAD"
-                optionLabel="name"
-                optionValue="name"
-                options={opcionesNacionalidad}
+                optionLabel="codigo"
+                optionValue="id"
+                options={nacionalidadOpcion?.obtenerNacionalidades.response}
                 onChange={({ target: { value } }) => {
                   setNacionalidad(value)
                 }}
                 className={`${
-                  errorFrom && (nacionalidad?.length < 1 || nacionalidad === '')
+                  errorFrom && nacionalidad === null
                     ? 'border-red-600 bg-red-300'
                     : ''
                 }`}
@@ -286,6 +295,7 @@ export default function RegistrarUsuario() {
                     ? 'border-red-600 bg-red-300 '
                     : ''
                 }`}
+                onKeyDown={onEnter}
               />
             </div>
           </div>
@@ -318,7 +328,12 @@ export default function RegistrarUsuario() {
             </div>
           )}
           <Button label="Volver" onClick={() => router.back()} />
-          <Button label="Registrar" onClick={registra} disabled={submitting} />
+          <Button
+            label="Registrar"
+            id="Regis"
+            onClick={registra}
+            disabled={submitting}
+          />
         </div>
         {/* eslint-disable-next-line react/no-unknown-property */}
         <style jsx global>{`
