@@ -73,13 +73,13 @@ const RegistroCarrera = ({ cambioVista }) => {
           label="Volver"
           onClick={() => {
             const newVistas = {
-              [`cargarOferta`]: true
+              [`cargarMalla`]: true
             }
             cambioVista((prevState) => ({
               ...prevState,
               ...newVistas,
               ...Object.keys(prevState).reduce((acc, key) => {
-                if (key !== 'cargarOferta') acc[key] = false
+                if (key !== 'cargarMalla') acc[key] = false
                 return acc
               }, {})
             }))

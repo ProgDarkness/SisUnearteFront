@@ -7,7 +7,7 @@ import { ConfirmDialog } from 'primereact/confirmdialog'
 import { BlockUI } from 'primereact/blockui'
 import { DataTable } from 'primereact/datatable'
 import { Column } from 'primereact/column'
-import DialogVerOferta from 'pages/componentesCargaOferta/dialogVerOferta'
+import DialogVerMalla from 'pages/CargaMallaCurricularComps/dialogVerMalla'
 import { useSesion } from 'hooks/useSesion'
 
 const Postulaciones = ({ data }) => {
@@ -30,10 +30,10 @@ const Postulaciones = ({ data }) => {
   const [parroquia, setParroquia] = useState(null)
   const [optionsParroquia, setOptionsParroquia] = useState(null)
   const [confirmRegistrar, setConfirmRegistrar] = useState(false)
-  const [ofertas, setOfertas] = useState(null)
+  const [mallas, setMallas] = useState(null)
   const [blockedPanel, setBlockedPanel] = useState(false)
-  const [activeDialogVerOferta, setActiveDialogVerOferta] = useState(false)
-  const [datosVerOferta, setDatosVerOferta] = useState(null)
+  const [activeDialogVerMalla, setActiveDialogVerMalla] = useState(false)
+  const [datosVerMalla, setDatosVerMalla] = useState(null)
   const { rolUser } = useSesion()
   const [confirmPostulacion, setConfirmPostulacion] = useState(false)
 
@@ -53,7 +53,7 @@ const Postulaciones = ({ data }) => {
   }
 
   useEffect(() => {
-    setOfertas([
+    setMallas([
       {
         carrera: 'Artes Plasticas',
         status_carrera: 'Habilitada',
@@ -117,8 +117,8 @@ const Postulaciones = ({ data }) => {
           tooltip="Ver"
           tooltipOptions={{ position: 'top' }}
           onClick={() => {
-            setDatosVerOferta(rowData)
-            setActiveDialogVerOferta(true)
+            setDatosVerMalla(rowData)
+            setActiveDialogVerMalla(true)
           }}
         />
         {rolUser === 3 && (
@@ -356,17 +356,17 @@ const Postulaciones = ({ data }) => {
         </div>
       </BlockUI>
 
-      <DialogVerOferta
-        setActiveDialogVerOferta={setActiveDialogVerOferta}
-        activeDialogVerOferta={activeDialogVerOferta}
-        datosVerOferta={datosVerOferta}
-        setDatosVerOferta={setDatosVerOferta}
+      <DialogVerMalla
+        setActiveDialogVerMalla={setActiveDialogVerMalla}
+        activeDialogVerMalla={activeDialogVerMalla}
+        datosVerMalla={datosVerMalla}
+        setDatosVerMalla={setDatosVerMalla}
       />
       {blockedPanel && (
         <div className="mt-3">
           <div className="col-span-5">
             <DataTable
-              value={ofertas}
+              value={mallas}
               emptyMessage="No hay carreras registradas."
             >
               <Column field="carrera" header="Carrera" />

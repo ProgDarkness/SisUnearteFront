@@ -4,13 +4,13 @@ import { Dropdown } from 'primereact/dropdown'
 import { InputText } from 'primereact/inputtext'
 import { useState, useEffect } from 'react'
 
-const DialogEditarOferta = ({
-  datosEditarOferta,
-  setDatosEditarOferta,
-  dialogEditarOferta,
-  setDialogEditarOferta
+const DialogEditarMalla = ({
+  datosEditarMalla,
+  setDatosEditarMalla,
+  dialogEditarMalla,
+  setDialogEditarMalla
 }) => {
-  const [opcionStatusOferta, setOpcionStatusOferta] = useState(null)
+  const [opcionStatusMalla, setOpcionStatusMalla] = useState(null)
   const [opcionCarreras, setOpcionCarreras] = useState(null)
 
   useEffect(() => {
@@ -25,17 +25,17 @@ const DialogEditarOferta = ({
         code: 3
       }
     ])
-    setOpcionStatusOferta([{ name: 'Habilitada' }, { name: 'Desahabilitar' }])
+    setOpcionStatusMalla([{ name: 'Habilitada' }, { name: 'Desahabilitar' }])
   }, [])
 
   return (
     <Dialog
-      visible={dialogEditarOferta}
+      visible={dialogEditarMalla}
       onHide={() => {
-        setDatosEditarOferta(null)
-        setDialogEditarOferta(false)
+        setDatosEditarMalla(null)
+        setDialogEditarMalla(false)
       }}
-      header="Modificar Oferta"
+      header="Modificar Malla"
       resizable={false}
       draggable={false}
     >
@@ -47,10 +47,10 @@ const DialogEditarOferta = ({
             optionLabel="name"
             optionValue="name"
             id="cod_carrera_ed"
-            value={datosEditarOferta?.carrera}
+            value={datosEditarMalla?.carrera}
             onChange={(e) =>
-              setDatosEditarOferta({
-                ...datosEditarOferta,
+              setDatosEditarMalla({
+                ...datosEditarMalla,
                 carrera: e.value
               })
             }
@@ -60,33 +60,33 @@ const DialogEditarOferta = ({
         </span>
         <span className="p-float-label field">
           <Dropdown
-            options={opcionStatusOferta}
+            options={opcionStatusMalla}
             className="w-full"
             optionLabel="name"
             optionValue="name"
-            id="status_oferta"
-            value={datosEditarOferta?.status_carrera}
+            id="status_malla"
+            value={datosEditarMalla?.status_carrera}
             onChange={(e) =>
-              setDatosEditarOferta({
-                ...datosEditarOferta,
+              setDatosEditarMalla({
+                ...datosEditarMalla,
                 status_carrera: e.value
               })
             }
             autoComplete="off"
           />
-          <label htmlFor="status_oferta">Estatus</label>
+          <label htmlFor="status_malla">Estatus</label>
         </span>
         <span className="p-float-label field">
           <InputText
             className="w-full"
             id="cant_cupos"
-            value={datosEditarOferta?.cant_cupos}
+            value={datosEditarMalla?.cant_cupos}
             autoComplete="off"
             keyfilter="pint"
             maxLength={3}
             onChange={(e) =>
-              setDatosEditarOferta({
-                ...datosEditarOferta,
+              setDatosEditarMalla({
+                ...datosEditarMalla,
                 cant_cupos: e.target.value
               })
             }
@@ -97,7 +97,7 @@ const DialogEditarOferta = ({
           <Button
             label="Modificar"
             icon="pi pi-plus"
-            onClick={() => setDialogEditarOferta(false)}
+            onClick={() => setDialogEditarMalla(false)}
           />
         </div>
       </div>
@@ -105,4 +105,4 @@ const DialogEditarOferta = ({
   )
 }
 
-export default DialogEditarOferta
+export default DialogEditarMalla

@@ -7,7 +7,7 @@ import Image from 'next/image'
 import imageInicio from '../../public/images/inicio.png'
 import InscripcionElectiva from './inscripcionElectiva'
 import Postulaciones from './postulaciones'
-import CargaOfertaAcademica from './cargaOfertaAcademica'
+import CargaMallaCurricular from './cargarMallaCurricular'
 import request from 'graphql-request'
 import GQLConsultasGenerales from 'graphql/consultasGenerales'
 
@@ -19,7 +19,7 @@ export default function index({ data }) {
     inscripcionElectiva: false,
     inscripcionesRegulares: false,
     postulaciones: false,
-    cargaOfertaAcademica: false
+    cargaMallaCurricular: false
   }
   const [mostrarVistas, setMostrarVistas] = useState(templateContext)
 
@@ -59,7 +59,7 @@ export default function index({ data }) {
               )}
               {mostrarVistas?.inscripcionElectiva && <InscripcionElectiva />}
               {mostrarVistas?.postulaciones && <Postulaciones data={data} />}
-              {mostrarVistas?.cargaOfertaAcademica && <CargaOfertaAcademica />}
+              {mostrarVistas?.cargaMallaCurricular && <CargaMallaCurricular />}
             </Card>
             {/* eslint-disable-next-line react/no-unknown-property */}
             <style jsx global>{`

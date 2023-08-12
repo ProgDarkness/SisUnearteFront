@@ -6,13 +6,13 @@ import { InputText } from 'primereact/inputtext'
 import { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 
-const DialogVerOferta = ({
-  activeDialogVerOferta,
-  setActiveDialogVerOferta,
-  datosVerOferta,
-  setDatosVerOferta
+const DialogVerMalla = ({
+  activeDialogVerMalla,
+  setActiveDialogVerMalla,
+  datosVerMalla,
+  setDatosVerMalla
 }) => {
-  const [infoOferta, setInfoOferta] = useState(null)
+  const [infoMalla, setInfoMalla] = useState(null)
   const [infoHorario, setInfoHorario] = useState(null)
   const [animacionVerHorario, setAnimacionVerHorario] = useState(false)
 
@@ -35,7 +35,7 @@ const DialogVerOferta = ({
   }
 
   useEffect(() => {
-    setInfoOferta([
+    setInfoMalla([
       {
         trayecto: 'Trayecto 1',
         semestre: 'Semestre 1',
@@ -125,13 +125,13 @@ const DialogVerOferta = ({
 
   return (
     <Dialog
-      visible={activeDialogVerOferta}
+      visible={activeDialogVerMalla}
       onHide={() => {
-        setActiveDialogVerOferta(false)
-        setDatosVerOferta(null)
+        setActiveDialogVerMalla(false)
+        setDatosVerMalla(null)
       }}
       style={{ height: '90%' }}
-      header="Ver Oferta"
+      header="Ver Malla Curricular"
       resizable={false}
       draggable={false}
     >
@@ -141,7 +141,7 @@ const DialogVerOferta = ({
           <InputText
             className="w-full"
             id="carrera"
-            value={datosVerOferta?.carrera}
+            value={datosVerMalla?.carrera}
             disabled
           />
           <label htmlFor="carrera">Carrera</label>
@@ -150,7 +150,7 @@ const DialogVerOferta = ({
           <InputText
             className="w-full"
             id="status_carrera"
-            value={datosVerOferta?.status_carrera}
+            value={datosVerMalla?.status_carrera}
             disabled
           />
           <label htmlFor="status_carrera">Estatus de la Carrera</label>
@@ -159,7 +159,7 @@ const DialogVerOferta = ({
           <InputText
             className="w-full"
             id="cant_cupos"
-            value={datosVerOferta?.cant_cupos}
+            value={datosVerMalla?.cant_cupos}
             disabled
           />
           <label htmlFor="cant_cupos">Cant. Cupos</label>
@@ -240,7 +240,7 @@ const DialogVerOferta = ({
           >
             <div className="col-span-5 mt-3">
               <DataTable
-                value={infoOferta}
+                value={infoMalla}
                 emptyMessage="No se encuentran trayectos registrados."
                 rowGroupMode="rowspan"
                 groupRowsBy={['trayecto', 'semestre']}
@@ -271,4 +271,4 @@ const DialogVerOferta = ({
   )
 }
 
-export default DialogVerOferta
+export default DialogVerMalla

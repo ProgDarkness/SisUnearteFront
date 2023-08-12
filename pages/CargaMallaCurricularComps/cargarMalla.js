@@ -2,18 +2,18 @@ import { Button } from 'primereact/button'
 import { Column } from 'primereact/column'
 import { DataTable } from 'primereact/datatable'
 import { useEffect, useState } from 'react'
-import DialogEditarOferta from './dialogEditarOferta'
-import DialogVerOferta from './dialogVerOferta'
+import DialogEditarMalla from './dialogEditarMalla'
+import DialogVerMalla from './dialogVerMalla'
 
-const CargarOferta = ({ cambioVista }) => {
-  const [ofertas, setOfertas] = useState(null)
-  const [activeDialogVerOferta, setActiveDialogVerOferta] = useState(false)
-  const [dialogEditarOferta, setDialogEditarOferta] = useState(false)
-  const [datosEditarOferta, setDatosEditarOferta] = useState(null)
-  const [datosVerOferta, setDatosVerOferta] = useState(null)
+const CargarMalla = ({ cambioVista }) => {
+  const [mallas, setMallas] = useState(null)
+  const [activeDialogVerMalla, setActiveDialogVerMalla] = useState(false)
+  const [dialogEditarMalla, setDialogEditarMalla] = useState(false)
+  const [datosEditarMalla, setDatosEditarMalla] = useState(null)
+  const [datosVerMalla, setDatosVerMalla] = useState(null)
 
   useEffect(() => {
-    setOfertas([
+    setMallas([
       {
         carrera: 'Artes Plasticas',
         status_carrera: 'Habilitada',
@@ -37,8 +37,8 @@ const CargarOferta = ({ cambioVista }) => {
           tooltip="Ver"
           tooltipOptions={{ position: 'top' }}
           onClick={() => {
-            setDatosVerOferta(rowData)
-            setActiveDialogVerOferta(true)
+            setDatosVerMalla(rowData)
+            setActiveDialogVerMalla(true)
           }}
         />
         <Button
@@ -46,8 +46,8 @@ const CargarOferta = ({ cambioVista }) => {
           className="p-button-help mr-1"
           tooltip="Modificar"
           onClick={() => {
-            setDatosEditarOferta(rowData)
-            setDialogEditarOferta(true)
+            setDatosEditarMalla(rowData)
+            setDialogEditarMalla(true)
           }}
           tooltipOptions={{ position: 'top' }}
         />
@@ -82,7 +82,7 @@ const CargarOferta = ({ cambioVista }) => {
       <div className="col-span-5 flex justify-between">
         <div />
         <h1 className="text-3xl font-semibold text-white">
-          Carga de Oferta Academica
+          Carga de Malla Curricular
         </h1>
         <Button
           label="Registrar Carrera"
@@ -101,20 +101,20 @@ const CargarOferta = ({ cambioVista }) => {
           }}
         />
       </div>
-      <DialogVerOferta
-        setActiveDialogVerOferta={setActiveDialogVerOferta}
-        activeDialogVerOferta={activeDialogVerOferta}
-        datosVerOferta={datosVerOferta}
-        setDatosVerOferta={setDatosVerOferta}
+      <DialogVerMalla
+        setActiveDialogVerMalla={setActiveDialogVerMalla}
+        activeDialogVerMalla={activeDialogVerMalla}
+        datosVerMalla={datosVerMalla}
+        setDatosVerMalla={setDatosVerMalla}
       />
-      <DialogEditarOferta
-        datosEditarOferta={datosEditarOferta}
-        setDatosEditarOferta={setDatosEditarOferta}
-        dialogEditarOferta={dialogEditarOferta}
-        setDialogEditarOferta={setDialogEditarOferta}
+      <DialogEditarMalla
+        datosEditarMalla={datosEditarMalla}
+        setDatosEditarMalla={setDatosEditarMalla}
+        dialogEditarMalla={dialogEditarMalla}
+        setDialogEditarMalla={setDialogEditarMalla}
       />
       <div className="col-span-5">
-        <DataTable value={ofertas} emptyMessage="No hay carreras registradas.">
+        <DataTable value={mallas} emptyMessage="No hay carreras registradas.">
           <Column field="carrera" header="Carrera" />
           <Column body={bodyStatus} header="Estatus" />
           <Column field="cant_cupos" header="Cant. Cupos" />
@@ -125,4 +125,4 @@ const CargarOferta = ({ cambioVista }) => {
   )
 }
 
-export default CargarOferta
+export default CargarMalla
