@@ -16,14 +16,11 @@ const CargarMalla = ({ cambioVista }) => {
     setMallas([
       {
         carrera: 'Artes Plasticas',
-        status_carrera: 'Habilitada',
-        cant_cupos: 100
+        status_carrera: 'Habilitada'
       },
-      { carrera: 'Museologia', status_carrera: 'Habilitada', cant_cupos: 100 },
       {
         carrera: 'Dibujo Artistico',
-        status_carrera: 'Deshabilitada',
-        cant_cupos: 0
+        status_carrera: 'Deshabilitada'
       }
     ])
   }, [])
@@ -117,7 +114,6 @@ const CargarMalla = ({ cambioVista }) => {
         <DataTable value={mallas} emptyMessage="No hay carreras registradas.">
           <Column field="carrera" header="Carrera" />
           <Column body={bodyStatus} header="Estatus" />
-          <Column field="cant_cupos" header="Cant. Cupos" />
           <Column body={accionBodyTemplate} />
         </DataTable>
       </div>

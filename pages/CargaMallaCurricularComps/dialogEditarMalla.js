@@ -1,7 +1,6 @@
 import { Button } from 'primereact/button'
 import { Dialog } from 'primereact/dialog'
 import { Dropdown } from 'primereact/dropdown'
-import { InputText } from 'primereact/inputtext'
 import { useState, useEffect } from 'react'
 
 const DialogEditarMalla = ({
@@ -39,7 +38,8 @@ const DialogEditarMalla = ({
       resizable={false}
       draggable={false}
     >
-      <div className="grid grid-cols-3 gap-4 m-2">
+      <div className="grid grid-cols-4 gap-2 m-2">
+        <div />
         <span className="p-float-label field">
           <Dropdown
             options={opcionCarreras}
@@ -76,24 +76,7 @@ const DialogEditarMalla = ({
           />
           <label htmlFor="status_malla">Estatus</label>
         </span>
-        <span className="p-float-label field">
-          <InputText
-            className="w-full"
-            id="cant_cupos"
-            value={datosEditarMalla?.cant_cupos}
-            autoComplete="off"
-            keyfilter="pint"
-            maxLength={3}
-            onChange={(e) =>
-              setDatosEditarMalla({
-                ...datosEditarMalla,
-                cant_cupos: e.target.value
-              })
-            }
-          />
-          <label htmlFor="cant_cupos">Cant. Cupos</label>
-        </span>
-        <div className="col-span-3 flex justify-center">
+        <div className="col-span-4 flex justify-center">
           <Button
             label="Modificar"
             icon="pi pi-plus"

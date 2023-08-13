@@ -1,10 +1,10 @@
-import { Button } from 'primereact/button'
+/* import { Button } from 'primereact/button' */
 import { Column } from 'primereact/column'
 import { DataTable } from 'primereact/datatable'
 import { Dialog } from 'primereact/dialog'
 import { InputText } from 'primereact/inputtext'
 import { useEffect, useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion /* , AnimatePresence */ } from 'framer-motion'
 
 const DialogVerMalla = ({
   activeDialogVerMalla,
@@ -13,8 +13,8 @@ const DialogVerMalla = ({
   setDatosVerMalla
 }) => {
   const [infoMalla, setInfoMalla] = useState(null)
-  const [infoHorario, setInfoHorario] = useState(null)
-  const [animacionVerHorario, setAnimacionVerHorario] = useState(false)
+  /* const [infoHorario, setInfoHorario] = useState(null)
+  const [animacionVerHorario, setAnimacionVerHorario] = useState(false) */
 
   const animation = {
     initial: {
@@ -38,44 +38,44 @@ const DialogVerMalla = ({
     setInfoMalla([
       {
         trayecto: 'Trayecto 1',
-        semestre: 'Semestre 1',
+        lapso: 'Lapso 1',
         materia: 'Dibujo',
         profesor: 'Juan Manuel'
       },
       {
         trayecto: 'Trayecto 1',
-        semestre: 'Semestre 1',
+        lapso: 'Lapso 1',
         materia: 'Fotografia',
         profesor: 'Juan Manuel'
       },
       {
         trayecto: 'Trayecto 1',
-        semestre: 'Semestre 2',
+        lapso: 'Lapso 2',
         materia: 'Arte',
         profesor: 'Juan Manuel'
       },
       {
         trayecto: 'Trayecto 1',
-        semestre: 'Semestre 2',
+        lapso: 'Lapso 2',
         materia: 'Fotografia 2',
         profesor: 'Juan Manuel'
       },
       /* ------------------------------------ */
       {
         trayecto: 'Trayecto 2',
-        semestre: 'Semestre 1',
+        lapso: 'Lapso 1',
         materia: 'Dibujo',
         profesor: 'Juan Manuel'
       },
       {
         trayecto: 'Trayecto 2',
-        semestre: 'Semestre 2',
+        lapso: 'Lapso 2',
         materia: 'Arte',
         profesor: 'Juan Manuel'
       }
       /* ------------------------------------- */
     ])
-    setInfoHorario([
+    /* setInfoHorario([
       {
         horas: '8:00-8:45',
         lunes: '',
@@ -96,10 +96,10 @@ const DialogVerMalla = ({
         sabado: '',
         domingo: ''
       }
-    ])
+    ]) */
   }, [])
 
-  const actionBodyTemplate = () => {
+  /* const actionBodyTemplate = () => {
     return (
       <div className="flex justify-center">
         <Button
@@ -109,9 +109,9 @@ const DialogVerMalla = ({
         />
       </div>
     )
-  }
+  } */
 
-  const bodyDiaSemana = (rowData, dia) => {
+  /* const bodyDiaSemana = (rowData, dia) => {
     const [materia, nombre, aula] = rowData[`${dia}`].split(' / ')
 
     return (
@@ -121,7 +121,7 @@ const DialogVerMalla = ({
         <p>{aula}</p>
       </div>
     )
-  }
+  } */
 
   return (
     <Dialog
@@ -135,7 +135,7 @@ const DialogVerMalla = ({
       resizable={false}
       draggable={false}
     >
-      <div className="grid grid-cols-5 gap-4 m-2">
+      <div className="grid grid-cols-4 gap-4 m-2 place-content-center">
         <div />
         <span className="p-float-label field">
           <InputText
@@ -155,7 +155,7 @@ const DialogVerMalla = ({
           />
           <label htmlFor="status_carrera">Estatus de la Carrera</label>
         </span>
-        <span className="p-float-label field">
+        {/* <span className="p-float-label field">
           <InputText
             className="w-full"
             id="cant_cupos"
@@ -163,8 +163,8 @@ const DialogVerMalla = ({
             disabled
           />
           <label htmlFor="cant_cupos">Cant. Cupos</label>
-        </span>
-        <div className="flex justify-center align-middle">
+        </span> */}
+        {/* <div className="flex justify-center align-middle">
           {animacionVerHorario && (
             <Button
               label="Volver"
@@ -173,9 +173,9 @@ const DialogVerMalla = ({
               iconPos="left"
             />
           )}
-        </div>
+        </div> */}
       </div>
-      <AnimatePresence initial={animacionVerHorario}>
+      {/* <AnimatePresence initial={animacionVerHorario}>
         {animacionVerHorario && (
           <motion.div
             initial="initial"
@@ -183,7 +183,7 @@ const DialogVerMalla = ({
             exit="exit"
             variants={animation}
           >
-            <div className="col-span-5 mt-3">
+            <div className="col-span-4 mt-3">
               <DataTable
                 value={infoHorario}
                 emptyMessage="No existe Horario Registrado."
@@ -229,36 +229,36 @@ const DialogVerMalla = ({
             </div>
           </motion.div>
         )}
-      </AnimatePresence>
-      <AnimatePresence initial={!animacionVerHorario}>
-        {!animacionVerHorario && (
-          <motion.div
-            initial="initial"
-            animate="animate"
-            exit="exit"
-            variants={animation}
+      </AnimatePresence> */}
+      {/* <AnimatePresence initial={!animacionVerHorario}> */}
+      {/* {!animacionVerHorario && ( */}
+      <motion.div
+        initial="initial"
+        animate="animate"
+        exit="exit"
+        variants={animation}
+      >
+        <div className="col-span-4 mt-3">
+          <DataTable
+            value={infoMalla}
+            emptyMessage="No se encuentran trayectos registrados."
+            rowGroupMode="rowspan"
+            groupRowsBy={['trayecto', 'lapso']}
           >
-            <div className="col-span-5 mt-3">
-              <DataTable
-                value={infoMalla}
-                emptyMessage="No se encuentran trayectos registrados."
-                rowGroupMode="rowspan"
-                groupRowsBy={['trayecto', 'semestre']}
-              >
-                <Column field="trayecto" header="Trayectos" />
-                <Column field="semestre" header="Semestres" />
-                <Column field="materia" header="Materias" />
-                <Column field="profesor" header="Profesores" />
-                <Column
+            <Column field="trayecto" header="Trayectos" />
+            <Column field="lapso" header="Lapsos" />
+            <Column field="materia" header="Materias" />
+            {/* <Column field="profesor" header="Profesores" /> */}
+            {/* <Column
                   field="semestre"
                   body={actionBodyTemplate}
                   style={{ width: '8.16rem' }}
-                />
-              </DataTable>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+                /> */}
+          </DataTable>
+        </div>
+      </motion.div>
+      {/* )} */}
+      {/* </AnimatePresence> */}
 
       {/* eslint-disable-next-line react/no-unknown-property */}
       <style jsx global>{`
