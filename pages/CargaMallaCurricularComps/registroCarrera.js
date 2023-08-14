@@ -6,6 +6,7 @@ import { InputText } from 'primereact/inputtext'
 import React, { useEffect, useState } from 'react'
 import DialogVerCarrera from './dialogVerCarrera'
 import DialogEditarCarrera from './dialogEditarCarrera'
+import { ConfirmDialog } from 'primereact/confirmdialog'
 
 const RegistroCarrera = ({ cambioVista }) => {
   const [carreras, setCarreras] = useState([])
@@ -17,6 +18,8 @@ const RegistroCarrera = ({ cambioVista }) => {
   const [dialogEditarMateria, setDialogEditarMateria] = useState(false)
   const [datosEditarMateria, setDatosEditarMateria] = useState(null)
   const [dialogRegMateria, setDialogRegMateria] = useState(false)
+  const [dialogConfirmElminarCarrera, setDialogConfirmElminarCarrera] =
+    useState(false)
 
   useEffect(() => {
     setCarreras([
@@ -35,6 +38,14 @@ const RegistroCarrera = ({ cambioVista }) => {
       }
     ])
   }, [])
+
+  const accept = () => {
+    console.log('SI')
+  }
+
+  const reject = () => {
+    console.log('NO')
+  }
 
   const HeaderTrayectos = () => {
     return (
@@ -77,6 +88,7 @@ const RegistroCarrera = ({ cambioVista }) => {
           className="p-button-danger"
           tooltip="Eliminar"
           tooltipOptions={{ position: 'top' }}
+          onClick={() => setDialogConfirmElminarCarrera(true)}
         />
       </div>
     )
@@ -222,6 +234,17 @@ const RegistroCarrera = ({ cambioVista }) => {
     <div className="grid grid-cols-5 gap-4 m-2 -mt-2">
       <DialogRegMateria />
       <DialogEditarMateria />
+      <ConfirmDialog
+        visible={dialogConfirmElminarCarrera}
+        onHide={() => setDialogConfirmElminarCarrera(false)}
+        message="¿Esta seguro que desea eliminar la carrera?"
+        header="Confirmacion"
+        icon="pi pi-exclamation-triangle"
+        accept={accept}
+        reject={reject}
+        acceptLabel="SI"
+        rejectLabel="NO"
+      />
       <DialogVerCarrera
         activeDialogVerCarrera={dialogVerCarrera}
         setActiveDialogVerCarrera={setDialogVerCarrera}

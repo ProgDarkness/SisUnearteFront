@@ -93,6 +93,7 @@ const RegistroPrevio = ({ data }) => {
       <div className="w-full text-center">
         <h1 className="text-3xl font-semibold text-white">Registro Previo</h1>
       </div>
+
       <BlockUI
         blocked={blockedPanel}
         template={
@@ -101,214 +102,213 @@ const RegistroPrevio = ({ data }) => {
             style={{ fontSize: '3rem', color: '#ffffff40' }}
           />
         }
-        className=" rounded-lg"
+        className="rounded-lg"
       >
-        <div className="p-3">
-          <div className="grid grid-cols-5 gap-4">
-            <span className="p-float-label field">
-              <Dropdown
-                className="w-full"
-                id="nacionalidad"
-                options={optionsNacionalidad}
-                value={nacionalidad}
-                onChange={(e) => {
-                  setNacionalidad(e.value)
-                }}
-                optionLabel="name"
-              />
-              <label htmlFor="nacionalidad">Nacionalidad</label>
-            </span>
-
-            <span className="p-float-label field">
-              <InputText
-                keyfilter={'num'}
-                maxLength={9}
-                className="w-full"
-                id="cedula"
-                value={cedula}
-                onChange={(e) => setCedula(e.target.value)}
-                autoComplete="off"
-              />
-              <label htmlFor="cedula">Cédula</label>
-            </span>
-            <span className="p-float-label field">
-              <InputText
-                className="w-full"
-                id="nombre"
-                value={nombre}
-                onChange={(e) => setNombre(e.target.value)}
-                autoComplete="off"
-              />
-              <label htmlFor="nombre">Nombre</label>
-            </span>
-            <span className="p-float-label field">
-              <InputText
-                className="w-full"
-                id="segundo_Nombre"
-                value={segundo_Nombre}
-                onChange={(e) => setSegundo_Nombre(e.target.value)}
-                autoComplete="off"
-              />
-              <label htmlFor="segundo_Nombre">Segundo Nombre</label>
-            </span>
-            <span className="p-float-label field">
-              <InputText
-                className="w-full"
-                id="apellido"
-                value={apellido}
-                onChange={(e) => setApellido(e.target.value)}
-                autoComplete="off"
-              />
-              <label htmlFor="apellido">Apellido</label>
-            </span>
-            <span className="p-float-label field">
-              <InputText
-                className="w-full"
-                id="segundo_Apellido"
-                value={segundo_Apellido}
-                onChange={(e) => setSegundo_Apellido(e.target.value)}
-                autoComplete="off"
-              />
-              <label htmlFor="segundo_Apellido">Segundo Apellido</label>
-            </span>
-
-            <span className="p-float-label field">
-              <InputMask
-                mask="99/99/9999"
-                className="w-full"
-                id="fechanaci"
-                value={fechanaci}
-                onChange={(e) => {
-                  setFechaNaci(e.value)
-                }}
-                autoComplete="off"
-              />
-              <label htmlFor="fechanaci">Fecha de nacimiento</label>
-            </span>
-            <span className="p-float-label field">
-              <Dropdown
-                className="w-full"
-                id="discapacidad"
-                options={optionsDiscapacidad}
-                value={discapacidad}
-                onChange={(e) => setDiscapacidad(e.target.value)}
-                optionLabel="name"
-              />
-              <label htmlFor="discapacidad">Discapacidad</label>
-            </span>
-            
-            <Divider className="col-span-5" />
-            <span className="p-float-label field">
-              <Dropdown
-                className="w-full"
-                id="sexo"
-                options={data?.obtenerSexos.response}
-                value={sexo}
-                onChange={(e) => {
-                  setSexo(e.value)
-                }}
-                optionLabel="nombre"
-              />
-              <label htmlFor="sexo">Sexo</label>
-            </span>
-            <span className="p-float-label field">
-              <InputText
-                className="w-full"
-                id="direccion"
-                value={direccion}
-                onChange={(e) => setDireccion(e.target.value)}
-                autoComplete="off"
-              />
-              <label htmlFor="direccion">Dirección</label>
-            </span>
-            <span className="p-float-label field">
-              <Dropdown
-                className="w-full"
-                id="estado"
-                options={optionsEstado}
-                value={estado}
-                onChange={(e) => setEstado(e.target.value)}
-                optionLabel="name"
-              />
-              <label htmlFor="estado">Estado</label>
-            </span>
-            <span className="p-float-label field">
-              <Dropdown
-                className="w-full"
-                id="municipio"
-                options={optionsMunicipio}
-                value={municipio}
-                onChange={(e) => setMunicipio(e.target.value)}
-                optionLabel="name"
-              />
-              <label htmlFor="municipio">Municipio</label>
-            </span>
-            <span className="p-float-label field">
-              <Dropdown
-                className="w-full"
-                id="parroquia"
-                options={optionsParroquia}
-                value={parroquia}
-                onChange={(e) => setParroquia(e.target.value)}
-                optionLabel="name"
-              />
-              <label htmlFor="parroquia">Parroquia</label>
-            </span>
-
-            <ConfirmDialog
-              draggable={false}
-              resizable={false}
-              className="bg-[#805e5e]"
-              visible={confirmRegistrar}
-              acceptLabel="Si"
-              rejectLabel="No"
-              onHide={() => setConfirmRegistrar(false)}
-              message="Estas seguro que deseas confirmar la informacion ingresada?"
-              header="Confirmar"
-              icon="pi pi-exclamation-triangle"
-              accept={accept}
-              reject={reject}
+        <div className="grid grid-cols-5 gap-4 mt-4 p-4">
+          <span className="p-float-label field">
+            <Dropdown
+              className="w-full"
+              id="nacionalidad"
+              options={optionsNacionalidad}
+              value={nacionalidad}
+              onChange={(e) => {
+                setNacionalidad(e.value)
+              }}
+              optionLabel="name"
             />
+            <label htmlFor="nacionalidad">Nacionalidad</label>
+          </span>
 
-            <ConfirmDialog
-              draggable={false}
-              resizable={false}
-              className="bg-[#805e5e]"
-              visible={confirmPostulacion}
-              acceptLabel="Si"
-              rejectLabel="No"
-              onHide={() => setConfirmPostulacion(false)}
-              message="Estas seguro que deseas confirmar la postulación?"
-              header="Confirmar"
-              icon="pi pi-exclamation-triangle"
-              accept={acceptPostu}
-              reject={rechazarPostu}
+          <span className="p-float-label field">
+            <InputText
+              keyfilter={'num'}
+              maxLength={9}
+              className="w-full"
+              id="cedula"
+              value={cedula}
+              onChange={(e) => setCedula(e.target.value)}
+              autoComplete="off"
             />
+            <label htmlFor="cedula">Cédula</label>
+          </span>
+          <span className="p-float-label field">
+            <InputText
+              className="w-full"
+              id="nombre"
+              value={nombre}
+              onChange={(e) => setNombre(e.target.value)}
+              autoComplete="off"
+            />
+            <label htmlFor="nombre">Nombre</label>
+          </span>
+          <span className="p-float-label field">
+            <InputText
+              className="w-full"
+              id="segundo_Nombre"
+              value={segundo_Nombre}
+              onChange={(e) => setSegundo_Nombre(e.target.value)}
+              autoComplete="off"
+            />
+            <label htmlFor="segundo_Nombre">Segundo Nombre</label>
+          </span>
+          <span className="p-float-label field">
+            <InputText
+              className="w-full"
+              id="apellido"
+              value={apellido}
+              onChange={(e) => setApellido(e.target.value)}
+              autoComplete="off"
+            />
+            <label htmlFor="apellido">Apellido</label>
+          </span>
+          <span className="p-float-label field">
+            <InputText
+              className="w-full"
+              id="segundo_Apellido"
+              value={segundo_Apellido}
+              onChange={(e) => setSegundo_Apellido(e.target.value)}
+              autoComplete="off"
+            />
+            <label htmlFor="segundo_Apellido">Segundo Apellido</label>
+          </span>
 
-            <Button
-              onClick={() => setConfirmRegistrar(true)}
-              icon="pi pi-check"
-              label="Registrarse" /* onClick={registra} */ /* disabled={submitting} */
-              disabled={
-                !nacionalidad ||
-                !cedula ||
-                !nombre ||
-                !segundo_Nombre ||
-                !apellido ||
-                !segundo_Apellido ||
-                !sexo ||
-                fechanaci.includes('_') ||
-                !fechanaci ||
-                !discapacidad ||
-                !direccion ||
-                !estado ||
-                !municipio ||
-                !parroquia
-              }
+          <span className="p-float-label field">
+            <InputMask
+              mask="99/99/9999"
+              className="w-full"
+              id="fechanaci"
+              value={fechanaci}
+              onChange={(e) => {
+                setFechaNaci(e.value)
+              }}
+              autoComplete="off"
             />
-          </div>
+            <label htmlFor="fechanaci">Fecha de nacimiento</label>
+          </span>
+          <span className="p-float-label field">
+            <Dropdown
+              className="w-full"
+              id="discapacidad"
+              options={optionsDiscapacidad}
+              value={discapacidad}
+              onChange={(e) => setDiscapacidad(e.target.value)}
+              optionLabel="name"
+            />
+            <label htmlFor="discapacidad">Discapacidad</label>
+          </span>
         </div>
       </BlockUI>
+      <div className="grid grid-cols-5 gap-4">
+        <Divider className="col-span-5" />
+        <span className="p-float-label field">
+          <Dropdown
+            className="w-full"
+            id="sexo"
+            options={data?.obtenerSexos.response}
+            value={sexo}
+            onChange={(e) => {
+              setSexo(e.value)
+            }}
+            optionLabel="nombre"
+          />
+          <label htmlFor="sexo">Sexo</label>
+        </span>
+        <span className="p-float-label field">
+          <InputText
+            className="w-full"
+            id="direccion"
+            value={direccion}
+            onChange={(e) => setDireccion(e.target.value)}
+            autoComplete="off"
+          />
+          <label htmlFor="direccion">Dirección</label>
+        </span>
+        <span className="p-float-label field">
+          <Dropdown
+            className="w-full"
+            id="estado"
+            options={optionsEstado}
+            value={estado}
+            onChange={(e) => setEstado(e.target.value)}
+            optionLabel="name"
+          />
+          <label htmlFor="estado">Estado</label>
+        </span>
+        <span className="p-float-label field">
+          <Dropdown
+            className="w-full"
+            id="municipio"
+            options={optionsMunicipio}
+            value={municipio}
+            onChange={(e) => setMunicipio(e.target.value)}
+            optionLabel="name"
+          />
+          <label htmlFor="municipio">Municipio</label>
+        </span>
+        <span className="p-float-label field">
+          <Dropdown
+            className="w-full"
+            id="parroquia"
+            options={optionsParroquia}
+            value={parroquia}
+            onChange={(e) => setParroquia(e.target.value)}
+            optionLabel="name"
+          />
+          <label htmlFor="parroquia">Parroquia</label>
+        </span>
+
+        <ConfirmDialog
+          draggable={false}
+          resizable={false}
+          className="bg-[#805e5e]"
+          visible={confirmRegistrar}
+          acceptLabel="Si"
+          rejectLabel="No"
+          onHide={() => setConfirmRegistrar(false)}
+          message="Estas seguro que deseas confirmar la informacion ingresada?"
+          header="Confirmar"
+          icon="pi pi-exclamation-triangle"
+          accept={accept}
+          reject={reject}
+        />
+
+        <ConfirmDialog
+          draggable={false}
+          resizable={false}
+          className="bg-[#805e5e]"
+          visible={confirmPostulacion}
+          acceptLabel="Si"
+          rejectLabel="No"
+          onHide={() => setConfirmPostulacion(false)}
+          message="Estas seguro que deseas confirmar la postulación?"
+          header="Confirmar"
+          icon="pi pi-exclamation-triangle"
+          accept={acceptPostu}
+          reject={rechazarPostu}
+        />
+
+        <Button
+          onClick={() => setConfirmRegistrar(true)}
+          icon="pi pi-check"
+          label="Registrarse" /* onClick={registra} */ /* disabled={submitting} */
+          disabled={
+            !nacionalidad ||
+            !cedula ||
+            !nombre ||
+            !segundo_Nombre ||
+            !apellido ||
+            !segundo_Apellido ||
+            !sexo ||
+            fechanaci.includes('_') ||
+            !fechanaci ||
+            !discapacidad ||
+            !direccion ||
+            !estado ||
+            !municipio ||
+            !parroquia
+          }
+        />
+      </div>
 
       <DialogVerMalla
         setActiveDialogVerMalla={setActiveDialogVerMalla}
