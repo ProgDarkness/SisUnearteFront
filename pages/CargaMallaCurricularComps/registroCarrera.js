@@ -20,6 +20,8 @@ const RegistroCarrera = ({ cambioVista }) => {
   const [dialogRegMateria, setDialogRegMateria] = useState(false)
   const [dialogConfirmElminarCarrera, setDialogConfirmElminarCarrera] =
     useState(false)
+  const [dialogConfirmElminarMateria, setDialogConfirmElminarMateria] =
+    useState(false)
 
   useEffect(() => {
     setCarreras([
@@ -34,17 +36,29 @@ const RegistroCarrera = ({ cambioVista }) => {
       {
         carrera_materia: 'Arte',
         cod_materia: 'ACT20-1',
-        nb_materia: 'Actuacion'
+        nb_materia: 'Actuacion',
+        tec_materia: 'Taller',
+        cant_uni_cre: 12
       }
     ])
   }, [])
 
-  const accept = () => {
+  const acceptElminarCarrera = () => {
     console.log('SI')
   }
 
-  const reject = () => {
+  const rejectElminarCarrera = () => {
     console.log('NO')
+  }
+
+  const acceptEliminarMateria = () => {
+    console.log('SI')
+    setDialogRegMateria(true)
+  }
+
+  const rejectEliminarMateria = () => {
+    console.log('NO')
+    setDialogRegMateria(true)
   }
 
   const HeaderTrayectos = () => {
@@ -113,6 +127,10 @@ const RegistroCarrera = ({ cambioVista }) => {
           className="p-button-danger"
           tooltip="Eliminar"
           tooltipOptions={{ position: 'top' }}
+          onClick={() => {
+            setDialogRegMateria(false)
+            setDialogConfirmElminarMateria(true)
+          }}
         />
       </div>
     )
@@ -130,7 +148,7 @@ const RegistroCarrera = ({ cambioVista }) => {
         resizable={false}
         draggable={false}
       >
-        <div className="grid grid-cols-4 gap-4 m-2">
+        <div className="grid grid-cols-5 gap-4 m-2">
           <span className="p-float-label field">
             <InputText
               className="w-full"
@@ -138,7 +156,7 @@ const RegistroCarrera = ({ cambioVista }) => {
               value={datosEditarMateria?.carrera_materia}
               autoComplete="off"
             />
-            <label htmlFor="new_carrera_materia">Carrera de la Materia</label>
+            <label htmlFor="new_carrera_materia">Carrera</label>
           </span>
           <span className="p-float-label field">
             <InputText
@@ -147,7 +165,7 @@ const RegistroCarrera = ({ cambioVista }) => {
               value={datosEditarMateria?.cod_materia}
               autoComplete="off"
             />
-            <label htmlFor="new_cod_carrera">Codigo de la Materia</label>
+            <label htmlFor="new_cod_carrera">Codigo</label>
           </span>
           <span className="p-float-label field">
             <InputText
@@ -156,13 +174,34 @@ const RegistroCarrera = ({ cambioVista }) => {
               value={datosEditarMateria?.nb_materia}
               autoComplete="off"
             />
-            <label htmlFor="new_nb_carrera">Nombre de la Materia</label>
+            <label htmlFor="new_nb_carrera">Materia</label>
           </span>
-          <div className="my-auto">
+          <span className="p-float-label field">
+            <InputText
+              className="w-full"
+              id="new_tec_materia"
+              value={datosEditarMateria?.tec_materia}
+              autoComplete="off"
+            />
+            <label htmlFor="new_tec_materia">Tecnica</label>
+          </span>
+          <span className="p-float-label field">
+            <InputText
+              className="w-full"
+              id="new_uni_cre_materia"
+              value={datosEditarMateria?.cant_uni_cre}
+              autoComplete="off"
+            />
+            <label htmlFor="new_uni_cre_materia">Unida de Credito</label>
+          </span>
+          <div className="col-span-5 flex justify-center">
             <Button
               label="Modificar"
               icon="pi pi-plus"
-              onClick={() => setDialogEditarMateria(false)}
+              onClick={() => {
+                setDialogEditarMateria(false)
+                setDialogRegMateria(true)
+              }}
             />
           </div>
         </div>
@@ -179,7 +218,7 @@ const RegistroCarrera = ({ cambioVista }) => {
         resizable={false}
         draggable={false}
       >
-        <div className="grid grid-cols-4 gap-4 m-2">
+        <div className="grid grid-cols-5 gap-4 m-2">
           <span className="p-float-label field">
             <InputText
               className="w-full"
@@ -207,7 +246,25 @@ const RegistroCarrera = ({ cambioVista }) => {
             />
             <label htmlFor="new_nb_carrera">Nombre de la Materia</label>
           </span>
-          <div className="my-auto">
+          <span className="p-float-label field">
+            <InputText
+              className="w-full"
+              id="new_tec_carrera"
+              /* value={datosEstudiante?.cedula} */
+              autoComplete="off"
+            />
+            <label htmlFor="new_tec_carrera">Tecnica de la Materia</label>
+          </span>
+          <span className="p-float-label field">
+            <InputText
+              className="w-full"
+              id="new_uni_cre_carrera"
+              /* value={datosEstudiante?.cedula} */
+              autoComplete="off"
+            />
+            <label htmlFor="new_uni_cre_carrera">Unidades de Credito</label>
+          </span>
+          <div className="col-span-5 flex justify-center">
             <Button
               label="Registrar"
               icon="pi pi-plus"
@@ -215,14 +272,16 @@ const RegistroCarrera = ({ cambioVista }) => {
             />
           </div>
         </div>
-        <div className="col-span-4">
+        <div className="col-span-5">
           <DataTable
             value={materias}
             emptyMessage="No se encuentran materias registradas."
           >
-            <Column field="carrera_materia" header="Carrera de la Materia" />
-            <Column field="cod_materia" header="Codigo de la Materia" />
-            <Column field="nb_materia" header="Nombre de la Materia" />
+            <Column field="carrera_materia" header="Carrera" />
+            <Column field="cod_materia" header="Codigo" />
+            <Column field="nb_materia" header="Materia" />
+            <Column field="tec_materia" header="Tecnica" />
+            <Column field="cant_uni_cre" header="Unidades de Credito" />
             <Column body={accionBodyTemplateMaterias} />
           </DataTable>
         </div>
@@ -240,8 +299,19 @@ const RegistroCarrera = ({ cambioVista }) => {
         message="¿Esta seguro que desea eliminar la carrera?"
         header="Confirmacion"
         icon="pi pi-exclamation-triangle"
-        accept={accept}
-        reject={reject}
+        accept={acceptElminarCarrera}
+        reject={rejectElminarCarrera}
+        acceptLabel="SI"
+        rejectLabel="NO"
+      />
+      <ConfirmDialog
+        visible={dialogConfirmElminarMateria}
+        onHide={() => setDialogConfirmElminarMateria(false)}
+        message="¿Esta seguro que desea eliminar la materia?"
+        header="Confirmacion"
+        icon="pi pi-exclamation-triangle"
+        accept={acceptEliminarMateria}
+        reject={rejectEliminarMateria}
         acceptLabel="SI"
         rejectLabel="NO"
       />

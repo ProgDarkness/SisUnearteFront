@@ -4,6 +4,7 @@ import { DataTable } from 'primereact/datatable'
 import { useEffect, useState } from 'react'
 import DialogEditarMalla from './dialogEditarMalla'
 import DialogVerMalla from './dialogVerMalla'
+import { ConfirmDialog } from 'primereact/confirmdialog'
 
 const CargarMalla = ({ cambioVista }) => {
   const [mallas, setMallas] = useState(null)
@@ -11,6 +12,8 @@ const CargarMalla = ({ cambioVista }) => {
   const [dialogEditarMalla, setDialogEditarMalla] = useState(false)
   const [datosEditarMalla, setDatosEditarMalla] = useState(null)
   const [datosVerMalla, setDatosVerMalla] = useState(null)
+  const [dialogConfirmElminarMalla, setDialogConfirmElminarMalla] =
+    useState(false)
 
   useEffect(() => {
     setMallas([
@@ -24,6 +27,14 @@ const CargarMalla = ({ cambioVista }) => {
       }
     ])
   }, [])
+
+  const acceptElminarMalla = () => {
+    console.log('SI')
+  }
+
+  const rejectElminarMalla = () => {
+    console.log('NO')
+  }
 
   const accionBodyTemplate = (rowData) => {
     return (
@@ -51,7 +62,9 @@ const CargarMalla = ({ cambioVista }) => {
         <Button
           icon="pi pi-times"
           className="p-button-danger"
+          tooltip="Eliminar"
           tooltipOptions={{ position: 'top' }}
+          onClick={() => setDialogConfirmElminarMalla(true)}
         />
       </div>
     )
@@ -98,6 +111,17 @@ const CargarMalla = ({ cambioVista }) => {
           }}
         />
       </div>
+      <ConfirmDialog
+        visible={dialogConfirmElminarMalla}
+        onHide={() => setDialogConfirmElminarMalla(false)}
+        message="¿Esta seguro que desea eliminar la malla curricular?"
+        header="Confirmacion"
+        icon="pi pi-exclamation-triangle"
+        accept={acceptElminarMalla}
+        reject={rejectElminarMalla}
+        acceptLabel="SI"
+        rejectLabel="NO"
+      />
       <DialogVerMalla
         setActiveDialogVerMalla={setActiveDialogVerMalla}
         activeDialogVerMalla={activeDialogVerMalla}

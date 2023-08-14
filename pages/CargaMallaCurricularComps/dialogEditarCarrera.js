@@ -5,6 +5,7 @@ import { Dialog } from 'primereact/dialog'
 import { InputText } from 'primereact/inputtext'
 import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
+import { ConfirmDialog } from 'primereact/confirmdialog'
 
 const DialogEditarCarrera = ({
   activeDialogEditarCarrera,
@@ -14,6 +15,18 @@ const DialogEditarCarrera = ({
 }) => {
   const [infoCarrera, setInfoCarrera] = useState(null)
   const [dialogAgregarMateria, setDialogAgregarMateria] = useState(false)
+  const [dialogConfirmElminarMateria, setDialogConfirmElminarMateria] =
+    useState(false)
+
+  const acceptEliminarMateria = () => {
+    console.log('SI')
+    setActiveDialogEditarCarrera(true)
+  }
+
+  const rejectEliminarMateria = () => {
+    console.log('NO')
+    setActiveDialogEditarCarrera(true)
+  }
 
   const animation = {
     initial: {
@@ -88,7 +101,7 @@ const DialogEditarCarrera = ({
         resizable={false}
         draggable={false}
       >
-        <div className="grid grid-cols-5 gap-4 m-2">
+        <div className="grid grid-cols-3 gap-4 m-2">
           <span className="p-float-label field">
             <InputText
               className="w-full"
@@ -110,26 +123,20 @@ const DialogEditarCarrera = ({
           <span className="p-float-label field">
             <InputText
               className="w-full"
-              id="lapso_materia"
-              /* value={datosEditarMateria?.carrera_materia} */
-              autoComplete="off"
-            />
-            <label htmlFor="lapso_materia">Lapso</label>
-          </span>
-          <span className="p-float-label field">
-            <InputText
-              className="w-full"
               id="nb_materia"
               /* value={datosEditarMateria?.carrera_materia} */
               autoComplete="off"
             />
             <label htmlFor="nb_materia">Nombre de la Materia</label>
           </span>
-          <div>
+          <div className="my-auto col-span-3 flex justify-center">
             <Button
               label="Agregar"
               icon="pi pi-plus"
-              /* onClick={() => setDialogEditarMateria(false)} */
+              onClick={() => {
+                setDialogAgregarMateria(false)
+                setActiveDialogEditarCarrera(true)
+              }}
             />
           </div>
         </div>
@@ -162,7 +169,7 @@ const DialogEditarCarrera = ({
           icon="pi pi-times"
           iconPos="left"
           className="p-button-danger p-1"
-          /* onClick={() => setAnimacionEditarHorario(!animacionEditarHorario)} */
+          onClick={() => setDialogConfirmElminarMateria(true)}
         />
       </div>
     )
@@ -171,6 +178,17 @@ const DialogEditarCarrera = ({
   return (
     <>
       <DialogAgregarMateria />
+      <ConfirmDialog
+        visible={dialogConfirmElminarMateria}
+        onHide={() => setDialogConfirmElminarMateria(false)}
+        message="¿Esta seguro que desea eliminar la materia?"
+        header="Confirmacion"
+        icon="pi pi-exclamation-triangle"
+        accept={acceptEliminarMateria}
+        reject={rejectEliminarMateria}
+        acceptLabel="SI"
+        rejectLabel="NO"
+      />
       <Dialog
         visible={activeDialogEditarCarrera}
         onHide={() => {
@@ -182,8 +200,7 @@ const DialogEditarCarrera = ({
         resizable={false}
         draggable={false}
       >
-        <div className="grid grid-cols-4 gap-4 m-2">
-          <div />
+        <div className="grid grid-cols-3 gap-4 m-2">
           <span className="p-float-label field">
             <InputText
               className="w-full"
@@ -214,10 +231,9 @@ const DialogEditarCarrera = ({
               value={infoCarrera}
               emptyMessage="No se encuentran trayectos registrados."
               rowGroupMode="rowspan"
-              groupRowsBy={['trayecto', 'lapso']}
+              groupRowsBy={['trayecto']}
             >
               <Column field="trayecto" header="Trayectos" />
-              <Column field="lapso" header="Lapsos" />
               <Column field="materia" header="Materias" />
               <Column
                 field="materia"
@@ -225,7 +241,7 @@ const DialogEditarCarrera = ({
                 style={{ width: '8rem' }}
               />
               <Column
-                field="lapso"
+                field="trayecto"
                 body={actionBodyTemplate}
                 style={{ width: '8rem' }}
               />

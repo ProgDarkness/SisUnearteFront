@@ -86,8 +86,7 @@ const DialogVerCarrera = ({
       resizable={false}
       draggable={false}
     >
-      <div className="grid grid-cols-4 gap-4 m-2">
-        <div />
+      <div className="grid grid-cols-2 gap-4 m-2">
         <span className="p-float-label field">
           <InputText
             className="w-full"
@@ -118,10 +117,9 @@ const DialogVerCarrera = ({
             value={infoCarrera}
             emptyMessage="No se encuentran trayectos registrados."
             rowGroupMode="rowspan"
-            groupRowsBy={['trayecto', 'lapso']}
+            groupRowsBy={['trayecto']}
           >
             <Column field="trayecto" header="Trayectos" />
-            <Column field="lapso" header="Lapsos" />
             <Column field="materia" header="Materias" />
           </DataTable>
         </div>

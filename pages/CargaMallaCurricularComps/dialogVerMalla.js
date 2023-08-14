@@ -135,8 +135,7 @@ const DialogVerMalla = ({
       resizable={false}
       draggable={false}
     >
-      <div className="grid grid-cols-4 gap-4 m-2 place-content-center">
-        <div />
+      <div className="grid grid-cols-2 gap-4 m-2 place-content-center">
         <span className="p-float-label field">
           <InputText
             className="w-full"
@@ -238,15 +237,14 @@ const DialogVerMalla = ({
         exit="exit"
         variants={animation}
       >
-        <div className="col-span-4 mt-3">
+        <div className="col-span-2 mt-3">
           <DataTable
             value={infoMalla}
             emptyMessage="No se encuentran trayectos registrados."
             rowGroupMode="rowspan"
-            groupRowsBy={['trayecto', 'lapso']}
+            groupRowsBy={['trayecto']}
           >
             <Column field="trayecto" header="Trayectos" />
-            <Column field="lapso" header="Lapsos" />
             <Column field="materia" header="Materias" />
             {/* <Column field="profesor" header="Profesores" /> */}
             {/* <Column
