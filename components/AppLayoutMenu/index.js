@@ -73,6 +73,28 @@ export default function Index({ children, verMenu = true }) {
               Carga de Malla Curricular
             </h1>
             <h1
+              className={`text-white font-medium text-sm rounded-md mt-2 cursor-pointer hover:bg-[#805e5e] ${
+                mostrarVistas?.regOfertaAcademica
+                  ? 'bg-[#805e5e]'
+                  : 'bg-[#ae8e8e]'
+              }`}
+              onClick={() => {
+                const newVistas = {
+                  [`regOfertaAcademica`]: !mostrarVistas?.regOfertaAcademica
+                }
+                setMostrarVistas((prevState) => ({
+                  ...prevState,
+                  ...newVistas,
+                  ...Object.keys(prevState).reduce((acc, key) => {
+                    if (key !== 'regOfertaAcademica') acc[key] = false
+                    return acc
+                  }, {})
+                }))
+              }}
+            >
+              Registro Oferta Academica
+            </h1>
+            <h1
               className={`text-white font-medium rounded-md mt-2 cursor-pointer hover:bg-[#805e5e] ${
                 mostrarVistas?.inscripcionesRegulares
                   ? 'bg-[#805e5e]'
