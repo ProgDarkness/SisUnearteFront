@@ -99,17 +99,17 @@ export default function Index({ children, verMenu = true }) {
             </h1>
             <h1
               className={`text-white font-medium text-sm rounded-md mt-2 cursor-pointer hover:bg-[#805e5e] ${
-                mostrarVistas?.registroprevio ? 'bg-[#805e5e]' : 'bg-[#ae8e8e]'
+                mostrarVistas?.registroPrevio ? 'bg-[#805e5e]' : 'bg-[#ae8e8e]'
               }`}
               onClick={() => {
                 const newVistas = {
-                  [`registroprevio`]: !mostrarVistas?.registroprevio
+                  [`registroPrevio`]: !mostrarVistas?.registroPrevio
                 }
                 setMostrarVistas((prevState) => ({
                   ...prevState,
                   ...newVistas,
                   ...Object.keys(prevState).reduce((acc, key) => {
-                    if (key !== 'registroprevio') acc[key] = false
+                    if (key !== 'registroPrevio') acc[key] = false
                     return acc
                   }, {})
                 }))

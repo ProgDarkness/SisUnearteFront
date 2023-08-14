@@ -20,7 +20,7 @@ const RegistroPrevio = ({ data }) => {
   const [fechanaci, setFechaNaci] = useState(null)
   const [discapacidad, setDiscapacidad] = useState(null)
   const [optionsDiscapacidad, setOptionsDiscapacidad] = useState(null)
-  const [direccion, setDireccion] = useState('')
+  const [ciudad, setCiudad] = useState('')
   const [estado, setEstado] = useState(null)
   const [optionsEstado, setOptionsEstado] = useState(null)
   const [municipio, setMunicipio] = useState(null)
@@ -32,7 +32,23 @@ const RegistroPrevio = ({ data }) => {
   const [activeDialogVerMalla, setActiveDialogVerMalla] = useState(false)
   const [datosVerMalla, setDatosVerMalla] = useState(null)
   const [confirmPostulacion, setConfirmPostulacion] = useState(false)
-
+  const [paisNacimiento, setPaisNacimiento] = useState(null)
+  const [optionsPaisNacimiento, setOptionsPaisNacimiento] = useState(null)
+  const [estadoCivil, setEstadoCivil] = useState(null)
+  const [optionsEstadoCivil, setOptionsEstadoCivil] = useState(null)
+  const [correoElectronico, setCorreoElectronico] = useState('')
+  const [tipoDeVia, setTipoDeVia] = useState(null)
+  const [optionsTipoDeVia, setOptionsTipoDeVia] = useState(null)
+  const [nombreDeVia, setNombreDeVia] = useState('')
+  const [tipoDeZona, setTipoDeZona] = useState(null)
+  const [optionsTipoDeZona, setOptionsTipoDeZona] = useState(null)
+  const [nombreDeZona, setNombreDeZona] = useState('')
+  const [tipoDeVivienda, setTipoDeVivienda] = useState(null)
+  const [optionsTipoDeVivienda, setOptionsTipoDeVivienda] = useState(null)
+  const [numeroDeVivienda, setNumeroDeVivienda] = useState('')
+  const [pais, setPais] = useState(null)
+  const [optionsPais, setOptionsPais] = useState(null)
+  const [zonaPostal, setZonaPostal] = useState('')
   const accept = () => {
     setBlockedPanel(true)
   }
@@ -62,7 +78,7 @@ const RegistroPrevio = ({ data }) => {
       { name: 'No soy discapacitado' },
       { name: 'Paralitico' }
     ])
-    setDireccion('Residencias Conjetura, Av. Angosta')
+    setCiudad('Residencias Conjetura, Av. Angosta')
     setEstado({ name: 'Distrito Capital' })
     setOptionsEstado([
       { name: 'Distrito Capital' },
@@ -86,6 +102,50 @@ const RegistroPrevio = ({ data }) => {
       { name: 'La Pastora' }
     ])
     setFechaNaci('19/11/2023')
+
+    setPaisNacimiento({ name: 'Venezuela' })
+    setOptionsPaisNacimiento([
+      { name: 'Venezuela' },
+      { name: 'Colombia' },
+      { name: 'Peru' },
+      { name: 'Brasil' },
+      { name: 'Chile' }
+    ])
+
+    setPais({ name: 'Venezuela' })
+    setOptionsPais([
+      { name: 'Venezuela' },
+      { name: 'Colombia' },
+      { name: 'Peru' },
+      { name: 'Brasil' },
+      { name: 'Chile' }
+    ])
+
+    setEstadoCivil({ name: 'Soltero' })
+    setOptionsEstadoCivil([{ name: 'Soltero' }, { name: 'Casado' }])
+
+    setCorreoElectronico('Carlos_raul@gmail.com')
+
+    setTipoDeVia({ name: 'Avenida' })
+    setOptionsTipoDeVia([{ name: 'Avenida' }, { name: 'Calle' }])
+
+    setNombreDeVia('Avenida el amparo, 23 de enero')
+
+    setTipoDeZona({ name: 'Barrio' })
+    setOptionsTipoDeZona([{ name: 'Barrio' }, { name: 'Urbanizacion' }])
+
+    setNombreDeZona('La Bombilla')
+
+    setTipoDeVivienda({ name: 'Casa' })
+    setOptionsTipoDeVivienda([
+      { name: 'Casa' },
+      { name: 'Apartamento' },
+      { name: 'Quinta' }
+    ])
+
+    setNumeroDeVivienda('35')
+
+    setZonaPostal('1010')
   }, [])
 
   return (
@@ -118,7 +178,19 @@ const RegistroPrevio = ({ data }) => {
             />
             <label htmlFor="nacionalidad">Nacionalidad</label>
           </span>
-
+          <span className="p-float-label field">
+            <Dropdown
+              className="w-full"
+              id="paisNacimiento"
+              options={optionsPaisNacimiento}
+              value={paisNacimiento}
+              onChange={(e) => {
+                setPaisNacimiento(e.value)
+              }}
+              optionLabel="name"
+            />
+            <label htmlFor="paisNacimiento">Pais Nacimiento</label>
+          </span>
           <span className="p-float-label field">
             <InputText
               keyfilter={'num'}
@@ -130,6 +202,16 @@ const RegistroPrevio = ({ data }) => {
               autoComplete="off"
             />
             <label htmlFor="cedula">Cédula</label>
+          </span>
+          <span className="p-float-label field">
+            <InputText
+              className="w-full"
+              id="correoElectronico"
+              value={correoElectronico}
+              onChange={(e) => setCorreoElectronico(e.target.value)}
+              autoComplete="off"
+            />
+            <label htmlFor="correoElectronico">Correo Electronico</label>
           </span>
           <span className="p-float-label field">
             <InputText
@@ -214,14 +296,104 @@ const RegistroPrevio = ({ data }) => {
           <label htmlFor="sexo">Sexo</label>
         </span>
         <span className="p-float-label field">
+          <Dropdown
+            className="w-full"
+            id="estadoCivil"
+            options={optionsEstadoCivil}
+            value={estadoCivil}
+            onChange={(e) => {
+              setEstadoCivil(e.value)
+            }}
+            optionLabel="name"
+          />
+          <label htmlFor="estadoCivil">Estado Civil</label>
+        </span>
+
+        <span className="p-float-label field">
+          <Dropdown
+            className="w-full"
+            id="pais"
+            options={optionsPais}
+            value={pais}
+            onChange={(e) => {
+              setPais(e.value)
+            }}
+            optionLabel="name"
+          />
+          <label htmlFor="pais">Pais </label>
+        </span>
+        <span className="p-float-label field">
           <InputText
             className="w-full"
-            id="direccion"
-            value={direccion}
-            onChange={(e) => setDireccion(e.target.value)}
+            id="ciudad"
+            value={ciudad}
+            onChange={(e) => setCiudad(e.target.value)}
             autoComplete="off"
           />
-          <label htmlFor="direccion">Dirección</label>
+          <label htmlFor="ciudad">Ciudad</label>
+        </span>
+        <span className="p-float-label field">
+          <Dropdown
+            className="w-full"
+            id="tipoDeVia"
+            options={optionsTipoDeVia}
+            value={tipoDeVia}
+            onChange={(e) => setTipoDeVia(e.target.value)}
+            optionLabel="name"
+          />
+          <label htmlFor="tipoDeVia">Tipo de via</label>
+        </span>
+        <span className="p-float-label field">
+          <InputText
+            className="w-full"
+            id="nombreDeVia"
+            value={nombreDeVia}
+            onChange={(e) => setCorreoElectronico(e.target.value)}
+            autoComplete="off"
+          />
+          <label htmlFor="nombreDeVia">Nombre De Via</label>
+        </span>
+        <span className="p-float-label field">
+          <Dropdown
+            className="w-full"
+            id="tipoDeZona"
+            options={optionsTipoDeZona}
+            value={tipoDeZona}
+            onChange={(e) => setTipoDeZona(e.target.value)}
+            optionLabel="name"
+          />
+          <label htmlFor="tipoDeZona">Tipo De Zona</label>
+        </span>
+        <span className="p-float-label field">
+          <InputText
+            className="w-full"
+            id="nombreDeZona"
+            value={nombreDeZona}
+            onChange={(e) => setNombreDeZona(e.target.value)}
+            autoComplete="off"
+          />
+          <label htmlFor="nombreDeZona">Nombre de Zona</label>
+        </span>
+        <span className="p-float-label field">
+          <Dropdown
+            className="w-full"
+            id="tipoDeVivienda"
+            options={optionsTipoDeVivienda}
+            value={tipoDeVivienda}
+            onChange={(e) => setTipoDeVivienda(e.target.value)}
+            optionLabel="name"
+          />
+          <label htmlFor="tipoDeVivienda">Tipo De Vivienda</label>
+        </span>
+        <span className="p-float-label field">
+          <InputText
+            className="w-full"
+            id="numeroDeVivienda"
+            value={numeroDeVivienda}
+            onChange={(e) => setNumeroDeVivienda(e.target.value)}
+            autoComplete="off"
+          />
+          <label htmlFor="numeroDeVivienda">Numero De Vivienda</label>
         </span>
         <span className="p-float-label field">
           <Dropdown
@@ -255,6 +427,16 @@ const RegistroPrevio = ({ data }) => {
             optionLabel="name"
           />
           <label htmlFor="parroquia">Parroquia</label>
+        </span>
+        <span className="p-float-label field">
+          <InputText
+            className="w-full"
+            id="zonaPostal"
+            value={zonaPostal}
+            onChange={(e) => setZonaPostal(e.target.value)}
+            autoComplete="off"
+          />
+          <label htmlFor="zonaPostal">Zona Postal</label>
         </span>
 
         <ConfirmDialog
@@ -302,7 +484,7 @@ const RegistroPrevio = ({ data }) => {
             fechanaci.includes('_') ||
             !fechanaci ||
             !discapacidad ||
-            !direccion ||
+            !ciudad ||
             !estado ||
             !municipio ||
             !parroquia
