@@ -97,7 +97,7 @@ const DialogEditarRegOferta = ({
           setDialogAgregarMateria(false)
           setActiveDialogEditarCarrera(true)
         }}
-        header="Modificar Materia"
+        header="Agregar Materia"
         resizable={false}
         draggable={false}
       >
@@ -196,7 +196,7 @@ const DialogEditarRegOferta = ({
           setDatosEditarCarrera(null)
         }}
         style={{ height: '90%' }}
-        header="Editar Carrera"
+        header="Editar Oferta"
         resizable={false}
         draggable={false}
       >

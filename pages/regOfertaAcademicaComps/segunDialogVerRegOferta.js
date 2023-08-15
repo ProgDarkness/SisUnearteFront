@@ -82,7 +82,7 @@ const DialogVerRegOferta = ({
         setDatosVerCarrera(null)
       }}
       style={{ height: '90%' }}
-      header="Ver Carrera"
+      header="Ver Oferta"
       resizable={false}
       draggable={false}
     >

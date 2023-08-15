@@ -383,7 +383,7 @@ const RegistroCarrera = ({ cambioVista }) => {
         />
         <label htmlFor="tp_ciclos">Tipo de Ciclos</label>
       </span>
-      <div className="flex align-middle">
+      <div>
         <Button
           icon="pi pi-plus"
           label="Registrar"

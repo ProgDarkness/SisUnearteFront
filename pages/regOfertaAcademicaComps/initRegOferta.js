@@ -3,8 +3,8 @@ import { Column } from 'primereact/column'
 import { DataTable } from 'primereact/datatable'
 import { useEffect, useState } from 'react'
 import { ConfirmDialog } from 'primereact/confirmdialog'
-import DialogVerOferta from './dialogVerOferta'
-import DialogEditarOferta from './dialogEditarOferta'
+import DialogVerOferta from './initDialogVerOferta'
+import DialogEditarOferta from './initDialogEditarOferta'
 
 const RegOfertaAcademica = ({ cambioVista }) => {
   const [ofertas, setOfertas] = useState(null)

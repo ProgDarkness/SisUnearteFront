@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import RegOfertaAcademica from 'pages/regOfertaAcademicaComps/regOfertaAcademica'
-import RegistrarOferta from 'pages/regOfertaAcademicaComps/registroOferta'
+import RegOfertaAcademica from 'pages/regOfertaAcademicaComps/initRegOferta'
+import RegistrarOferta from 'pages/regOfertaAcademicaComps/segunRegOferta'
 
 const CargaMallaCurricular = () => {
   const vistas = {
