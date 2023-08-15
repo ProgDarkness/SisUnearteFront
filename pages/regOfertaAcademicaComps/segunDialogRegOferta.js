@@ -5,6 +5,7 @@ import { DataTable } from 'primereact/datatable'
 import { Dialog } from 'primereact/dialog'
 import { InputText } from 'primereact/inputtext'
 import { useEffect, useState } from 'react'
+import DialogCargarHorario from './segunDialogCagarHorario'
 
 const DialogRegOferta = ({ dialogRegOferta, setDialogRegOferta }) => {
   const [infoCarrera, setInfoCarrera] = useState(null)
@@ -12,6 +13,8 @@ const DialogRegOferta = ({ dialogRegOferta, setDialogRegOferta }) => {
     useState(false)
   const [dialogAgregarMateria, setDialogAgregarMateria] = useState(false)
   const [dialogAgregarprofesor, setDialogAgregarprofesor] = useState(false)
+  const [activeDialogCargarHorario, setActiveDialogCargarHorario] =
+    useState(false)
 
   const acceptEliminarMateria = () => {
     console.log('SI')
@@ -214,10 +217,9 @@ const DialogRegOferta = ({ dialogRegOferta, setDialogRegOferta }) => {
           icon="pi pi-plus"
           iconPos="left"
           className="p-button-info text-sm p-1"
-          /* onClick={() => {
-            setDialogAgregarprofesor(true)
-            setDialogRegOferta(false)
-          }} */
+          onClick={() => {
+            setActiveDialogCargarHorario(true)
+          }}
         />
         <Button
           label="Agregar Materia"
@@ -246,6 +248,10 @@ const DialogRegOferta = ({ dialogRegOferta, setDialogRegOferta }) => {
         reject={rejectEliminarMateria}
         acceptLabel="SI"
         rejectLabel="NO"
+      />
+      <DialogCargarHorario
+        activeDialogCargarHorario={activeDialogCargarHorario}
+        setActiveDialogCargarHorario={setActiveDialogCargarHorario}
       />
 
       <Dialog
