@@ -51,6 +51,29 @@ export default function Index({ children, verMenu = true }) {
               Postulaciones
             </h1>
             <h1
+              className={`text-white font-medium rounded-md mt-2 cursor-pointer hover:bg-[#805e5e] ${
+                mostrarVistas?.gestionDePostulaciones
+                  ? 'bg-[#805e5e]'
+                  : 'bg-[#ae8e8e]'
+              }`}
+              onClick={() => {
+                const newVistas = {
+                  [`gestionDePostulaciones`]:
+                    !mostrarVistas?.gestionDePostulaciones
+                }
+                setMostrarVistas((prevState) => ({
+                  ...prevState,
+                  ...newVistas,
+                  ...Object.keys(prevState).reduce((acc, key) => {
+                    if (key !== 'gestionDePostulaciones') acc[key] = false
+                    return acc
+                  }, {})
+                }))
+              }}
+            >
+              Gestion De Postulaciones
+            </h1>
+            <h1
               className={`text-white font-medium text-sm rounded-md mt-2 cursor-pointer hover:bg-[#805e5e] ${
                 mostrarVistas?.cargaMallaCurricular
                   ? 'bg-[#805e5e]'
