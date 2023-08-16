@@ -48,7 +48,7 @@ export default function Index({ children, verMenu = true }) {
                 }))
               }}
             >
-              Postulaciones
+              Postulacion
             </h1>
             <h1
               className={`text-white font-medium rounded-md mt-2 cursor-pointer hover:bg-[#805e5e] ${

@@ -151,7 +151,9 @@ const RegistroPrevio = ({ data }) => {
   return (
     <div className="m-2 -mt-2">
       <div className="w-full text-center">
-        <h1 className="text-3xl font-semibold text-white">Registro Previo</h1>
+        <h1 className="text-3xl font-semibold text-white text-center mr-32 mb-6 -mt-3">
+          Registro Previo
+        </h1>
       </div>
 
       <BlockUI

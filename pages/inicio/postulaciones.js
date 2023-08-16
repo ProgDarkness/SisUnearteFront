@@ -62,6 +62,9 @@ const Postulaciones = ({ data }) => {
   }
   return (
     <div>
+      <div className="text-3xl font-semibold text-white text-center mr-32 mb-6 -mt-3">
+        <h1>Postulacion</h1>
+      </div>
       <ConfirmDialog
         draggable={false}
         resizable={false}

@@ -78,12 +78,12 @@ const GestionDePostulaciones = () => {
   }
 
   return (
-    <div className="m-2">
+    <div >
       <DialogDatosEstudiantes
         activeDialogVerDatosEstudiantes={activeDialogVerDatosEstudiantes}
         setActiveDialogVerDatosEstudiantes={setActiveDialogVerDatosEstudiantes}
       />
-      <div className="text text-3xl font-semibold text-white flex justify-center ">
+      <div className="text-3xl font-semibold text-white text-center mr-32 mb-6 -mt-3">
         <h1>Gestion De Postulaciones</h1>
       </div>
 
