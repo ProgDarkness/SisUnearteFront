@@ -6,6 +6,7 @@ import DialogVerRegOferta from './segunDialogVerRegOferta'
 import DialogEditarRegOferta from './segunDialogEditarRegOferta'
 import { ConfirmDialog } from 'primereact/confirmdialog'
 import DialogRegOferta from './segunDialogRegOferta'
+import DialogRegPeriodo from './segunDialogRegPeriodo'
 
 const RegistroOferta = ({ cambioVista }) => {
   const [carreras, setCarreras] = useState([])
@@ -16,6 +17,7 @@ const RegistroOferta = ({ cambioVista }) => {
   const [dialogRegOferta, setDialogRegOferta] = useState(false)
   const [dialogConfirmElminarOferta, setDialogConfirmElminarOferta] =
     useState(false)
+  const [activeDialogRegPerido, setActiveDialogRegPerido] = useState(false)
 
   useEffect(() => {
     setCarreras([
@@ -45,6 +47,12 @@ const RegistroOferta = ({ cambioVista }) => {
           icon="pi pi-plus"
           className="mr-2"
           onClick={() => setDialogRegOferta(true)}
+        />
+        <Button
+          label="Registrar Periodo"
+          icon="pi pi-plus"
+          className="mr-2"
+          onClick={() => setActiveDialogRegPerido(true)}
         />
       </div>
     )
@@ -89,6 +97,10 @@ const RegistroOferta = ({ cambioVista }) => {
       <DialogRegOferta
         dialogRegOferta={dialogRegOferta}
         setDialogRegOferta={setDialogRegOferta}
+      />
+      <DialogRegPeriodo
+        activeDialogRegPerido={activeDialogRegPerido}
+        setActiveDialogRegPerido={setActiveDialogRegPerido}
       />
       <ConfirmDialog
         visible={dialogConfirmElminarOferta}
