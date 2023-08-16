@@ -155,15 +155,6 @@ const DialogVerOferta = ({
           />
           <label htmlFor="status_carrera">Estatus de la Carrera</label>
         </span>
-        <span className="p-float-label field">
-          <InputText
-            className="w-full"
-            id="cant_cupos"
-            value={datosVerOferta?.cant_cupos}
-            disabled
-          />
-          <label htmlFor="cant_cupos">Cant. Cupos</label>
-        </span>
         <div className="flex justify-center align-middle">
           {animacionVerHorario && (
             <Button
