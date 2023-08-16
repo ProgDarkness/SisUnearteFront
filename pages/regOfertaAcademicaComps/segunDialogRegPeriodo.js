@@ -1,13 +1,94 @@
 import { Button } from 'primereact/button'
+import { Column } from 'primereact/column'
+import { DataTable } from 'primereact/datatable'
 import { Dialog } from 'primereact/dialog'
 import { InputText } from 'primereact/inputtext'
+import { useEffect, useState } from 'react'
+import DialogEditarPeriodo from './segunDialogEditarPeriodo'
+import DialogVerPeriodo from './segunDialogVerPeriodo'
 
 const DialogRegPeriodo = ({
   activeDialogRegPerido,
   setActiveDialogRegPerido
 }) => {
+  const [periodosInfo, setPeriodosInfo] = useState(null)
+  const [activeDialogEditarPeriodo, setActiveDialogEditarPeriodo] =
+    useState(false)
+  const [activeDialogVerPeriodo, setActiveDialogVerPeriodo] = useState(false)
+
+  useEffect(() => {
+    setPeriodosInfo([
+      {
+        cod_periodo: 'fk55',
+        nb_periodo: 'PERIODO 1',
+        tp_periodo: 'REGULAR',
+        anio_periodo: '2023',
+        mes_inicio: 'Agosto',
+        mes_fin: 'Septiembre',
+        num_semanas: '30',
+        fe_incio: '12/04/2023',
+        fe_fin: '12/04/2023',
+        fe_entregaActa: '12/04/2023',
+        fe_soli_doc: '12/04/2023',
+        fe_soli_pre_grado: '12/04/2023',
+        fe_retiro: '12/04/2023',
+        fe_modificacion: '12/04/2023',
+        fe_ini_pre_inscri: '12/04/2023',
+        fe_ini_inscri: '12/04/2023',
+        fe_fin_inscri: '12/04/2023',
+        fe_ini_oferta: '12/04/2023',
+        fe_fin_oferta: '12/04/2023',
+        fe_ini_retiro: '12/04/2023',
+        fe_fin_retiro: '12/04/2023',
+        fe_ini_notas: '12/04/2023',
+        fe_fin_notas: '12/04/2023',
+        estatus_periodo: 'Activo'
+      }
+    ])
+  }, [])
+
+  const accionBodyTemplate = (rowData) => {
+    return (
+      <div className="flex justify-center">
+        <Button
+          icon="pi pi-search"
+          className="p-button-info mr-1"
+          tooltip="Ver"
+          tooltipOptions={{ position: 'top' }}
+          onClick={() => {
+            setActiveDialogVerPeriodo(true)
+          }}
+        />
+        <Button
+          icon="pi pi-pencil"
+          className="p-button-help mr-1"
+          tooltip="Modificar"
+          onClick={() => {
+            setActiveDialogEditarPeriodo(true)
+          }}
+          tooltipOptions={{ position: 'top' }}
+        />
+        <Button
+          icon="pi pi-times"
+          className="p-button-danger"
+          tooltip="Eliminar"
+          tooltipOptions={{ position: 'top' }}
+          /* onClick={() => setDialogConfirmElminarOferta(true)} */
+        />
+      </div>
+    )
+  }
+
   return (
     <>
+      <DialogEditarPeriodo
+        activeDialogEditarPeriodo={activeDialogEditarPeriodo}
+        setActiveDialogEditarPeriodo={setActiveDialogEditarPeriodo}
+      />
+      <DialogVerPeriodo
+        activeDialogVerPeriodo={activeDialogVerPeriodo}
+        setActiveDialogVerPeriodo={setActiveDialogVerPeriodo}
+      />
       <Dialog
         header="Registrar Periodo"
         visible={activeDialogRegPerido}
@@ -15,7 +96,7 @@ const DialogRegPeriodo = ({
         draggable={false}
         resizable={false}
       >
-        <div className="grid grid-cols-5 gap-4 mt-3">
+        <div className="grid grid-cols-8 gap-4 mt-3">
           <span className="p-float-label field">
             <InputText
               className="w-full"
@@ -206,7 +287,7 @@ const DialogRegPeriodo = ({
             />
             <label htmlFor="fe_ini_retiro">Fecha de Inicio de Retiro</label>
           </span>
-          <span className="p-float-label field">
+          <span className="p-float-label field col-span-2">
             <InputText
               className="w-full"
               id="fe_fin_retiro"
@@ -254,6 +335,21 @@ const DialogRegPeriodo = ({
               }} */
             />
           </div>
+        </div>
+        <div className="mt-4">
+          <h1 className="text-2xl font-semibold ml-4">Periodos</h1>
+          <DataTable
+            value={periodosInfo}
+            emptyMessage="No se encuentran periodos registrados."
+          >
+            <Column field="cod_periodo" header="Codigo Periodo" />
+            <Column field="nb_periodo" header="Nombre Periodo" />
+            <Column field="tp_periodo" header="Tipo Periodo" />
+            <Column field="anio_periodo" header="Año del Periodo" />
+            <Column field="fe_incio" header="Fecha Inicio" />
+            <Column field="fe_fin" header="Fecha Fin" />
+            <Column body={accionBodyTemplate} />
+          </DataTable>
         </div>
       </Dialog>
     </>
