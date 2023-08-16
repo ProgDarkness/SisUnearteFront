@@ -21,5 +21,38 @@ export default {
         }
       }
     }
+  `,
+  GET_DISCAPACIDADES: gql`
+    query discapacidades {
+      obtenerDiscapacidades {
+        response {
+          id
+          nombre
+        }
+      }
+    }
+  `,
+  GET_PAISES: gql`
+    query paises {
+      obtenerPaises {
+        response {
+          id
+          nombre
+        }
+      }
+    }
+  `,
+  GET_ESTADOS_CIVILES: gql`
+    query obtenerEstadoCivil {
+      obtenerEstadoCivil {
+        status
+        message
+        type
+        response {
+          id
+          nombre
+        }
+      }
+    }
   `
 }

@@ -182,6 +182,8 @@ export default function Index() {
                 width={620}
                 height={460}
                 alt="UNEARTE"
+                loading="eager"
+                priority={true}
               />
             </div>
           </div>

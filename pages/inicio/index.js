@@ -10,7 +10,7 @@ import Postulaciones from './postulaciones'
 import CargaMallaCurricular from './cargarMallaCurricular'
 import request from 'graphql-request'
 import GQLConsultasGenerales from 'graphql/consultasGenerales'
-import RegistroPrevio from './registroPrevio'
+import RegistroPrevio from './registroprevio'
 import RegOfertaAcademica from './registroOfertaAcademica'
 import GestionDePostulaciones from './gestionDePostulaciones'
 
@@ -59,7 +59,13 @@ export default function index({ data }) {
               {!hasAnyTrue() && (
                 <div className="w-full h-full">
                   <div className="mx-[15%] mt-4">
-                    <Image src={imageInicio} width={850} height={450} />
+                    <Image
+                      src={imageInicio}
+                      width={850}
+                      height={450}
+                      loading="eager"
+                      priority={true}
+                    />
                   </div>
                 </div>
               )}
@@ -185,10 +191,38 @@ export default function index({ data }) {
 export { VistasContext }
 
 export async function getStaticProps() {
-  const data = await request(
+  const sexos = await request(
     process.env.NEXT_PUBLIC_URL_BACKEND,
     GQLConsultasGenerales.GET_SEXO
   )
+
+  const nacionalidades = await request(
+    process.env.NEXT_PUBLIC_URL_BACKEND,
+    GQLConsultasGenerales.GET_NACIONALIDADES
+  )
+
+  const discapacidades = await request(
+    process.env.NEXT_PUBLIC_URL_BACKEND,
+    GQLConsultasGenerales.GET_DISCAPACIDADES
+  )
+
+  const paises = await request(
+    process.env.NEXT_PUBLIC_URL_BACKEND,
+    GQLConsultasGenerales.GET_PAISES
+  )
+
+  const estados_civiles = await request(
+    process.env.NEXT_PUBLIC_URL_BACKEND,
+    GQLConsultasGenerales.GET_ESTADOS_CIVILES
+  )
+
+  const data = {
+    sexos,
+    nacionalidades,
+    discapacidades,
+    paises,
+    estados_civiles
+  }
 
   return {
     props: {

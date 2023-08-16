@@ -62,7 +62,7 @@ export default function Header({ verMenu }) {
 
       <div className="mx-3 text-center flex justify-start">
         <div className="inline-block w-[9.5rem] -mt-11 -ml-5">
-          <Image src={logo} layout="responsive" alt="Logo" />
+          <Image src={logo} layout="responsive" alt="Logo" loading="eager" priority={true} />
         </div>
       </div>
 
