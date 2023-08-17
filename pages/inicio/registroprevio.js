@@ -39,7 +39,8 @@ const RegistroPrevio = ({ data }) => {
   const [numeroDeVivienda, setNumeroDeVivienda] = useState('')
   const [pais, setPais] = useState(null)
   const [nombreDeVia, setNombreDeVia] = useState('')
-  const [zonaPostal, setZonaPostal] = useState('')
+
+  console.log(pais)
 
   const validateEmail = (email) => {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -121,9 +122,6 @@ const RegistroPrevio = ({ data }) => {
         ]
       : null
   )
-
-  const [optionsTipoDeVia, setOptionsTipoDeVia] = useState([])
-  const [optionsTipoDeVivienda, setOptionsTipoDeVivienda] = useState([])
 
   const accept = () => {
     setBlockedPanel(true)
@@ -291,7 +289,6 @@ const RegistroPrevio = ({ data }) => {
       </BlockUI>
       <div className="grid grid-cols-5 gap-4">
         <Divider className="col-span-5" />
-
         <span className="p-float-label field">
           <Dropdown
             className="w-full"
@@ -332,44 +329,56 @@ const RegistroPrevio = ({ data }) => {
           />
           <label htmlFor="estado">Estado</label>
         </span>
-        <span className="p-float-label field">
-          <Dropdown
-            className="w-full"
-            id="municipio"
-            options={municipiosPorEstado?.obtenerMunicipiosPorEstado.response}
-            value={municipio}
-            onChange={(e) => setMunicipio(e.target.value)}
-            optionLabel="nombre"
-            emptyMessage="Seleccione un estado"
-          />
-          <label htmlFor="municipio">Municipio</label>
-        </span>
-        <span className="p-float-label field">
-          <Dropdown
-            className="w-full"
-            id="ciudad"
-            options={ciudadesPorEstado?.obtenerCiudadesPorEstado.response}
-            value={ciudad}
-            onChange={(e) => setCiudad(e.target.value)}
-            optionLabel="nombre"
-            emptyMessage="Seleccione un estado"
-          />
-          <label htmlFor="ciudad">Ciudad</label>
-        </span>
-        <span className="p-float-label field">
-          <Dropdown
-            className="w-full"
-            id="parroquia"
-            options={
-              parroquiasPorMunicipio?.obtenerParrquiasPorMunicipio.response
-            }
-            value={parroquia}
-            onChange={(e) => setParroquia(e.target.value)}
-            optionLabel="nombre"
-            emptyMessage="Seleccione un municipio"
-          />
-          <label htmlFor="parroquia">Parroquia</label>
-        </span>
+        {pais === null || parseInt(pais?.id) === 239 ? (
+          <span className="p-float-label field">
+            <Dropdown
+              className="w-full"
+              id="municipio"
+              options={municipiosPorEstado?.obtenerMunicipiosPorEstado.response}
+              value={municipio}
+              onChange={(e) => setMunicipio(e.target.value)}
+              optionLabel="nombre"
+              emptyMessage="Seleccione un estado"
+            />
+            <label htmlFor="municipio">Municipio</label>
+          </span>
+        ) : (
+          ''
+        )}
+        {pais === null || parseInt(pais?.id) === 239 ? (
+          <span className="p-float-label field">
+            <Dropdown
+              className="w-full"
+              id="ciudad"
+              options={ciudadesPorEstado?.obtenerCiudadesPorEstado.response}
+              value={ciudad}
+              onChange={(e) => setCiudad(e.target.value)}
+              optionLabel="nombre"
+              emptyMessage="Seleccione un estado"
+            />
+            <label htmlFor="ciudad">Ciudad</label>
+          </span>
+        ) : (
+          ''
+        )}
+        {pais === null || parseInt(pais?.id) === 239 ? (
+          <span className="p-float-label field">
+            <Dropdown
+              className="w-full"
+              id="parroquia"
+              options={
+                parroquiasPorMunicipio?.obtenerParrquiasPorMunicipio.response
+              }
+              value={parroquia}
+              onChange={(e) => setParroquia(e.target.value)}
+              optionLabel="nombre"
+              emptyMessage="Seleccione un municipio"
+            />
+            <label htmlFor="parroquia">Parroquia</label>
+          </span>
+        ) : (
+          ''
+        )}
         <span className="p-float-label field">
           <Dropdown
             className="w-full"
@@ -381,27 +390,35 @@ const RegistroPrevio = ({ data }) => {
           />
           <label htmlFor="tipoDeZona">Tipo De Zona</label>
         </span>
-        <span className="p-float-label field">
-          <Dropdown
-            className="w-full"
-            id="nombreDeZona"
-            options={zonasPorParroquias?.obtenerZonasPorParroquias.response}
-            value={nombreDeZona}
-            onChange={(e) => setNombreDeZona(e.target.value)}
-            optionLabel="nombre"
-            emptyMessage="Seleccione una parroquia"
-          />
-          <label htmlFor="nombreDeZona">Nombre de Zona</label>
-        </span>
-        <span className="p-float-label field">
-          <InputText
-            className="w-full"
-            id="zonaPostal"
-            value={nombreDeZona?.codigo_postal || ''}
-            autoComplete="off"
-          />
-          <label htmlFor="zonaPostal">Zona Postal</label>
-        </span>
+        {pais === null || parseInt(pais?.id) === 239 ? (
+          <span className="p-float-label field">
+            <Dropdown
+              className="w-full"
+              id="nombreDeZona"
+              options={zonasPorParroquias?.obtenerZonasPorParroquias.response}
+              value={nombreDeZona}
+              onChange={(e) => setNombreDeZona(e.target.value)}
+              optionLabel="nombre"
+              emptyMessage="Seleccione una parroquia"
+            />
+            <label htmlFor="nombreDeZona">Nombre de Zona</label>
+          </span>
+        ) : (
+          ''
+        )}
+        {pais === null || parseInt(pais?.id) === 239 ? (
+          <span className="p-float-label field">
+            <InputText
+              className="w-full"
+              id="zonaPostal"
+              value={nombreDeZona?.codigo_postal || ''}
+              autoComplete="off"
+            />
+            <label htmlFor="zonaPostal">Zona Postal</label>
+          </span>
+        ) : (
+          ''
+        )}
         <span className="p-float-label field">
           <Dropdown
             className="w-full"
