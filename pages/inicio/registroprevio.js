@@ -9,8 +9,10 @@ import DialogVerMalla from 'pages/CargaMallaCurricularComps/dialogVerMalla'
 import { Divider } from 'primereact/divider'
 import GQLConsultasGenerales from 'graphql/consultasGenerales'
 import useSWR from 'swr'
+import { useSesion } from 'hooks/useSesion'
 
 const RegistroPrevio = ({ data }) => {
+  const { nacionalidadUser, cedUsuario, nbUsuario, apUsuario } = useSesion()
   const [nacionalidad, setNacionalidad] = useState(null)
   const [paisNacimiento, setPaisNacimiento] = useState(null)
   const [cedula, setCedula] = useState('')
@@ -40,7 +42,12 @@ const RegistroPrevio = ({ data }) => {
   const [pais, setPais] = useState(null)
   const [nombreDeVia, setNombreDeVia] = useState('')
 
-  console.log(pais)
+  console.log(nacionalidad)
+
+  useEffect(() => {
+    if(data?.nacionalidades.obtenerNacionalidades.response)
+    setNacionalidad(nacionalidadUser)
+  }, [nacionalidadUser])
 
   const validateEmail = (email) => {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/

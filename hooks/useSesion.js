@@ -32,6 +32,10 @@ export const useSesion = () => {
     idUser: usuario?.id_usuario,
     userName: usuario?.user_name,
     statusUser: usuario?.bl_status,
-    rolUser: usuario?.id_rol
+    rolUser: usuario?.id_rol,
+    nacionalidadUser: usuario?.nacionalidad,
+    cedUsuario: usuario?.ced_usuario,
+    nbUsuario: usuario?.nb_usuario,
+    apUsuario: usuario?.ape_usuario
   }
 }
