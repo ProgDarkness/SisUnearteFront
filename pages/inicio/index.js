@@ -216,12 +216,30 @@ export async function getStaticProps() {
     GQLConsultasGenerales.GET_ESTADOS_CIVILES
   )
 
+  const tipos_zona = await request(
+    process.env.NEXT_PUBLIC_URL_BACKEND,
+    GQLConsultasGenerales.GET_TIPO_ZONAS
+  )
+
+  const tipos_via = await request(
+    process.env.NEXT_PUBLIC_URL_BACKEND,
+    GQLConsultasGenerales.GET_TIPO_VIAS
+  )
+
+  const tipos_vivienda = await request(
+    process.env.NEXT_PUBLIC_URL_BACKEND,
+    GQLConsultasGenerales.GET_TIPO_VIVIENDA
+  )
+
   const data = {
     sexos,
     nacionalidades,
     discapacidades,
     paises,
-    estados_civiles
+    estados_civiles,
+    tipos_zona,
+    tipos_via,
+    tipos_vivienda
   }
 
   return {

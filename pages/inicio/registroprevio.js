@@ -7,9 +7,10 @@ import { ConfirmDialog } from 'primereact/confirmdialog'
 import { BlockUI } from 'primereact/blockui'
 import DialogVerMalla from 'pages/CargaMallaCurricularComps/dialogVerMalla'
 import { Divider } from 'primereact/divider'
+import GQLConsultasGenerales from 'graphql/consultasGenerales'
+import useSWR from 'swr'
 
 const RegistroPrevio = ({ data }) => {
-  console.log(data)
   const [nacionalidad, setNacionalidad] = useState(null)
   const [paisNacimiento, setPaisNacimiento] = useState(null)
   const [cedula, setCedula] = useState('')
@@ -56,11 +57,72 @@ const RegistroPrevio = ({ data }) => {
     }
   }
 
-  const [optionsEstado, setOptionsEstado] = useState([])
-  const [optionsMunicipio, setOptionsMunicipio] = useState([])
-  const [optionsParroquia, setOptionsParroquia] = useState([])
+  const { data: estadosPorPais } = useSWR(
+    pais
+      ? [
+          GQLConsultasGenerales.GET_ESTADOS_POR_PAIS,
+          {
+            InputPais: {
+              pais: parseInt(pais.id)
+            }
+          }
+        ]
+      : null
+  )
+
+  const { data: municipiosPorEstado } = useSWR(
+    estado
+      ? [
+          GQLConsultasGenerales.GET_MUNICIPIOS_POR_ESTADO,
+          {
+            InputEstado: {
+              estado: parseInt(estado.id)
+            }
+          }
+        ]
+      : null
+  )
+
+  const { data: ciudadesPorEstado } = useSWR(
+    estado
+      ? [
+          GQLConsultasGenerales.GET_CIUDADES_POR_ESTADO,
+          {
+            InputEstado: {
+              estado: parseInt(estado.id)
+            }
+          }
+        ]
+      : null
+  )
+
+  const { data: parroquiasPorMunicipio } = useSWR(
+    municipio
+      ? [
+          GQLConsultasGenerales.GET_PARROQUIAS_POR_MUNICIPIO,
+          {
+            InputMunicipio: {
+              municipio: parseInt(municipio.id)
+            }
+          }
+        ]
+      : null
+  )
+
+  const { data: zonasPorParroquias } = useSWR(
+    parroquia
+      ? [
+          GQLConsultasGenerales.GET_ZONAS_POR_PARROQUIA,
+          {
+            InputParroquia: {
+              parroquia: parseInt(parroquia.id)
+            }
+          }
+        ]
+      : null
+  )
+
   const [optionsTipoDeVia, setOptionsTipoDeVia] = useState([])
-  const [optionsTipoDeZona, setOptionsTipoDeZona] = useState([])
   const [optionsTipoDeVivienda, setOptionsTipoDeVivienda] = useState([])
 
   const accept = () => {
@@ -262,10 +324,11 @@ const RegistroPrevio = ({ data }) => {
           <Dropdown
             className="w-full"
             id="estado"
-            options={optionsEstado}
+            options={estadosPorPais?.obtenerEstadosPorPais.response}
             value={estado}
             onChange={(e) => setEstado(e.target.value)}
-            optionLabel="name"
+            optionLabel="nombre"
+            emptyMessage="Seleccione un pais"
           />
           <label htmlFor="estado">Estado</label>
         </span>
@@ -273,10 +336,11 @@ const RegistroPrevio = ({ data }) => {
           <Dropdown
             className="w-full"
             id="municipio"
-            options={optionsMunicipio}
+            options={municipiosPorEstado?.obtenerMunicipiosPorEstado.response}
             value={municipio}
             onChange={(e) => setMunicipio(e.target.value)}
-            optionLabel="name"
+            optionLabel="nombre"
+            emptyMessage="Seleccione un estado"
           />
           <label htmlFor="municipio">Municipio</label>
         </span>
@@ -284,10 +348,11 @@ const RegistroPrevio = ({ data }) => {
           <Dropdown
             className="w-full"
             id="ciudad"
-            options={[]}
+            options={ciudadesPorEstado?.obtenerCiudadesPorEstado.response}
             value={ciudad}
             onChange={(e) => setCiudad(e.target.value)}
             optionLabel="nombre"
+            emptyMessage="Seleccione un estado"
           />
           <label htmlFor="ciudad">Ciudad</label>
         </span>
@@ -295,10 +360,13 @@ const RegistroPrevio = ({ data }) => {
           <Dropdown
             className="w-full"
             id="parroquia"
-            options={optionsParroquia}
+            options={
+              parroquiasPorMunicipio?.obtenerParrquiasPorMunicipio.response
+            }
             value={parroquia}
             onChange={(e) => setParroquia(e.target.value)}
-            optionLabel="name"
+            optionLabel="nombre"
+            emptyMessage="Seleccione un municipio"
           />
           <label htmlFor="parroquia">Parroquia</label>
         </span>
@@ -306,20 +374,22 @@ const RegistroPrevio = ({ data }) => {
           <Dropdown
             className="w-full"
             id="tipoDeZona"
-            options={optionsTipoDeZona}
+            options={data?.tipos_zona.obtenerTipoZona.response}
             value={tipoDeZona}
             onChange={(e) => setTipoDeZona(e.target.value)}
-            optionLabel="name"
+            optionLabel="nombre"
           />
           <label htmlFor="tipoDeZona">Tipo De Zona</label>
         </span>
         <span className="p-float-label field">
-          <InputText
+          <Dropdown
             className="w-full"
             id="nombreDeZona"
+            options={zonasPorParroquias?.obtenerZonasPorParroquias.response}
             value={nombreDeZona}
             onChange={(e) => setNombreDeZona(e.target.value)}
-            autoComplete="off"
+            optionLabel="nombre"
+            emptyMessage="Seleccione una parroquia"
           />
           <label htmlFor="nombreDeZona">Nombre de Zona</label>
         </span>
@@ -327,8 +397,7 @@ const RegistroPrevio = ({ data }) => {
           <InputText
             className="w-full"
             id="zonaPostal"
-            value={zonaPostal}
-            onChange={(e) => setZonaPostal(e.target.value)}
+            value={nombreDeZona?.codigo_postal || ''}
             autoComplete="off"
           />
           <label htmlFor="zonaPostal">Zona Postal</label>
@@ -337,10 +406,10 @@ const RegistroPrevio = ({ data }) => {
           <Dropdown
             className="w-full"
             id="tipoDeVia"
-            options={optionsTipoDeVia}
+            options={data?.tipos_via.obtenerTipoVia.response}
             value={tipoDeVia}
             onChange={(e) => setTipoDeVia(e.target.value)}
-            optionLabel="name"
+            optionLabel="nombre"
           />
           <label htmlFor="tipoDeVia">Tipo de via</label>
         </span>
@@ -358,10 +427,10 @@ const RegistroPrevio = ({ data }) => {
           <Dropdown
             className="w-full"
             id="tipoDeVivienda"
-            options={optionsTipoDeVivienda}
+            options={data?.tipos_vivienda.obtenerTipoVivienda.response}
             value={tipoDeVivienda}
             onChange={(e) => setTipoDeVivienda(e.target.value)}
-            optionLabel="name"
+            optionLabel="nombre"
           />
           <label htmlFor="tipoDeVivienda">Tipo De Vivienda</label>
         </span>
