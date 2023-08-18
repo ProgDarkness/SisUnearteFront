@@ -1,53 +1,202 @@
 import { InputText } from 'primereact/inputtext'
 import { Dropdown } from 'primereact/dropdown'
 import { Button } from 'primereact/button'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { InputMask } from 'primereact/inputmask'
 import { ConfirmDialog } from 'primereact/confirmdialog'
 import { BlockUI } from 'primereact/blockui'
-import DialogVerMalla from 'pages/CargaMallaCurricularComps/dialogVerMalla'
 import { Divider } from 'primereact/divider'
 import GQLConsultasGenerales from 'graphql/consultasGenerales'
+import GQLUsuarios from 'graphql/usuarios'
 import useSWR from 'swr'
 import { useSesion } from 'hooks/useSesion'
+import request from 'graphql-request'
+import { Toast } from 'primereact/toast'
 
 const RegistroPrevio = ({ data }) => {
-  const { nacionalidadUser, cedUsuario, nbUsuario, apUsuario } = useSesion()
+  const { nacionalidadUser, cedUsuario, nbUsuario, apUsuario, idUser } =
+    useSesion()
+  const toast = useRef(null)
+
   const [nacionalidad, setNacionalidad] = useState(null)
-  const [paisNacimiento, setPaisNacimiento] = useState(null)
   const [cedula, setCedula] = useState('')
-  const [correoElectronico, setCorreoElectronico] = useState('')
   const [nombre, setNombre] = useState('')
-  const [segundo_Nombre, setSegundo_Nombre] = useState('')
   const [apellido, setApellido] = useState('')
+  const [segundo_Nombre, setSegundo_Nombre] = useState('')
   const [segundo_Apellido, setSegundo_Apellido] = useState('')
-  const [sexo, setSexo] = useState(null)
+  const [correoElectronico, setCorreoElectronico] = useState('')
   const [fechanaci, setFechaNaci] = useState(null)
+  const [paisNacimiento, setPaisNacimiento] = useState(null)
   const [discapacidad, setDiscapacidad] = useState(null)
-  const [ciudad, setCiudad] = useState('')
+  const [sexo, setSexo] = useState(null)
+
+  const [estadoCivil, setEstadoCivil] = useState(null)
+  const [pais, setPais] = useState(null)
   const [estado, setEstado] = useState(null)
   const [municipio, setMunicipio] = useState(null)
+  const [ciudad, setCiudad] = useState(null)
   const [parroquia, setParroquia] = useState(null)
-  const [confirmRegistrar, setConfirmRegistrar] = useState(false)
-  const [blockedPanel, setBlockedPanel] = useState(false)
-  const [activeDialogVerMalla, setActiveDialogVerMalla] = useState(false)
-  const [datosVerMalla, setDatosVerMalla] = useState(null)
-  const [confirmPostulacion, setConfirmPostulacion] = useState(false)
-  const [estadoCivil, setEstadoCivil] = useState(null)
-  const [tipoDeVia, setTipoDeVia] = useState(null)
   const [tipoDeZona, setTipoDeZona] = useState(null)
   const [nombreDeZona, setNombreDeZona] = useState('')
+  const [tipoDeVia, setTipoDeVia] = useState(null)
+  const [nombreDeVia, setNombreDeVia] = useState('')
   const [tipoDeVivienda, setTipoDeVivienda] = useState(null)
   const [numeroDeVivienda, setNumeroDeVivienda] = useState('')
-  const [pais, setPais] = useState(null)
-  const [nombreDeVia, setNombreDeVia] = useState('')
 
-  console.log(nacionalidad)
+  const [confirmRegistrar, setConfirmRegistrar] = useState(false)
+  const [blockedPanel, setBlockedPanel] = useState(false)
+  const [evalToFormForPais, setEvalToFormForPais] = useState(true)
+
+  const { data: infoUser } = useSWR(
+    idUser ? [GQLUsuarios.GET_INFO_USER_REG, { id_usuario: idUser }] : null
+  )
 
   useEffect(() => {
-    if(data?.nacionalidades.obtenerNacionalidades.response)
-    setNacionalidad(nacionalidadUser)
-  }, [nacionalidadUser])
+    if (infoUser?.getInfoUsuario.response) {
+      setNacionalidad(infoUser?.getInfoUsuario.response.nacionalidad)
+      setCedula(infoUser?.getInfoUsuario.response.ced_usuario)
+      setNombre(infoUser?.getInfoUsuario.response.nb_usuario)
+      setSegundo_Nombre(infoUser?.getInfoUsuario.response.nb2_usuario)
+      setApellido(infoUser?.getInfoUsuario.response.ape_usuario)
+      setSegundo_Apellido(infoUser?.getInfoUsuario.response.ape2_usuario)
+      setCorreoElectronico(infoUser?.getInfoUsuario.response.correoElectronico)
+      setSexo(infoUser?.getInfoUsuario.response.sexo)
+      setPaisNacimiento(infoUser?.getInfoUsuario.response.paisNac)
+      setCorreoElectronico(infoUser?.getInfoUsuario.response.correo_usuario)
+      setFechaNaci(
+        new Date(
+          parseInt(infoUser?.getInfoUsuario.response.fe_nac_usuario)
+        ).toLocaleDateString('es-ES', {
+          day: '2-digit',
+          month: '2-digit',
+          year: 'numeric'
+        })
+      )
+      setEstadoCivil(infoUser?.getInfoUsuario.response.estadoCivil)
+      setPais(infoUser?.getInfoUsuario.response.pais)
+      setEstado(infoUser?.getInfoUsuario.response.estado)
+      setMunicipio(infoUser?.getInfoUsuario.response.municipio)
+      setCiudad(infoUser?.getInfoUsuario.response.ciudad)
+      setParroquia(infoUser?.getInfoUsuario.response.parroquia)
+      setTipoDeZona(infoUser?.getInfoUsuario.response.tpZona)
+      setTipoDeVia(infoUser?.getInfoUsuario.response.tpVia)
+      setNombreDeVia(infoUser?.getInfoUsuario.response.nb_via)
+      setNombreDeZona(infoUser?.getInfoUsuario.response.nombZona)
+      setTipoDeVivienda(infoUser?.getInfoUsuario.response.tpVivienda)
+      setNumeroDeVivienda(infoUser?.getInfoUsuario.response.nu_vivienda)
+      setDiscapacidad(infoUser?.getInfoUsuario.response.discapacidad)
+      setBlockedPanel(infoUser?.getInfoUsuario.response.bl_registro)
+    }
+  }, [infoUser])
+
+  useEffect(() => {
+    if (nacionalidadUser && cedUsuario && nbUsuario && apUsuario) {
+      setNacionalidad(nacionalidadUser)
+      setCedula(cedUsuario)
+      setNombre(nbUsuario)
+      setApellido(apUsuario)
+    }
+  }, [
+    nacionalidadUser,
+    cedUsuario,
+    nbUsuario,
+    apUsuario,
+    cedula,
+    nombre,
+    apellido,
+    segundo_Nombre,
+    segundo_Apellido,
+    correoElectronico,
+    fechanaci,
+    paisNacimiento,
+    paisNacimiento,
+    discapacidad,
+    sexo,
+    estadoCivil,
+    pais,
+    estado,
+    municipio,
+    ciudad,
+    parroquia,
+    tipoDeZona,
+    nombreDeZona,
+    tipoDeVia,
+    tipoDeVivienda,
+    nombreDeVia,
+    numeroDeVivienda
+  ])
+
+  useEffect(() => {
+    const valueInVenezuela =
+      !nacionalidad ||
+      !cedula ||
+      !nombre ||
+      !segundo_Nombre ||
+      !apellido ||
+      !segundo_Apellido ||
+      !sexo ||
+      fechanaci.includes('_') ||
+      !fechanaci ||
+      !discapacidad ||
+      !estadoCivil ||
+      !pais ||
+      !ciudad ||
+      !estado ||
+      !municipio ||
+      !parroquia ||
+      !nombreDeZona ||
+      !tipoDeZona ||
+      !tipoDeVia ||
+      !nombreDeVia ||
+      !tipoDeVivienda ||
+      !numeroDeVivienda
+
+    const valueNotInVenezuela =
+      !nacionalidad ||
+      !cedula ||
+      !nombre ||
+      !segundo_Nombre ||
+      !apellido ||
+      !segundo_Apellido ||
+      !sexo ||
+      fechanaci?.includes('_') ||
+      !fechanaci ||
+      !discapacidad ||
+      !estadoCivil ||
+      !pais ||
+      !estado ||
+      !tipoDeZona ||
+      !tipoDeVia ||
+      !nombreDeVia ||
+      !tipoDeVivienda ||
+      !numeroDeVivienda
+
+    if (pais?.id === 239) {
+      setEvalToFormForPais(valueInVenezuela)
+    } else {
+      setEvalToFormForPais(valueNotInVenezuela)
+    }
+  }, [
+    pais,
+    ciudad,
+    estado,
+    municipio,
+    parroquia,
+    nombreDeZona,
+    tipoDeZona,
+    tipoDeVia,
+    nombreDeVia,
+    tipoDeVivienda,
+    numeroDeVivienda
+  ])
+
+  const savePerfilUser = (variables) => {
+    return request(
+      process.env.NEXT_PUBLIC_URL_BACKEND,
+      GQLUsuarios.SAVE_PERFIL_USER,
+      variables
+    )
+  }
 
   const validateEmail = (email) => {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -55,14 +204,46 @@ const RegistroPrevio = ({ data }) => {
   }
 
   function registra() {
-    const evaluEmail = validateEmail(correoElectronico)
-
-    if (evaluEmail) {
-      setConfirmRegistrar(true)
-    } else {
-      setCorreoElectronico('')
-      alert('Debe registrar un correo valido')
+    const InputActualizarUsuario = {
+      idnacionalidad: parseInt(nacionalidad?.id),
+      cedula,
+      nombre,
+      apellido,
+      nombre2: segundo_Nombre,
+      apellido2: segundo_Apellido,
+      sexo: parseInt(sexo?.id),
+      fenac: fechanaci,
+      idpaisorigen: parseInt(paisNacimiento?.id),
+      idcivil: parseInt(estadoCivil?.id),
+      correo: correoElectronico,
+      idtpvia: parseInt(tipoDeVia?.id),
+      nbtpvia: nombreDeVia,
+      idtpzona: parseInt(tipoDeZona?.id),
+      nbzona: nombreDeZona?.nombre,
+      idtpvivienda: parseInt(tipoDeVivienda?.id),
+      nuvivienda: numeroDeVivienda,
+      idciudad: parseInt(ciudad?.id),
+      idestado: parseInt(estado?.id),
+      idpais: parseInt(pais?.id),
+      idmunicipio: parseInt(municipio?.id),
+      idparroquia: parseInt(parroquia?.id),
+      idpostal: parseInt(nombreDeZona?.codigo_postal),
+      blregistro: true,
+      idusuario: idUser,
+      idZona: parseInt(nombreDeZona.id),
+      idDiscapacidad: parseInt(discapacidad.id)
     }
+
+    setConfirmRegistrar(true)
+    savePerfilUser({ InputActualizarUsuario }).then(
+      ({ actualizarUsuario: { status, message, type } }) => {
+        toast.current.show({
+          severity: type,
+          summary: '¡ Atención !',
+          detail: message
+        })
+      }
+    )
   }
 
   const { data: estadosPorPais } = useSWR(
@@ -131,22 +312,28 @@ const RegistroPrevio = ({ data }) => {
   )
 
   const accept = () => {
-    setBlockedPanel(true)
+    const evaluEmail = validateEmail(correoElectronico)
+
+    if (evaluEmail) {
+      setBlockedPanel(true)
+      registra()
+    } else {
+      setCorreoElectronico('')
+      toast.current.show({
+        severity: 'error',
+        summary: '¡ Atención !',
+        detail: 'El correo debe ser una dirrecion de correo valida'
+      })
+    }
   }
 
   const reject = () => {
     setConfirmRegistrar(false)
   }
 
-  const acceptPostu = () => {
-    setConfirmPostulacion(true)
-  }
-  const rechazarPostu = () => {
-    setConfirmPostulacion(false)
-  }
-
   return (
     <div className="m-2 -mt-2">
+      <Toast ref={toast} />
       <div className="w-full text-center">
         <h1 className="text-3xl font-semibold text-white text-center mr-32 mb-6 -mt-3">
           Registro Previo
@@ -189,13 +376,12 @@ const RegistroPrevio = ({ data }) => {
             />
             <label htmlFor="cedula">Cédula</label>
           </span>
-
           <span className="p-float-label field">
             <InputText
               className="w-full"
               id="nombre"
               value={nombre}
-              onChange={(e) => setNombre(e.target.value)}
+              onChange={(e) => setNombre(e.target.value.toUpperCase())}
               autoComplete="off"
             />
             <label htmlFor="nombre">Nombre</label>
@@ -203,19 +389,9 @@ const RegistroPrevio = ({ data }) => {
           <span className="p-float-label field">
             <InputText
               className="w-full"
-              id="segundo_Nombre"
-              value={segundo_Nombre}
-              onChange={(e) => setSegundo_Nombre(e.target.value)}
-              autoComplete="off"
-            />
-            <label htmlFor="segundo_Nombre">Segundo Nombre</label>
-          </span>
-          <span className="p-float-label field">
-            <InputText
-              className="w-full"
               id="apellido"
               value={apellido}
-              onChange={(e) => setApellido(e.target.value)}
+              onChange={(e) => setApellido(e.target.value.toUpperCase())}
               autoComplete="off"
             />
             <label htmlFor="apellido">Apellido</label>
@@ -223,9 +399,21 @@ const RegistroPrevio = ({ data }) => {
           <span className="p-float-label field">
             <InputText
               className="w-full"
+              id="segundo_Nombre"
+              value={segundo_Nombre}
+              onChange={(e) => setSegundo_Nombre(e.target.value.toUpperCase())}
+              autoComplete="off"
+            />
+            <label htmlFor="segundo_Nombre">Segundo Nombre</label>
+          </span>
+          <span className="p-float-label field">
+            <InputText
+              className="w-full"
               id="segundo_Apellido"
               value={segundo_Apellido}
-              onChange={(e) => setSegundo_Apellido(e.target.value)}
+              onChange={(e) =>
+                setSegundo_Apellido(e.target.value.toUpperCase())
+              }
               autoComplete="off"
             />
             <label htmlFor="segundo_Apellido">Segundo Apellido</label>
@@ -317,6 +505,11 @@ const RegistroPrevio = ({ data }) => {
             value={pais}
             onChange={(e) => {
               setPais(e.value)
+              setEstado(null)
+              setMunicipio(null)
+              setCiudad(null)
+              setParroquia(null)
+              setNombreDeZona(null)
             }}
             filter
             filterBy="nombre"
@@ -330,7 +523,13 @@ const RegistroPrevio = ({ data }) => {
             id="estado"
             options={estadosPorPais?.obtenerEstadosPorPais.response}
             value={estado}
-            onChange={(e) => setEstado(e.target.value)}
+            onChange={(e) => {
+              setEstado(e.target.value)
+              setMunicipio(null)
+              setCiudad(null)
+              setParroquia(null)
+              setNombreDeZona(null)
+            }}
             optionLabel="nombre"
             emptyMessage="Seleccione un pais"
           />
@@ -343,7 +542,12 @@ const RegistroPrevio = ({ data }) => {
               id="municipio"
               options={municipiosPorEstado?.obtenerMunicipiosPorEstado.response}
               value={municipio}
-              onChange={(e) => setMunicipio(e.target.value)}
+              onChange={(e) => {
+                setMunicipio(e.target.value)
+                setCiudad(null)
+                setParroquia(null)
+                setNombreDeZona(null)
+              }}
               optionLabel="nombre"
               emptyMessage="Seleccione un estado"
             />
@@ -359,7 +563,11 @@ const RegistroPrevio = ({ data }) => {
               id="ciudad"
               options={ciudadesPorEstado?.obtenerCiudadesPorEstado.response}
               value={ciudad}
-              onChange={(e) => setCiudad(e.target.value)}
+              onChange={(e) => {
+                setCiudad(e.target.value)
+                setParroquia(null)
+                setNombreDeZona(null)
+              }}
               optionLabel="nombre"
               emptyMessage="Seleccione un estado"
             />
@@ -377,7 +585,10 @@ const RegistroPrevio = ({ data }) => {
                 parroquiasPorMunicipio?.obtenerParrquiasPorMunicipio.response
               }
               value={parroquia}
-              onChange={(e) => setParroquia(e.target.value)}
+              onChange={(e) => {
+                setParroquia(e.target.value)
+                setNombreDeZona(null)
+              }}
               optionLabel="nombre"
               emptyMessage="Seleccione un municipio"
             />
@@ -442,7 +653,7 @@ const RegistroPrevio = ({ data }) => {
             className="w-full"
             id="nombreDeVia"
             value={nombreDeVia}
-            onChange={(e) => setNombreDeVia(e.target.value)}
+            onChange={(e) => setNombreDeVia(e.target.value.toUpperCase())}
             autoComplete="off"
           />
           <label htmlFor="nombreDeVia">Nombre De Via</label>
@@ -463,6 +674,8 @@ const RegistroPrevio = ({ data }) => {
             className="w-full"
             id="numeroDeVivienda"
             value={numeroDeVivienda}
+            keyfilter="pint"
+            maxLength={4}
             onChange={(e) => setNumeroDeVivienda(e.target.value)}
             autoComplete="off"
           />
@@ -484,50 +697,13 @@ const RegistroPrevio = ({ data }) => {
           reject={reject}
         />
 
-        <ConfirmDialog
-          draggable={false}
-          resizable={false}
-          className="bg-[#805e5e]"
-          visible={confirmPostulacion}
-          acceptLabel="Si"
-          rejectLabel="No"
-          onHide={() => setConfirmPostulacion(false)}
-          message="Estas seguro que deseas confirmar la postulación?"
-          header="Confirmar"
-          icon="pi pi-exclamation-triangle"
-          accept={acceptPostu}
-          reject={rechazarPostu}
-        />
-
         <Button
           icon="pi pi-check"
-          label="Registrarse"
-          onClick={registra} /* disabled={submitting} */
-          disabled={
-            !nacionalidad ||
-            !cedula ||
-            !nombre ||
-            !segundo_Nombre ||
-            !apellido ||
-            !segundo_Apellido ||
-            !sexo ||
-            fechanaci.includes('_') ||
-            !fechanaci ||
-            !discapacidad ||
-            !ciudad ||
-            !estado ||
-            !municipio ||
-            !parroquia
-          }
+          label={infoUser?.getInfoUsuario.response.bl_registro ? "Guardar" : "Registrarse"}
+          onClick={() => setConfirmRegistrar(true)}
+          disabled={evalToFormForPais}
         />
       </div>
-
-      <DialogVerMalla
-        setActiveDialogVerMalla={setActiveDialogVerMalla}
-        activeDialogVerMalla={activeDialogVerMalla}
-        datosVerMalla={datosVerMalla}
-        setDatosVerMalla={setDatosVerMalla}
-      />
       {/*  eslint-disable-next-line react/no-unknown-property */}
       <style jsx global>{`
         .p-button.p-button-text:enabled:active,
