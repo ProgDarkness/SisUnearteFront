@@ -7,8 +7,15 @@ import React, { useEffect, useState } from 'react'
 import DialogVerCarrera from './dialogVerCarrera'
 import DialogEditarCarrera from './dialogEditarCarrera'
 import { ConfirmDialog } from 'primereact/confirmdialog'
+import request from 'graphql-request'
+import GQLregMallaCurricular from 'graphql/regMallaCurricular'
 
 const RegistroCarrera = ({ cambioVista }) => {
+  const [codCarrera, setCodCarrera] = useState('')
+  const [nombCarrera, setNombCarrera] = useState('')
+  const [tpCiclos, setTpCiclos] = useState(null)
+  const [tituloCarrera, setTituloCarrera] = useState('')
+  const [cantTrayectos, setCantTrayectos] = useState('')
   const [carreras, setCarreras] = useState([])
   const [materias, setMaterias] = useState([])
   const [dialogVerCarrera, setDialogVerCarrera] = useState(false)
@@ -22,6 +29,14 @@ const RegistroCarrera = ({ cambioVista }) => {
     useState(false)
   const [dialogConfirmElminarMateria, setDialogConfirmElminarMateria] =
     useState(false)
+
+  const crearCarrera = (variables) => {
+    return request(
+      process.env.NEXT_PUBLIC_URL_BACKEND,
+      GQLregMallaCurricular.SAVE_CARRERA,
+      variables
+    )
+  }
 
   useEffect(() => {
     setCarreras([
@@ -351,7 +366,8 @@ const RegistroCarrera = ({ cambioVista }) => {
         <InputText
           className="w-full"
           id="cod_carrera"
-          /* value={datosEstudiante?.cedula} */
+          value={codCarrera}
+          onChange={(e) => setCodCarrera(e.target.value)}
           autoComplete="off"
         />
         <label htmlFor="cod_carrera">Código de Carrera</label>
@@ -360,7 +376,7 @@ const RegistroCarrera = ({ cambioVista }) => {
         <InputText
           className="w-full"
           id="nb_carrera"
-          /* value={datosEstudiante?.cedula} */
+          value={nombCarrera}
           autoComplete="off"
         />
         <label htmlFor="nb_carrera">Nombre de la Carrera</label>
@@ -369,16 +385,18 @@ const RegistroCarrera = ({ cambioVista }) => {
         <InputText
           className="w-full"
           id="tp_carrera"
-          /* value={datosEstudiante?.cedula} */
+          value={tituloCarrera}
+          onChange={(e) => setTituloCarrera(e.target.value)}
           autoComplete="off"
         />
-        <label htmlFor="tp_carrera">Tipo de Carrera</label>
+        <label htmlFor="tp_carrera">Titulo de Carrera</label>
       </span>
       <span className="p-float-label field">
         <InputText
           className="w-full"
           id="tp_ciclos"
-          /* value={datosEstudiante?.cedula} */
+          value={tpCiclos}
+          onChange={(e) => setTpCiclos(e.target.value)}
           autoComplete="off"
         />
         <label htmlFor="tp_ciclos">Tipo de Ciclos</label>
