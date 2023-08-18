@@ -699,7 +699,7 @@ const RegistroPrevio = ({ data }) => {
 
         <Button
           icon="pi pi-check"
-          label={infoUser?.getInfoUsuario.response.bl_registro ? "Guardar" : "Registrarse"}
+          label={infoUser?.getInfoUsuario.response?.bl_registro ? "Guardar" : "Registrarse"}
           onClick={() => setConfirmRegistrar(true)}
           disabled={evalToFormForPais}
         />
