@@ -29,7 +29,6 @@ const RegistroPrevio = ({ data }) => {
   const [paisNacimiento, setPaisNacimiento] = useState(null)
   const [discapacidad, setDiscapacidad] = useState(null)
   const [sexo, setSexo] = useState(null)
-
   const [estadoCivil, setEstadoCivil] = useState(null)
   const [pais, setPais] = useState(null)
   const [estado, setEstado] = useState(null)
@@ -42,7 +41,6 @@ const RegistroPrevio = ({ data }) => {
   const [nombreDeVia, setNombreDeVia] = useState('')
   const [tipoDeVivienda, setTipoDeVivienda] = useState(null)
   const [numeroDeVivienda, setNumeroDeVivienda] = useState('')
-
   const [confirmRegistrar, setConfirmRegistrar] = useState(false)
   const [blockedPanel, setBlockedPanel] = useState(false)
   const [evalToFormForPais, setEvalToFormForPais] = useState(true)
@@ -50,6 +48,30 @@ const RegistroPrevio = ({ data }) => {
   const { data: infoUser } = useSWR(
     idUser ? [GQLUsuarios.GET_INFO_USER_REG, { id_usuario: idUser }] : null
   )
+
+  function isValidDate(date) {
+    const year = date.getFullYear()
+
+    if (year < 1910 || year > 2023) {
+      return true
+    }
+
+    return false
+  }
+
+  function validateDate(fecha) {
+    if (fecha) {
+      const date = new Date(fecha)
+      if (isValidDate(date) || date.toString().includes('Invalid Date')) {
+        toast.current.show({
+          severity: 'error',
+          summary: '¡ Atención !',
+          detail: 'Fecha Invalida'
+        })
+        setFechaNaci(null)
+      }
+    }
+  }
 
   useEffect(() => {
     if (infoUser?.getInfoUsuario.response) {
@@ -438,6 +460,7 @@ const RegistroPrevio = ({ data }) => {
                 setFechaNaci(e.value)
               }}
               autoComplete="off"
+              onBlur={() => validateDate(fechanaci)}
             />
             <label htmlFor="fechanaci">Fecha de nacimiento</label>
           </span>
@@ -699,7 +722,11 @@ const RegistroPrevio = ({ data }) => {
 
         <Button
           icon="pi pi-check"
-          label={infoUser?.getInfoUsuario.response?.bl_registro ? "Guardar" : "Registrarse"}
+          label={
+            infoUser?.getInfoUsuario.response?.bl_registro
+              ? 'Guardar'
+              : 'Registrarse'
+          }
           onClick={() => setConfirmRegistrar(true)}
           disabled={evalToFormForPais}
         />
