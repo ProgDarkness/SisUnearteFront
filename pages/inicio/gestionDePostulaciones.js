@@ -60,7 +60,7 @@ const GestionDePostulaciones = () => {
         <Button
           icon="pi pi-check"
           className="p-button-success mr-1"
-          tooltip="Modificar"
+          tooltip="Confirmar"
           onClick={() => {
             setDialogConfirmConfirmarPostulado(true)
           }}
@@ -78,7 +78,7 @@ const GestionDePostulaciones = () => {
   }
 
   return (
-    <div >
+    <div>
       <DialogDatosEstudiantes
         activeDialogVerDatosEstudiantes={activeDialogVerDatosEstudiantes}
         setActiveDialogVerDatosEstudiantes={setActiveDialogVerDatosEstudiantes}

@@ -13,6 +13,7 @@ import GQLConsultasGenerales from 'graphql/consultasGenerales'
 import RegistroPrevio from './registroprevio'
 import RegOfertaAcademica from './registroOfertaAcademica'
 import GestionDePostulaciones from './gestionDePostulaciones'
+import InformacionDelEstudiante from './informacionDelEstudiante'
 
 const VistasContext = createContext({})
 
@@ -25,7 +26,8 @@ export default function index({ data }) {
     cargaMallaCurricular: false,
     registroPrevio: false,
     regOfertaAcademica: false,
-    gestionDePostulaciones: false
+    gestionDePostulaciones: false,
+    informacionDelEstudiante: false
   }
   const [mostrarVistas, setMostrarVistas] = useState(templateContext)
 
@@ -76,6 +78,9 @@ export default function index({ data }) {
               {mostrarVistas?.regOfertaAcademica && <RegOfertaAcademica />}
               {mostrarVistas?.gestionDePostulaciones && (
                 <GestionDePostulaciones />
+              )}
+              {mostrarVistas?.informacionDelEstudiante && (
+                <InformacionDelEstudiante />
               )}
             </Card>
             {/* eslint-disable-next-line react/no-unknown-property */}

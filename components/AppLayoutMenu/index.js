@@ -162,6 +162,29 @@ export default function Index({ children, verMenu = true }) {
             >
               Inscripcion Electiva
             </h1>
+            <h1
+              className={`text-white font-medium rounded-md mt-2 cursor-pointer hover:bg-[#805e5e] ${
+                mostrarVistas?.informacionDelEstudiante
+                  ? 'bg-[#805e5e]'
+                  : 'bg-[#ae8e8e]'
+              }`}
+              onClick={() => {
+                const newVistas = {
+                  [`informacionDelEstudiante`]:
+                    !mostrarVistas?.informacionDelEstudiante
+                }
+                setMostrarVistas((prevState) => ({
+                  ...prevState,
+                  ...newVistas,
+                  ...Object.keys(prevState).reduce((acc, key) => {
+                    if (key !== 'informacionDelEstudiante') acc[key] = false
+                    return acc
+                  }, {})
+                }))
+              }}
+            >
+              Informacion Del Estudiante
+            </h1>
           </div>
         </div>
         <div className="w-full">{children}</div>
