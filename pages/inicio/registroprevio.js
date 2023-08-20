@@ -50,9 +50,14 @@ const RegistroPrevio = ({ data }) => {
   )
 
   function isValidDate(date) {
-    const year = date.getFullYear()
+    const [day, month, year] = date.split('/')
+    const dateObject = new Date(year, month - 1, day)
 
-    if (year < 1910 || year > 2023) {
+    if(new Date(year, month, 0).getDate() < day){
+      return true
+    }
+
+    if (dateObject.getFullYear() < 1910 || dateObject.getFullYear() > 2007) {
       return true
     }
 
@@ -61,8 +66,7 @@ const RegistroPrevio = ({ data }) => {
 
   function validateDate(fecha) {
     if (fecha) {
-      const date = new Date(fecha)
-      if (isValidDate(date) || date.toString().includes('Invalid Date')) {
+      if (isValidDate(fecha)) {
         toast.current.show({
           severity: 'error',
           summary: '¡ Atención !',
