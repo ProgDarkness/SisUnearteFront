@@ -22,7 +22,7 @@ const RegistroCarrera = ({ cambioVista }) => {
   const [tpCiclos, setTpCiclos] = useState(null)
   const [tituloCarrera, setTituloCarrera] = useState('')
   const [cantTrayectos, setCantTrayectos] = useState('')
-  const [tipoCarrera, setTipoCarrera] = useState(null) 
+  const [tipoCarrera, setTipoCarrera] = useState(null)
   const [dialogVerCarrera, setDialogVerCarrera] = useState(false)
   const [datosVerCarrera, setDatosVerCarrera] = useState(null)
   const [dialogEditarCarrera, setDialogEditarCarrera] = useState(false)
@@ -72,8 +72,6 @@ const RegistroCarrera = ({ cambioVista }) => {
       }
     )
   }
-
-  
 
   const acceptElminarCarrera = () => {
     console.log('SI')
@@ -228,6 +226,15 @@ const RegistroCarrera = ({ cambioVista }) => {
           icon="pi pi-plus"
           label="Registrar"
           onClick={registrarCarrera}
+          disabled={
+            !codCarrera ||
+            !nombCarrera ||
+            !tituloCarrera ||
+            !tpCiclos ||
+            !cantTrayectos ||
+            !tipoCarrera ||
+            !sedeCarrera
+          }
         />
       </div>
       <span className="p-float-label field">

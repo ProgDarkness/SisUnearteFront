@@ -21,27 +21,25 @@ const DialogRegMateria = ({
   const [codMateria, setCodMateria] = useState('')
   const [nombMateria, setNombMateria] = useState('')
   const [idTpMateria, setIdTpMateria] = useState(null)
+  const [idSede, setIdSede] = useState(null)
   const [unCredito, setUnCredito] = useState('')
   const [horasSemanales, setHorasSemanales] = useState('')
-  const [materias, setMaterias] = useState([])
   const [datosEditarMateria, setDatosEditarMateria] = useState(null)
   const [dialogEditarMateria, setDialogEditarMateria] = useState(false)
   const [dialogConfirmElminarMateria, setDialogConfirmElminarMateria] =
     useState(false)
 
   const { data: tpmateria } = useSWR(GQLconsultasGenerales.GET_TIPO_MATERIA)
-
-  useEffect(() => {
-    setMaterias([
-      {
-        carrera_materia: 'Arte',
-        cod_materia: 'ACT20-1',
-        nb_materia: 'Actuacion',
-        tec_materia: 'Taller',
-        cant_uni_cre: 12
-      }
-    ])
-  }, [])
+  const { data: materias } = useSWR(GQLregMallaCurricular.GET_MATERIAS)
+  console.log()
+  const { data: sedeMateria } = useSWR(
+    idCarrera
+      ? [
+          GQLregMallaCurricular.GET_SEDE_CARRERA_MATERIA,
+          { carrera: parseInt(idCarrera) }
+        ]
+      : null
+  )
 
   const crearMateria = (variables) => {
     return request(
@@ -185,24 +183,47 @@ const DialogRegMateria = ({
             />
             <label htmlFor="new_uni_cre_carrera">Horas Semanales</label>
           </span>
-          <div className="col-span-5 flex justify-center">
+          <span className="p-float-label field">
+            <Dropdown
+              className="w-full"
+              id="new_sede_carrera"
+              options={sedeMateria?.obtenerSedesPorCarrera.response}
+              optionLabel="nombre"
+              optionValue="id"
+              value={idSede}
+              onChange={(e) => setIdSede(e.value)}
+              autoComplete="off"
+            />
+            <label htmlFor="new_sede_carrera">Sede</label>
+          </span>
+          <div className="flex">
             <Button
               label="Registrar"
               icon="pi pi-plus"
               onClick={() => setDialogRegMateria(false)}
+              disabled={
+                !idCarrera ||
+                !codMateria ||
+                !nombMateria ||
+                !idTpMateria ||
+                !unCredito ||
+                !horasSemanales ||
+                !idSede
+              }
             />
           </div>
         </div>
         <div className="col-span-5">
           <DataTable
-            value={materias}
+            value={materias?.obtenerTodasMaterias.response}
             emptyMessage="No se encuentran materias registradas."
           >
             <Column field="carrera_materia" header="Carrera" />
-            <Column field="cod_materia" header="Codigo" />
-            <Column field="nb_materia" header="Materia" />
+            <Column field="codigo" header="Codigo" />
+            <Column field="nombre" header="Materia" />
             <Column field="tec_materia" header="Tecnica" />
-            <Column field="cant_uni_cre" header="Unidades de Credito" />
+            <Column field="credito" header="Unidades de Credito" />
+            <Column field="hora" header="Horas Semanales" />
             <Column body={accionBodyTemplateMaterias} />
           </DataTable>
         </div>

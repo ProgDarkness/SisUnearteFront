@@ -14,6 +14,7 @@ import RegistroPrevio from './registroprevio'
 import RegOfertaAcademica from './registroOfertaAcademica'
 import GestionDePostulaciones from './gestionDePostulaciones'
 import InformacionDelEstudiante from './informacionDelEstudiante'
+import PruebasImportExport from './pruebasImportExport'
 
 const VistasContext = createContext({})
 
@@ -27,7 +28,8 @@ export default function index({ data }) {
     registroPrevio: false,
     regOfertaAcademica: false,
     gestionDePostulaciones: false,
-    informacionDelEstudiante: false
+    informacionDelEstudiante: false,
+    pruebasImportExport: false
   }
   const [mostrarVistas, setMostrarVistas] = useState(templateContext)
 
@@ -82,6 +84,7 @@ export default function index({ data }) {
               {mostrarVistas?.informacionDelEstudiante && (
                 <InformacionDelEstudiante />
               )}
+              {mostrarVistas?.pruebasImportExport && <PruebasImportExport />}
             </Card>
             {/* eslint-disable-next-line react/no-unknown-property */}
             <style jsx global>{`

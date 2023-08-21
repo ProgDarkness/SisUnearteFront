@@ -185,6 +185,29 @@ export default function Index({ children, verMenu = true }) {
             >
               Informacion Del Estudiante
             </h1>
+            <h1
+              className={`text-white font-medium rounded-md mt-2 cursor-pointer hover:bg-[#805e5e] ${
+                mostrarVistas?.pruebasImportExport
+                  ? 'bg-[#805e5e]'
+                  : 'bg-[#ae8e8e]'
+              }`}
+              onClick={() => {
+                const newVistas = {
+                  [`pruebasImportExport`]:
+                    !mostrarVistas?.pruebasImportExport
+                }
+                setMostrarVistas((prevState) => ({
+                  ...prevState,
+                  ...newVistas,
+                  ...Object.keys(prevState).reduce((acc, key) => {
+                    if (key !== 'pruebasImportExport') acc[key] = false
+                    return acc
+                  }, {})
+                }))
+              }}
+            >
+              Pruebas para Import Export
+            </h1>
           </div>
         </div>
         <div className="w-full">{children}</div>

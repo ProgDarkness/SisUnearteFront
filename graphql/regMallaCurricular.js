@@ -24,5 +24,32 @@ export default {
         }
       }
     }
+  `,
+  GET_SEDE_CARRERA_MATERIA: gql`
+    query obtenerSedesPorCarrera($carrera: Int!) {
+      obtenerSedesPorCarrera(carrera: $carrera) {
+        status
+        message
+        type
+        response {
+          id
+          nombre
+        }
+      }
+    }
+  `,
+  GET_MATERIAS: gql`
+    query obtenertodasmaterias {
+      obtenerTodasMaterias {
+        response {
+          id
+          codigo
+          nombre
+          credito
+          hora
+          estatus
+        }
+      }
+    }
   `
 }
