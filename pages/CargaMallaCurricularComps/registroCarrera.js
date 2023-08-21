@@ -1,34 +1,40 @@
 import { Button } from 'primereact/button'
 import { Column } from 'primereact/column'
 import { DataTable } from 'primereact/datatable'
-import { Dialog } from 'primereact/dialog'
 import { InputText } from 'primereact/inputtext'
-import React, { useEffect, useState } from 'react'
+import React, { useRef, useState } from 'react'
 import DialogVerCarrera from './dialogVerCarrera'
 import DialogEditarCarrera from './dialogEditarCarrera'
 import { ConfirmDialog } from 'primereact/confirmdialog'
 import request from 'graphql-request'
 import GQLregMallaCurricular from 'graphql/regMallaCurricular'
+import GQLconsultasGenerales from 'graphql/consultasGenerales'
+import { Toast } from 'primereact/toast'
+import { Dropdown } from 'primereact/dropdown'
+import useSWR from 'swr'
+import DialogRegMateria from './dialogCrearMateria'
 
 const RegistroCarrera = ({ cambioVista }) => {
+  const toast = useRef(null)
   const [codCarrera, setCodCarrera] = useState('')
+  const [sedeCarrera, setSedeCarrera] = useState(null)
   const [nombCarrera, setNombCarrera] = useState('')
   const [tpCiclos, setTpCiclos] = useState(null)
   const [tituloCarrera, setTituloCarrera] = useState('')
   const [cantTrayectos, setCantTrayectos] = useState('')
-  const [carreras, setCarreras] = useState([])
-  const [materias, setMaterias] = useState([])
+  const [tipoCarrera, setTipoCarrera] = useState(null) 
   const [dialogVerCarrera, setDialogVerCarrera] = useState(false)
   const [datosVerCarrera, setDatosVerCarrera] = useState(null)
   const [dialogEditarCarrera, setDialogEditarCarrera] = useState(false)
   const [datosEditarCarrera, setDatosEditarCarrera] = useState(null)
-  const [dialogEditarMateria, setDialogEditarMateria] = useState(false)
-  const [datosEditarMateria, setDatosEditarMateria] = useState(null)
   const [dialogRegMateria, setDialogRegMateria] = useState(false)
   const [dialogConfirmElminarCarrera, setDialogConfirmElminarCarrera] =
     useState(false)
-  const [dialogConfirmElminarMateria, setDialogConfirmElminarMateria] =
-    useState(false)
+
+  const { data: tiposCarreras } = useSWR(GQLconsultasGenerales.GET_TIPO_CARRERA)
+  const { data: tiposCiclos } = useSWR(GQLconsultasGenerales.GET_TIPO_CICLOS)
+  const { data: carreras, mutate } = useSWR(GQLregMallaCurricular.GET_CARRERAS)
+  const { data: sedes } = useSWR(GQLconsultasGenerales.GET_SEDES)
 
   const crearCarrera = (variables) => {
     return request(
@@ -38,25 +44,36 @@ const RegistroCarrera = ({ cambioVista }) => {
     )
   }
 
-  useEffect(() => {
-    setCarreras([
-      {
-        cod_carrera: 'ART20-1',
-        nb_carrera: 'Arte',
-        tp_carrera: 'Pre-Grado',
-        tp_ciclo: 'Anual'
+  const registrarCarrera = () => {
+    const InputCrearCarrera = {
+      codigo: codCarrera,
+      nombre: nombCarrera,
+      tipo: parseInt(tipoCarrera),
+      ciclo: parseInt(tpCiclos),
+      titulo: tituloCarrera,
+      cantTrayectos: parseInt(cantTrayectos),
+      sede: parseInt(sedeCarrera)
+    }
+    crearCarrera({ InputCrearCarrera }).then(
+      ({ crearCarrera: { status, message, type } }) => {
+        setCodCarrera('')
+        setNombCarrera('')
+        setTipoCarrera(null)
+        setTpCiclos(null)
+        setTituloCarrera('')
+        setCantTrayectos(null)
+        setSedeCarrera(null)
+        toast.current.show({
+          severity: type,
+          summary: '¡ Atención !',
+          detail: message
+        })
+        mutate()
       }
-    ])
-    setMaterias([
-      {
-        carrera_materia: 'Arte',
-        cod_materia: 'ACT20-1',
-        nb_materia: 'Actuacion',
-        tec_materia: 'Taller',
-        cant_uni_cre: 12
-      }
-    ])
-  }, [])
+    )
+  }
+
+  
 
   const acceptElminarCarrera = () => {
     console.log('SI')
@@ -64,16 +81,6 @@ const RegistroCarrera = ({ cambioVista }) => {
 
   const rejectElminarCarrera = () => {
     console.log('NO')
-  }
-
-  const acceptEliminarMateria = () => {
-    console.log('SI')
-    setDialogRegMateria(true)
-  }
-
-  const rejectEliminarMateria = () => {
-    console.log('NO')
-    setDialogRegMateria(true)
   }
 
   const HeaderTrayectos = () => {
@@ -123,191 +130,14 @@ const RegistroCarrera = ({ cambioVista }) => {
     )
   }
 
-  const accionBodyTemplateMaterias = (rowData) => {
-    return (
-      <div className="flex justify-center">
-        <Button
-          icon="pi pi-pencil"
-          className="p-button-help mr-1"
-          tooltip="Modificar"
-          onClick={() => {
-            setDatosEditarMateria(rowData)
-            setDialogRegMateria(false)
-            setDialogEditarMateria(true)
-          }}
-          tooltipOptions={{ position: 'top' }}
-        />
-        <Button
-          icon="pi pi-times"
-          className="p-button-danger"
-          tooltip="Eliminar"
-          tooltipOptions={{ position: 'top' }}
-          onClick={() => {
-            setDialogRegMateria(false)
-            setDialogConfirmElminarMateria(true)
-          }}
-        />
-      </div>
-    )
-  }
-
-  const DialogEditarMateria = () => {
-    return (
-      <Dialog
-        visible={dialogEditarMateria}
-        onHide={() => {
-          setDialogEditarMateria(false)
-          setDialogRegMateria(true)
-        }}
-        header="Modificar Materia"
-        resizable={false}
-        draggable={false}
-      >
-        <div className="grid grid-cols-5 gap-4 m-2">
-          <span className="p-float-label field">
-            <InputText
-              className="w-full"
-              id="new_carrera_materia"
-              value={datosEditarMateria?.carrera_materia}
-              autoComplete="off"
-            />
-            <label htmlFor="new_carrera_materia">Carrera</label>
-          </span>
-          <span className="p-float-label field">
-            <InputText
-              className="w-full"
-              id="new_cod_carrera"
-              value={datosEditarMateria?.cod_materia}
-              autoComplete="off"
-            />
-            <label htmlFor="new_cod_carrera">Codigo</label>
-          </span>
-          <span className="p-float-label field">
-            <InputText
-              className="w-full"
-              id="new_nb_carrera"
-              value={datosEditarMateria?.nb_materia}
-              autoComplete="off"
-            />
-            <label htmlFor="new_nb_carrera">Materia</label>
-          </span>
-          <span className="p-float-label field">
-            <InputText
-              className="w-full"
-              id="new_tec_materia"
-              value={datosEditarMateria?.tec_materia}
-              autoComplete="off"
-            />
-            <label htmlFor="new_tec_materia">Tecnica</label>
-          </span>
-          <span className="p-float-label field">
-            <InputText
-              className="w-full"
-              id="new_uni_cre_materia"
-              value={datosEditarMateria?.cant_uni_cre}
-              autoComplete="off"
-            />
-            <label htmlFor="new_uni_cre_materia">Unida de Credito</label>
-          </span>
-          <div className="col-span-5 flex justify-center">
-            <Button
-              label="Modificar"
-              icon="pi pi-plus"
-              onClick={() => {
-                setDialogEditarMateria(false)
-                setDialogRegMateria(true)
-              }}
-            />
-          </div>
-        </div>
-      </Dialog>
-    )
-  }
-
-  const DialogRegMateria = () => {
-    return (
-      <Dialog
-        visible={dialogRegMateria}
-        onHide={() => setDialogRegMateria(false)}
-        header="Materias"
-        resizable={false}
-        draggable={false}
-      >
-        <div className="grid grid-cols-5 gap-4 m-2">
-          <span className="p-float-label field">
-            <InputText
-              className="w-full"
-              id="new_carrera_materia"
-              /* value={datosEstudiante?.cedula} */
-              autoComplete="off"
-            />
-            <label htmlFor="new_carrera_materia">Carrera de la Materia</label>
-          </span>
-          <span className="p-float-label field">
-            <InputText
-              className="w-full"
-              id="new_cod_carrera"
-              /* value={datosEstudiante?.cedula} */
-              autoComplete="off"
-            />
-            <label htmlFor="new_cod_carrera">Codigo de la Materia</label>
-          </span>
-          <span className="p-float-label field">
-            <InputText
-              className="w-full"
-              id="new_nb_carrera"
-              /* value={datosEstudiante?.cedula} */
-              autoComplete="off"
-            />
-            <label htmlFor="new_nb_carrera">Nombre de la Materia</label>
-          </span>
-          <span className="p-float-label field">
-            <InputText
-              className="w-full"
-              id="new_tec_carrera"
-              /* value={datosEstudiante?.cedula} */
-              autoComplete="off"
-            />
-            <label htmlFor="new_tec_carrera">Tecnica de la Materia</label>
-          </span>
-          <span className="p-float-label field">
-            <InputText
-              className="w-full"
-              id="new_uni_cre_carrera"
-              /* value={datosEstudiante?.cedula} */
-              autoComplete="off"
-            />
-            <label htmlFor="new_uni_cre_carrera">Unidades de Credito</label>
-          </span>
-          <div className="col-span-5 flex justify-center">
-            <Button
-              label="Registrar"
-              icon="pi pi-plus"
-              onClick={() => setDialogRegMateria(false)}
-            />
-          </div>
-        </div>
-        <div className="col-span-5">
-          <DataTable
-            value={materias}
-            emptyMessage="No se encuentran materias registradas."
-          >
-            <Column field="carrera_materia" header="Carrera" />
-            <Column field="cod_materia" header="Codigo" />
-            <Column field="nb_materia" header="Materia" />
-            <Column field="tec_materia" header="Tecnica" />
-            <Column field="cant_uni_cre" header="Unidades de Credito" />
-            <Column body={accionBodyTemplateMaterias} />
-          </DataTable>
-        </div>
-      </Dialog>
-    )
-  }
-
   return (
     <div className="grid grid-cols-5 gap-4 m-2 -mt-2">
-      <DialogRegMateria />
-      <DialogEditarMateria />
+      <Toast ref={toast} />
+      <DialogRegMateria
+        dialogRegMateria={dialogRegMateria}
+        setDialogRegMateria={setDialogRegMateria}
+        carreras={carreras}
+      />
       <ConfirmDialog
         visible={dialogConfirmElminarCarrera}
         onHide={() => setDialogConfirmElminarCarrera(false)}
@@ -316,17 +146,6 @@ const RegistroCarrera = ({ cambioVista }) => {
         icon="pi pi-exclamation-triangle"
         accept={acceptElminarCarrera}
         reject={rejectElminarCarrera}
-        acceptLabel="SI"
-        rejectLabel="NO"
-      />
-      <ConfirmDialog
-        visible={dialogConfirmElminarMateria}
-        onHide={() => setDialogConfirmElminarMateria(false)}
-        message="¿Esta seguro que desea eliminar la materia?"
-        header="Confirmacion"
-        icon="pi pi-exclamation-triangle"
-        accept={acceptEliminarMateria}
-        reject={rejectEliminarMateria}
         acceptLabel="SI"
         rejectLabel="NO"
       />
@@ -378,6 +197,7 @@ const RegistroCarrera = ({ cambioVista }) => {
           id="nb_carrera"
           value={nombCarrera}
           autoComplete="off"
+          onChange={(e) => setNombCarrera(e.target.value)}
         />
         <label htmlFor="nb_carrera">Nombre de la Carrera</label>
       </span>
@@ -392,12 +212,14 @@ const RegistroCarrera = ({ cambioVista }) => {
         <label htmlFor="tp_carrera">Titulo de Carrera</label>
       </span>
       <span className="p-float-label field">
-        <InputText
+        <Dropdown
           className="w-full"
           id="tp_ciclos"
           value={tpCiclos}
+          options={tiposCiclos?.obtenerCiclos.response}
           onChange={(e) => setTpCiclos(e.target.value)}
-          autoComplete="off"
+          optionLabel="nombre"
+          optionValue="id"
         />
         <label htmlFor="tp_ciclos">Tipo de Ciclos</label>
       </span>
@@ -405,22 +227,61 @@ const RegistroCarrera = ({ cambioVista }) => {
         <Button
           icon="pi pi-plus"
           label="Registrar"
-          /* onClick={() => {
-              setDatosEditarMalla(rowData)
-              setDialogEditarMalla(true)
-            }} */
+          onClick={registrarCarrera}
         />
       </div>
+      <span className="p-float-label field">
+        <Dropdown
+          className="w-full"
+          id="cant_trayecto"
+          value={cantTrayectos}
+          onChange={(e) => setCantTrayectos(e.target.value)}
+          optionLabel="label"
+          optionValue="value"
+          options={[
+            { label: '1', value: 1 },
+            { label: '2', value: 2 },
+            { label: '3', value: 3 },
+            { label: '4', value: 4 }
+          ]}
+        />
+        <label htmlFor="cant_trayecto">Cantidad de trayectos</label>
+      </span>
+      <span className="p-float-label field">
+        <Dropdown
+          className="w-full"
+          id="tp_carrera"
+          value={tipoCarrera}
+          onChange={(e) => setTipoCarrera(e.target.value)}
+          options={tiposCarreras?.obtenerTipoCarrera.response}
+          optionLabel="nombre"
+          optionValue="id"
+        />
+        <label htmlFor="tp_carrera">Tipo de carrera</label>
+      </span>
+      <span className="p-float-label field">
+        <Dropdown
+          className="w-full"
+          id="tp_carrera"
+          value={sedeCarrera}
+          onChange={(e) => setSedeCarrera(e.target.value)}
+          options={sedes?.obtenerSedes.response}
+          optionLabel="nombre"
+          optionValue="id"
+        />
+        <label htmlFor="tp_carrera">Seca de la Carrera</label>
+      </span>
       <div className="col-span-5">
         <HeaderTrayectos />
         <DataTable
-          value={carreras}
+          value={carreras?.obtenerTodasCarreras.response}
           emptyMessage="No se encuentran trayectos registrados."
         >
-          <Column field="cod_carrera" header="Codigo de Carrera" />
-          <Column field="nb_carrera" header="Nombre de Carrera" />
-          <Column field="tp_carrera" header="Tipo de Carrera" />
-          <Column field="tp_ciclo" header="Tipo de Ciclo" />
+          <Column field="codigo" header="Codigo" />
+          <Column field="nombre" header="Nombre" />
+          <Column field="tipo" header="Tipo" />
+          <Column field="ciclo" header="Tipo de Ciclo" />
+          <Column field="titulo" header="Titulo" />
           <Column body={accionBodyTemplate} />
         </DataTable>
       </div>

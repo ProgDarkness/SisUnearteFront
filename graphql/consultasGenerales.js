@@ -138,5 +138,54 @@ export default {
         }
       }
     }
+  `,
+  GET_TIPO_CARRERA: gql`
+    query tiposcarreras {
+      obtenerTipoCarrera {
+        response {
+          id
+          nombre
+        }
+      }
+    }
+  `,
+  GET_TIPO_CICLOS: gql`
+    query obtenerCiclos {
+      obtenerCiclos {
+        status
+        message
+        type
+        response {
+          id
+          nombre
+        }
+      }
+    }
+  `,
+  GET_TIPO_MATERIA: gql`
+    query obtenerTipoMateria {
+      obtenerTipoMateria {
+        status
+        message
+        type
+        response {
+          id
+          nombre
+        }
+      }
+    }
+  `,
+  GET_SEDES: gql`
+    query obtenerSedes {
+      obtenerSedes {
+        status
+        message
+        type
+        response {
+          id
+          nombre
+        }
+      }
+    }
   `
 }
