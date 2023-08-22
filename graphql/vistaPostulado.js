@@ -18,5 +18,16 @@ export default {
         }
       }
     }
+  `,
+  INSERT_ESTUDIANTES: gql`
+    mutation insertarEstudiante(
+      $InputInsertarEstudiante: InputInsertarEstudiante!
+    ) {
+      insertarEstudiante(input: $InputInsertarEstudiante) {
+        status
+        message
+        type
+      }
+    }
   `
 }

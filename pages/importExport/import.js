@@ -1,12 +1,24 @@
+import request from 'graphql-request'
 import { Button } from 'primereact/button'
 import { FileUpload } from 'primereact/fileupload'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import * as XLSX from 'xlsx'
+import GQLvistaPostulado from 'graphql/vistaPostulado'
+import { Toast } from 'primereact/toast'
 
 const Import = ({ cambioVista }) => {
+  const toast = useRef(null)
   const [itemsDatos, setItemsDatos] = useState(null)
 
   console.log(itemsDatos)
+
+  const insertEstudiante = (variables) => {
+    return request(
+      process.env.NEXT_PUBLIC_URL_BACKEND,
+      GQLvistaPostulado.INSERT_ESTUDIANTES,
+      variables
+    )
+  }
 
   const adjuntarArchivo = () => {
     document.querySelector('#fileUpload input').click()
@@ -29,11 +41,27 @@ const Import = ({ cambioVista }) => {
         defval: ''
       })
       setItemsDatos(data)
+
+      const InputInsertarEstudiante = {
+        estatus: 1,
+        datos: data
+      }
+
+      insertEstudiante({ InputInsertarEstudiante }).then(
+        ({ insertarEstudiante: { status, message, type } }) => {
+          toast.current.show({
+            severity: type,
+            summary: '¡ Atención !',
+            detail: message
+          })
+        }
+      )
     }
   }
 
   return (
     <div className="grid col-span-5 gap-4 mt-2">
+      <Toast ref={toast} />
       <div className="col-span-5 flex justify-between">
         <div />
         <h1 className="text-3xl font-semibold text-white">Import de Data</h1>
