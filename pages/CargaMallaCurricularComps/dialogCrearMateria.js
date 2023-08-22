@@ -4,19 +4,21 @@ import { DataTable } from 'primereact/datatable'
 import { Dialog } from 'primereact/dialog'
 import { Dropdown } from 'primereact/dropdown'
 import { InputText } from 'primereact/inputtext'
-import { useEffect, useState } from 'react'
+import { useRef, useState } from 'react'
 import GQLconsultasGenerales from 'graphql/consultasGenerales'
 import GQLregMallaCurricular from 'graphql/regMallaCurricular'
 import useSWR from 'swr'
 import request from 'graphql-request'
 import DialogEditarMateria from './dialogEditarMateria'
 import { ConfirmDialog } from 'primereact/confirmdialog'
+import { Toast } from 'primereact/toast'
 
 const DialogRegMateria = ({
   dialogRegMateria,
   setDialogRegMateria,
   carreras
 }) => {
+  const toast = useRef(null)
   const [idCarrera, setIdCarrera] = useState(null)
   const [codMateria, setCodMateria] = useState('')
   const [nombMateria, setNombMateria] = useState('')
@@ -28,10 +30,10 @@ const DialogRegMateria = ({
   const [dialogEditarMateria, setDialogEditarMateria] = useState(false)
   const [dialogConfirmElminarMateria, setDialogConfirmElminarMateria] =
     useState(false)
+  const [dataEliminarMateria, setDataEliminarMateria] = useState(null)
 
   const { data: tpmateria } = useSWR(GQLconsultasGenerales.GET_TIPO_MATERIA)
-  const { data: materias } = useSWR(GQLregMallaCurricular.GET_MATERIAS)
-  console.log()
+  const { data: materias, mutate } = useSWR(GQLregMallaCurricular.GET_MATERIAS)
   const { data: sedeMateria } = useSWR(
     idCarrera
       ? [
@@ -44,8 +46,44 @@ const DialogRegMateria = ({
   const crearMateria = (variables) => {
     return request(
       process.env.NEXT_PUBLIC_URL_BACKEND,
-      GQLregMallaCurricular.SAVE_CARRERA,
+      GQLregMallaCurricular.SAVE_MATERIA,
       variables
+    )
+  }
+  const eliminarMateria = (variables) => {
+    return request(
+      process.env.NEXT_PUBLIC_URL_BACKEND,
+      GQLregMallaCurricular.DELETE_MATERIA,
+      variables
+    )
+  }
+
+  const regMateria = () => {
+    const InputCrearMateria = {
+      codigo: codMateria,
+      nombre: nombMateria,
+      credito: parseInt(unCredito),
+      tipo: parseInt(idTpMateria),
+      hora: parseInt(horasSemanales),
+      sede: parseInt(idSede),
+      carrera: parseInt(idCarrera)
+    }
+    crearMateria({ InputCrearMateria }).then(
+      ({ crearMateria: { message } }) => {
+        setIdCarrera(null)
+        setCodMateria('')
+        setNombMateria('')
+        setIdTpMateria(null)
+        setIdSede(null)
+        setHorasSemanales('')
+        setUnCredito('')
+        toast.current.show({
+          severity: 'success',
+          summary: '¡ Atención !',
+          detail: message
+        })
+        mutate()
+      }
     )
   }
 
@@ -58,7 +96,6 @@ const DialogRegMateria = ({
           tooltip="Modificar"
           onClick={() => {
             setDatosEditarMateria(rowData)
-            setDialogRegMateria(false)
             setDialogEditarMateria(true)
           }}
           tooltipOptions={{ position: 'top' }}
@@ -69,8 +106,8 @@ const DialogRegMateria = ({
           tooltip="Eliminar"
           tooltipOptions={{ position: 'top' }}
           onClick={() => {
-            setDialogRegMateria(false)
             setDialogConfirmElminarMateria(true)
+            setDataEliminarMateria(rowData)
           }}
         />
       </div>
@@ -78,8 +115,20 @@ const DialogRegMateria = ({
   }
 
   const acceptEliminarMateria = () => {
-    console.log('SI')
-    setDialogRegMateria(true)
+    const InputEliminarMateria = {
+      idmateria: parseInt(dataEliminarMateria?.id)
+    }
+    eliminarMateria({ InputEliminarMateria }).then(
+      ({ eliminarMateria: { message } }) => {
+        setDataEliminarMateria(null)
+        toast.current.show({
+          severity: 'success',
+          summary: '¡ Atención !',
+          detail: message
+        })
+        mutate()
+      }
+    )
   }
 
   const rejectEliminarMateria = () => {
@@ -89,6 +138,7 @@ const DialogRegMateria = ({
 
   return (
     <>
+      <Toast ref={toast} />
       <DialogEditarMateria
         dialogEditarMateria={dialogEditarMateria}
         setDialogEditarMateria={setDialogEditarMateria}
@@ -200,7 +250,7 @@ const DialogRegMateria = ({
             <Button
               label="Registrar"
               icon="pi pi-plus"
-              onClick={() => setDialogRegMateria(false)}
+              onClick={regMateria}
               disabled={
                 !idCarrera ||
                 !codMateria ||
@@ -218,10 +268,10 @@ const DialogRegMateria = ({
             value={materias?.obtenerTodasMaterias.response}
             emptyMessage="No se encuentran materias registradas."
           >
-            <Column field="carrera_materia" header="Carrera" />
+            <Column field="carrera" header="Carrera" />
             <Column field="codigo" header="Codigo" />
             <Column field="nombre" header="Materia" />
-            <Column field="tec_materia" header="Tecnica" />
+            <Column field="tipo" header="Tecnica" />
             <Column field="credito" header="Unidades de Credito" />
             <Column field="hora" header="Horas Semanales" />
             <Column body={accionBodyTemplateMaterias} />

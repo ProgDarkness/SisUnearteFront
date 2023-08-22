@@ -30,6 +30,7 @@ const RegistroCarrera = ({ cambioVista }) => {
   const [dialogRegMateria, setDialogRegMateria] = useState(false)
   const [dialogConfirmElminarCarrera, setDialogConfirmElminarCarrera] =
     useState(false)
+  const [dataEliminarCarrera, setDataEliminarCarrera] = useState(null)
 
   const { data: tiposCarreras } = useSWR(GQLconsultasGenerales.GET_TIPO_CARRERA)
   const { data: tiposCiclos } = useSWR(GQLconsultasGenerales.GET_TIPO_CICLOS)
@@ -40,6 +41,14 @@ const RegistroCarrera = ({ cambioVista }) => {
     return request(
       process.env.NEXT_PUBLIC_URL_BACKEND,
       GQLregMallaCurricular.SAVE_CARRERA,
+      variables
+    )
+  }
+
+  const eliminarCarrera = (variables) => {
+    return request(
+      process.env.NEXT_PUBLIC_URL_BACKEND,
+      GQLregMallaCurricular.DELETE_CARRERA,
       variables
     )
   }
@@ -74,7 +83,20 @@ const RegistroCarrera = ({ cambioVista }) => {
   }
 
   const acceptElminarCarrera = () => {
-    console.log('SI')
+    const InputEliminarCarrera = {
+      idcarrera: parseInt(dataEliminarCarrera?.id)
+    }
+    eliminarCarrera({ InputEliminarCarrera }).then(
+      ({ eliminarCarrera: { message } }) => {
+        setDataEliminarCarrera(null)
+        toast.current.show({
+          severity: 'success',
+          summary: '¡ Atención !',
+          detail: message
+        })
+        mutate()
+      }
+    )
   }
 
   const rejectElminarCarrera = () => {
@@ -122,7 +144,10 @@ const RegistroCarrera = ({ cambioVista }) => {
           className="p-button-danger"
           tooltip="Eliminar"
           tooltipOptions={{ position: 'top' }}
-          onClick={() => setDialogConfirmElminarCarrera(true)}
+          onClick={() => {
+            setDialogConfirmElminarCarrera(true)
+            setDataEliminarCarrera(rowData)
+          }}
         />
       </div>
     )

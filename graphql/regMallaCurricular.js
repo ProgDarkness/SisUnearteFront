@@ -48,7 +48,30 @@ export default {
           credito
           hora
           estatus
+          tipo
+          carrera
         }
+      }
+    }
+  `,
+  SAVE_MATERIA: gql`
+    mutation crearmateria($InputCrearMateria: InputCrearMateria!) {
+      crearMateria(input: $InputCrearMateria) {
+        message
+      }
+    }
+  `,
+  DELETE_CARRERA: gql`
+    mutation eliminarcarrera($InputEliminarCarrera: InputEliminarCarrera!) {
+      eliminarCarrera(input: $InputEliminarCarrera) {
+        message
+      }
+    }
+  `,
+  DELETE_MATERIA: gql`
+    mutation eliminarmateria($InputEliminarMateria: InputEliminarMateria!) {
+      eliminarMateria(input: $InputEliminarMateria) {
+        message
       }
     }
   `
