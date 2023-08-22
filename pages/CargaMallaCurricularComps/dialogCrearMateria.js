@@ -122,7 +122,7 @@ const DialogRegMateria = ({
       ({ eliminarMateria: { message } }) => {
         setDataEliminarMateria(null)
         toast.current.show({
-          severity: 'success',
+          severity: 'error',
           summary: '¡ Atención !',
           detail: message
         })

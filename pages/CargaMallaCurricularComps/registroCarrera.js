@@ -90,7 +90,7 @@ const RegistroCarrera = ({ cambioVista }) => {
       ({ eliminarCarrera: { message } }) => {
         setDataEliminarCarrera(null)
         toast.current.show({
-          severity: 'success',
+          severity: 'error',
           summary: '¡ Atención !',
           detail: message
         })
