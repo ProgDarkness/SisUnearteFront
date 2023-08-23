@@ -36,7 +36,7 @@ const RegistroCarrera = ({ cambioVista }) => {
   const { data: tiposCiclos } = useSWR(GQLconsultasGenerales.GET_TIPO_CICLOS)
   const { data: carreras, mutate } = useSWR(GQLregMallaCurricular.GET_CARRERAS)
   const { data: sedes } = useSWR(GQLconsultasGenerales.GET_SEDES)
-
+  
   const crearCarrera = (variables) => {
     return request(
       process.env.NEXT_PUBLIC_URL_BACKEND,
@@ -209,7 +209,7 @@ const RegistroCarrera = ({ cambioVista }) => {
           className="w-full"
           id="cod_carrera"
           value={codCarrera}
-          onChange={(e) => setCodCarrera(e.target.value)}
+          onChange={(e) => setCodCarrera(e.target.value.toUpperCase())}
           autoComplete="off"
         />
         <label htmlFor="cod_carrera">Código de Carrera</label>
@@ -220,7 +220,7 @@ const RegistroCarrera = ({ cambioVista }) => {
           id="nb_carrera"
           value={nombCarrera}
           autoComplete="off"
-          onChange={(e) => setNombCarrera(e.target.value)}
+          onChange={(e) => setNombCarrera(e.target.value.toUpperCase())}
         />
         <label htmlFor="nb_carrera">Nombre de la Carrera</label>
       </span>
@@ -229,7 +229,7 @@ const RegistroCarrera = ({ cambioVista }) => {
           className="w-full"
           id="tp_carrera"
           value={tituloCarrera}
-          onChange={(e) => setTituloCarrera(e.target.value)}
+          onChange={(e) => setTituloCarrera(e.target.value.toUpperCase())}
           autoComplete="off"
         />
         <label htmlFor="tp_carrera">Titulo de Carrera</label>
@@ -301,7 +301,7 @@ const RegistroCarrera = ({ cambioVista }) => {
           optionLabel="nombre"
           optionValue="id"
         />
-        <label htmlFor="tp_carrera">Seca de la Carrera</label>
+        <label htmlFor="tp_carrera">Sede de la Carrera</label>
       </span>
       <div className="col-span-5">
         <HeaderTrayectos />

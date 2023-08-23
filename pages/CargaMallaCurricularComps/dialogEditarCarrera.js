@@ -205,7 +205,7 @@ const DialogEditarCarrera = ({
             <InputText
               className="w-full"
               id="cod_carrera"
-              value={datosEditarCarrera?.cod_carrera}
+              value={datosEditarCarrera?.estatus}
               disabled
             />
             <label htmlFor="cod_carrera">Estatus de la Carrera</label>
@@ -214,7 +214,7 @@ const DialogEditarCarrera = ({
             <InputText
               className="w-full"
               id="nb_carrera"
-              value={datosEditarCarrera?.nb_carrera}
+              value={datosEditarCarrera?.nombre}
               disabled
             />
             <label htmlFor="nb_carrera">Carrera</label>

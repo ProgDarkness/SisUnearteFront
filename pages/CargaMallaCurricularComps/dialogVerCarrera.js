@@ -2,8 +2,9 @@ import { Column } from 'primereact/column'
 import { DataTable } from 'primereact/datatable'
 import { Dialog } from 'primereact/dialog'
 import { InputText } from 'primereact/inputtext'
-import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
+import GQLregMallaCurricular from 'graphql/regMallaCurricular'
+import useSWR from 'swr'
 
 const DialogVerCarrera = ({
   activeDialogVerCarrera,
@@ -11,7 +12,18 @@ const DialogVerCarrera = ({
   datosVerCarrera,
   setDatosVerCarrera
 }) => {
-  const [infoCarrera, setInfoCarrera] = useState(null)
+  const { data: infoCarrera } = useSWR(
+    datosVerCarrera?.id
+      ? [
+          GQLregMallaCurricular.VER_DETALLE_CARRERA,
+          {
+            InputCarrera: {
+              carrera: parseInt(datosVerCarrera?.id)
+            }
+          }
+        ]
+      : null
+  )
 
   const animation = {
     initial: {
@@ -31,48 +43,11 @@ const DialogVerCarrera = ({
     }
   }
 
-  useEffect(() => {
-    setInfoCarrera([
-      {
-        trayecto: 'Trayecto 1',
-        lapso: 'lapso 1',
-        materia: 'Dibujo',
-        profesor: 'Juan Manuel'
-      },
-      {
-        trayecto: 'Trayecto 1',
-        lapso: 'lapso 1',
-        materia: 'Fotografia',
-        profesor: 'Juan Manuel'
-      },
-      {
-        trayecto: 'Trayecto 1',
-        lapso: 'lapso 2',
-        materia: 'Arte',
-        profesor: 'Juan Manuel'
-      },
-      {
-        trayecto: 'Trayecto 1',
-        lapso: 'lapso 2',
-        materia: 'Fotografia 2',
-        profesor: 'Juan Manuel'
-      },
-      /* ------------------------------------ */
-      {
-        trayecto: 'Trayecto 2',
-        lapso: 'lapso 1',
-        materia: 'Dibujo',
-        profesor: 'Juan Manuel'
-      },
-      {
-        trayecto: 'Trayecto 2',
-        lapso: 'lapso 2',
-        materia: 'Arte',
-        profesor: 'Juan Manuel'
-      }
-      /* ------------------------------------- */
-    ])
-  }, [])
+  /* const bodyMaterias = (rowData) => {
+    if (rowData.nb_materia !== null) {
+      return <div>{rowData.nb_materia}</div>
+    }
+  } */
 
   return (
     <Dialog
@@ -91,7 +66,7 @@ const DialogVerCarrera = ({
           <InputText
             className="w-full"
             id="cod_carrera"
-            value={datosVerCarrera?.cod_carrera}
+            value={datosVerCarrera?.estatus}
             disabled
           />
           <label htmlFor="cod_carrera">Estatus de la Carrera</label>
@@ -100,7 +75,7 @@ const DialogVerCarrera = ({
           <InputText
             className="w-full"
             id="nb_carrera"
-            value={datosVerCarrera?.nb_carrera}
+            value={datosVerCarrera?.nombre}
             disabled
           />
           <label htmlFor="nb_carrera">Carrera</label>
@@ -114,13 +89,13 @@ const DialogVerCarrera = ({
       >
         <div className="col-span-4 mt-3">
           <DataTable
-            value={infoCarrera}
+            value={infoCarrera?.obtenerDetalleCarrera.response}
             emptyMessage="No se encuentran trayectos registrados."
             rowGroupMode="rowspan"
-            groupRowsBy={['trayecto']}
+            groupRowsBy={['nb_trayecto', 'nb_materia']}
           >
-            <Column field="trayecto" header="Trayectos" />
-            <Column field="materia" header="Materias" />
+            <Column field="nb_trayecto" header="Trayectos" />
+            <Column field="nb_materia" header="Materias" />
           </DataTable>
         </div>
       </motion.div>

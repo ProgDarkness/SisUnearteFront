@@ -181,7 +181,7 @@ const DialogRegMateria = ({
               className="w-full"
               id="new_cod_carrera"
               value={codMateria}
-              onChange={(e) => setCodMateria(e.target.value)}
+              onChange={(e) => setCodMateria(e.target.value.toUpperCase())}
               autoComplete="off"
             />
             <label htmlFor="new_cod_carrera">Codigo de la Materia</label>
@@ -191,7 +191,7 @@ const DialogRegMateria = ({
               className="w-full"
               id="new_nb_carrera"
               value={nombMateria}
-              onChange={(e) => setNombMateria(e.target.value)}
+              onChange={(e) => setNombMateria(e.target.value.toUpperCase())}
               autoComplete="off"
             />
             <label htmlFor="new_nb_carrera">Nombre de la Materia</label>
@@ -243,6 +243,7 @@ const DialogRegMateria = ({
               value={idSede}
               onChange={(e) => setIdSede(e.value)}
               autoComplete="off"
+              emptyMessage="Seleccione una carrera"
             />
             <label htmlFor="new_sede_carrera">Sede</label>
           </span>

@@ -74,5 +74,20 @@ export default {
         message
       }
     }
+  `,
+  VER_DETALLE_CARRERA: gql`
+    query obtenerDetalleCarrera($InputCarrera: InputCarrera!) {
+      obtenerDetalleCarrera(input: $InputCarrera) {
+        status
+        message
+        type
+        response {
+          idTrayectoCarrera
+          nb_trayecto
+          id_materia
+          nb_materia
+        }
+      }
+    }
   `
 }
