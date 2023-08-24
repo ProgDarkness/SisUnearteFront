@@ -87,6 +87,10 @@ export default {
             id
             nombre
           }
+          etnia {
+            id
+            nombre
+          }
         }
       }
     }

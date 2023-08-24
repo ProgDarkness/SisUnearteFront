@@ -43,12 +43,6 @@ const DialogVerCarrera = ({
     }
   }
 
-  /* const bodyMaterias = (rowData) => {
-    if (rowData.nb_materia !== null) {
-      return <div>{rowData.nb_materia}</div>
-    }
-  } */
-
   return (
     <Dialog
       visible={activeDialogVerCarrera}
@@ -66,7 +60,7 @@ const DialogVerCarrera = ({
           <InputText
             className="w-full"
             id="cod_carrera"
-            value={datosVerCarrera?.estatus}
+            value={datosVerCarrera?.estatus || ''}
             disabled
           />
           <label htmlFor="cod_carrera">Estatus de la Carrera</label>
@@ -75,7 +69,7 @@ const DialogVerCarrera = ({
           <InputText
             className="w-full"
             id="nb_carrera"
-            value={datosVerCarrera?.nombre}
+            value={datosVerCarrera?.nombre || ''}
             disabled
           />
           <label htmlFor="nb_carrera">Carrera</label>

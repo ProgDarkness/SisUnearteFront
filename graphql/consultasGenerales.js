@@ -187,5 +187,28 @@ export default {
         }
       }
     }
+  `,
+  GET_TIPO_TITULO: gql`
+    query obtenertipotitulos {
+      obtenerTipoTitulo {
+        response {
+          id
+          nombre
+        }
+      }
+    }
+  `,
+  GET_ETNIAS: gql`
+    query obtenerEtnia {
+      obtenerEtnia {
+        status
+        message
+        type
+        response {
+          id
+          nombre
+        }
+      }
+    }
   `
 }

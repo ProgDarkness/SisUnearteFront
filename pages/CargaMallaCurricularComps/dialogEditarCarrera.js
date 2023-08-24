@@ -3,9 +3,11 @@ import { Column } from 'primereact/column'
 import { DataTable } from 'primereact/datatable'
 import { Dialog } from 'primereact/dialog'
 import { InputText } from 'primereact/inputtext'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { ConfirmDialog } from 'primereact/confirmdialog'
+import GQLregMallaCurricular from 'graphql/regMallaCurricular'
+import useSWR from 'swr'
 
 const DialogEditarCarrera = ({
   activeDialogEditarCarrera,
@@ -13,10 +15,22 @@ const DialogEditarCarrera = ({
   datosEditarCarrera,
   setDatosEditarCarrera
 }) => {
-  const [infoCarrera, setInfoCarrera] = useState(null)
   const [dialogAgregarMateria, setDialogAgregarMateria] = useState(false)
   const [dialogConfirmElminarMateria, setDialogConfirmElminarMateria] =
     useState(false)
+
+  const { data: infoCarrera } = useSWR(
+    datosEditarCarrera?.id
+      ? [
+          GQLregMallaCurricular.VER_DETALLE_CARRERA,
+          {
+            InputCarrera: {
+              carrera: parseInt(datosEditarCarrera?.id)
+            }
+          }
+        ]
+      : null
+  )
 
   const acceptEliminarMateria = () => {
     console.log('SI')
@@ -45,49 +59,6 @@ const DialogEditarCarrera = ({
       }
     }
   }
-
-  useEffect(() => {
-    setInfoCarrera([
-      {
-        trayecto: 'Trayecto 1',
-        lapso: 'lapso 1',
-        materia: 'Dibujo',
-        profesor: 'Juan Manuel'
-      },
-      {
-        trayecto: 'Trayecto 1',
-        lapso: 'lapso 1',
-        materia: 'Fotografia',
-        profesor: 'Juan Manuel'
-      },
-      {
-        trayecto: 'Trayecto 1',
-        lapso: 'lapso 2',
-        materia: 'Arte',
-        profesor: 'Juan Manuel'
-      },
-      {
-        trayecto: 'Trayecto 1',
-        lapso: 'lapso 2',
-        materia: 'Fotografia 2',
-        profesor: 'Juan Manuel'
-      },
-      /* ------------------------------------ */
-      {
-        trayecto: 'Trayecto 2',
-        lapso: 'lapso 1',
-        materia: 'Dibujo',
-        profesor: 'Juan Manuel'
-      },
-      {
-        trayecto: 'Trayecto 2',
-        semestre: 'Semestre 2',
-        materia: 'Arte',
-        profesor: 'Juan Manuel'
-      }
-      /* ------------------------------------- */
-    ])
-  }, [])
 
   const DialogAgregarMateria = () => {
     return (
@@ -161,16 +132,18 @@ const DialogEditarCarrera = ({
     )
   }
 
-  const actionBodyTemplateMateria = () => {
+  const actionBodyTemplateMateria = (rowData) => {
     return (
       <div className="flex justify-center">
-        <Button
-          tooltip="Eliminar Materia"
-          icon="pi pi-times"
-          iconPos="left"
-          className="p-button-danger p-1"
-          onClick={() => setDialogConfirmElminarMateria(true)}
-        />
+        {rowData.id_materia && (
+          <Button
+            tooltip="Eliminar Materia"
+            icon="pi pi-times"
+            iconPos="left"
+            className="p-button-danger p-1"
+            onClick={() => setDialogConfirmElminarMateria(true)}
+          />
+        )}
       </div>
     )
   }
@@ -205,7 +178,7 @@ const DialogEditarCarrera = ({
             <InputText
               className="w-full"
               id="cod_carrera"
-              value={datosEditarCarrera?.estatus}
+              value={datosEditarCarrera?.estatus || ''}
               disabled
             />
             <label htmlFor="cod_carrera">Estatus de la Carrera</label>
@@ -214,7 +187,7 @@ const DialogEditarCarrera = ({
             <InputText
               className="w-full"
               id="nb_carrera"
-              value={datosEditarCarrera?.nombre}
+              value={datosEditarCarrera?.nombre || ''}
               disabled
             />
             <label htmlFor="nb_carrera">Carrera</label>
@@ -228,20 +201,20 @@ const DialogEditarCarrera = ({
         >
           <div className="col-span-4 mt-3">
             <DataTable
-              value={infoCarrera}
+              value={infoCarrera?.obtenerDetalleCarrera.response}
               emptyMessage="No se encuentran trayectos registrados."
               rowGroupMode="rowspan"
-              groupRowsBy={['trayecto']}
+              groupRowsBy={['nb_trayecto', 'nb_materia']}
             >
-              <Column field="trayecto" header="Trayectos" />
-              <Column field="materia" header="Materias" />
+              <Column field="nb_trayecto" header="Trayectos" />
+              <Column field="nb_materia" header="Materias" />
               <Column
-                field="materia"
+                field="nb_materia"
                 body={actionBodyTemplateMateria}
                 style={{ width: '8rem' }}
               />
               <Column
-                field="trayecto"
+                field="nb_trayecto"
                 body={actionBodyTemplate}
                 style={{ width: '8rem' }}
               />

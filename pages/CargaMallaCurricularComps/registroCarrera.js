@@ -34,9 +34,10 @@ const RegistroCarrera = ({ cambioVista }) => {
 
   const { data: tiposCarreras } = useSWR(GQLconsultasGenerales.GET_TIPO_CARRERA)
   const { data: tiposCiclos } = useSWR(GQLconsultasGenerales.GET_TIPO_CICLOS)
+  const { data: tiposTitulo } = useSWR(GQLconsultasGenerales.GET_TIPO_TITULO)
   const { data: carreras, mutate } = useSWR(GQLregMallaCurricular.GET_CARRERAS)
   const { data: sedes } = useSWR(GQLconsultasGenerales.GET_SEDES)
-  
+
   const crearCarrera = (variables) => {
     return request(
       process.env.NEXT_PUBLIC_URL_BACKEND,
@@ -59,7 +60,7 @@ const RegistroCarrera = ({ cambioVista }) => {
       nombre: nombCarrera,
       tipo: parseInt(tipoCarrera),
       ciclo: parseInt(tpCiclos),
-      titulo: tituloCarrera,
+      titulo: parseInt(tituloCarrera),
       cantTrayectos: parseInt(cantTrayectos),
       sede: parseInt(sedeCarrera)
     }
@@ -225,12 +226,14 @@ const RegistroCarrera = ({ cambioVista }) => {
         <label htmlFor="nb_carrera">Nombre de la Carrera</label>
       </span>
       <span className="p-float-label field">
-        <InputText
+        <Dropdown
           className="w-full"
           id="tp_carrera"
+          options={tiposTitulo?.obtenerTipoTitulo.response}
           value={tituloCarrera}
-          onChange={(e) => setTituloCarrera(e.target.value.toUpperCase())}
-          autoComplete="off"
+          onChange={(e) => setTituloCarrera(e.value)}
+          optionLabel="nombre"
+          optionValue="id"
         />
         <label htmlFor="tp_carrera">Titulo de Carrera</label>
       </span>

@@ -28,6 +28,7 @@ const RegistroPrevio = ({ data }) => {
   const [fechanaci, setFechaNaci] = useState(null)
   const [paisNacimiento, setPaisNacimiento] = useState(null)
   const [discapacidad, setDiscapacidad] = useState(null)
+  const [etnia, setEtnia] = useState(null)
   const [sexo, setSexo] = useState(null)
   const [estadoCivil, setEstadoCivil] = useState(null)
   const [pais, setPais] = useState(null)
@@ -53,7 +54,7 @@ const RegistroPrevio = ({ data }) => {
     const [day, month, year] = date.split('/')
     const dateObject = new Date(year, month - 1, day)
 
-    if(new Date(year, month, 0).getDate() < day){
+    if (new Date(year, month, 0).getDate() < day) {
       return true
     }
 
@@ -112,6 +113,7 @@ const RegistroPrevio = ({ data }) => {
       setNumeroDeVivienda(infoUser?.getInfoUsuario.response.nu_vivienda)
       setDiscapacidad(infoUser?.getInfoUsuario.response.discapacidad)
       setBlockedPanel(infoUser?.getInfoUsuario.response.bl_registro)
+      setEtnia(infoUser?.getInfoUsuario.response.etnia)
     }
   }, [infoUser])
 
@@ -175,7 +177,8 @@ const RegistroPrevio = ({ data }) => {
       !tipoDeVia ||
       !nombreDeVia ||
       !tipoDeVivienda ||
-      !numeroDeVivienda
+      !numeroDeVivienda ||
+      !etnia
 
     const valueNotInVenezuela =
       !nacionalidad ||
@@ -197,12 +200,22 @@ const RegistroPrevio = ({ data }) => {
       !tipoDeVivienda ||
       !numeroDeVivienda
 
-    if (pais?.id === 239) {
+    if (pais?.id === '239') {
       setEvalToFormForPais(valueInVenezuela)
     } else {
       setEvalToFormForPais(valueNotInVenezuela)
     }
   }, [
+    nacionalidad,
+    cedula,
+    nombre,
+    segundo_Nombre,
+    apellido,
+    segundo_Apellido,
+    sexo,
+    fechanaci,
+    discapacidad,
+    estadoCivil,
     pais,
     ciudad,
     estado,
@@ -213,7 +226,8 @@ const RegistroPrevio = ({ data }) => {
     tipoDeVia,
     nombreDeVia,
     tipoDeVivienda,
-    numeroDeVivienda
+    numeroDeVivienda,
+    etnia
   ])
 
   const savePerfilUser = (variables) => {
@@ -257,7 +271,8 @@ const RegistroPrevio = ({ data }) => {
       blregistro: true,
       idusuario: idUser,
       idZona: parseInt(nombreDeZona.id),
-      idDiscapacidad: parseInt(discapacidad.id)
+      idDiscapacidad: parseInt(discapacidad.id),
+      idEtnia: parseInt(etnia.id)
     }
 
     setConfirmRegistrar(true)
@@ -336,6 +351,8 @@ const RegistroPrevio = ({ data }) => {
         ]
       : null
   )
+
+  const { data: tiposEtnias } = useSWR(GQLConsultasGenerales.GET_ETNIAS)
 
   const accept = () => {
     const evaluEmail = validateEmail(correoElectronico)
@@ -562,6 +579,24 @@ const RegistroPrevio = ({ data }) => {
           />
           <label htmlFor="estado">Estado</label>
         </span>
+        {pais === null || parseInt(pais?.id) === 239 ? (
+          <span className="p-float-label field">
+            <Dropdown
+              className="w-full"
+              id="etnia"
+              options={tiposEtnias?.obtenerEtnia.response}
+              value={etnia}
+              onChange={(e) => {
+                setEtnia(e.target.value)
+              }}
+              optionLabel="nombre"
+              emptyMessage="Seleccione un estado"
+            />
+            <label htmlFor="etnia">Etnia</label>
+          </span>
+        ) : (
+          ''
+        )}
         {pais === null || parseInt(pais?.id) === 239 ? (
           <span className="p-float-label field">
             <Dropdown
