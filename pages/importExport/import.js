@@ -24,7 +24,7 @@ const Import = ({ cambioVista }) => {
     document.querySelector('#fileUpload input').click()
   }
 
-  const subirArchivo = (e) => {
+  const cargarArchivo = (e) => {
     const file = e.files[0]
     const fileReader = new FileReader()
     fileReader.readAsArrayBuffer(file)
@@ -41,22 +41,24 @@ const Import = ({ cambioVista }) => {
         defval: ''
       })
       setItemsDatos(data)
-
-      const InputInsertarEstudiante = {
-        estatus: 1,
-        datos: data
-      }
-
-      insertEstudiante({ InputInsertarEstudiante }).then(
-        ({ insertarEstudiante: { status, message, type } }) => {
-          toast.current.show({
-            severity: type,
-            summary: '¡ Atención !',
-            detail: message
-          })
-        }
-      )
     }
+  }
+
+  const subirArchivo = () => {
+    const InputInsertarEstudiante = {
+      estatus: 1,
+      datos: itemsDatos
+    }
+
+    insertEstudiante({ InputInsertarEstudiante }).then(
+      ({ insertarEstudiante: { status, message, type } }) => {
+        toast.current.show({
+          severity: type,
+          summary: '¡ Atención !',
+          detail: message
+        })
+      }
+    )
   }
 
   return (
@@ -89,6 +91,13 @@ const Import = ({ cambioVista }) => {
           tooltipOptions={{ position: 'top' }}
           onClick={() => adjuntarArchivo()}
         />
+        <Button
+          icon="pi pi-cloud-upload"
+          label="Cargar"
+          tooltipOptions={{ position: 'top' }}
+          onClick={() => subirArchivo()}
+          className="ml-2"
+        />
       </div>
       <FileUpload
         id="fileUpload"
@@ -96,7 +105,7 @@ const Import = ({ cambioVista }) => {
         name="files[]"
         auto
         customUpload
-        uploadHandler={(e) => subirArchivo(e)}
+        uploadHandler={(e) => cargarArchivo(e)}
         style={{ display: 'none' }}
         maxFileSize={1000000}
       />

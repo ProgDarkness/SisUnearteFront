@@ -210,5 +210,18 @@ export default {
         }
       }
     }
+  `,
+  GET_CARRERAS: gql`
+    query obtenerCarreras {
+      obtenerCarreras {
+        status
+        message
+        type
+        response {
+          id
+          nombre
+        }
+      }
+    }
   `
 }

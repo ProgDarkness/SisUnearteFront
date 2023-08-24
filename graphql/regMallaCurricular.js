@@ -82,11 +82,64 @@ export default {
         message
         type
         response {
+          id_carrema
           idTrayectoCarrera
           nb_trayecto
           id_materia
           nb_materia
         }
+      }
+    }
+  `,
+  GET_CARRERAS_POR_MATERIA: gql`
+    query obtenerMateriasPorCarrera($carrera: Int!) {
+      obtenerMateriasPorCarrera(carrera: $carrera) {
+        status
+        message
+        type
+        response {
+          id
+          nombre
+        }
+      }
+    }
+  `,
+  GET_TRAYECTOS_POR_CARRERA: gql`
+    query obtenerTrayectosPorCarrera($carrera: Int!) {
+      obtenerTrayectosPorCarrera(carrera: $carrera) {
+        status
+        message
+        type
+        response {
+          id
+          nombre
+        }
+      }
+    }
+  `,
+  ASIGNAR_TRAYECTO: gql`
+    mutation asignarTrayectoMateria(
+      $idCarrema: Int!
+      $idTrayecto: Int!
+      $idMateria: Int!
+    ) {
+      asignarTrayectoMateria(
+        idCarrema: $idCarrema
+        idTrayecto: $idTrayecto
+        idMateria: $idMateria
+      ) {
+        status
+        message
+        type
+      }
+    }
+  `,
+  DESASIGNAR_TRAYECTO: gql`
+    mutation desasignarTrayectoMateria($idCarrema: Int!, $idMateria: Int!) {
+      desasignarTrayectoMateria(idCarrema: $idCarrema, idMateria: $idMateria) {
+        status
+        message
+        type
       }
     }
   `

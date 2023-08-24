@@ -3,11 +3,15 @@ import { Column } from 'primereact/column'
 import { DataTable } from 'primereact/datatable'
 import { Dialog } from 'primereact/dialog'
 import { InputText } from 'primereact/inputtext'
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { motion } from 'framer-motion'
 import { ConfirmDialog } from 'primereact/confirmdialog'
 import GQLregMallaCurricular from 'graphql/regMallaCurricular'
+import GQLconsultasGenerales from 'graphql/consultasGenerales'
 import useSWR from 'swr'
+import { Dropdown } from 'primereact/dropdown'
+import request from 'graphql-request'
+import { Toast } from 'primereact/toast'
 
 const DialogEditarCarrera = ({
   activeDialogEditarCarrera,
@@ -18,8 +22,10 @@ const DialogEditarCarrera = ({
   const [dialogAgregarMateria, setDialogAgregarMateria] = useState(false)
   const [dialogConfirmElminarMateria, setDialogConfirmElminarMateria] =
     useState(false)
+  const [datosAggMateria, setDatosAggMateria] = useState(null)
+  const toast = useRef(null)
 
-  const { data: infoCarrera } = useSWR(
+  const { data: infoCarrera, mutate } = useSWR(
     datosEditarCarrera?.id
       ? [
           GQLregMallaCurricular.VER_DETALLE_CARRERA,
@@ -32,8 +38,83 @@ const DialogEditarCarrera = ({
       : null
   )
 
+  const { data: materias } = useSWR(
+    datosEditarCarrera?.id
+      ? [
+          GQLregMallaCurricular.GET_CARRERAS_POR_MATERIA,
+          {
+            carrera: parseInt(datosEditarCarrera?.id)
+          }
+        ]
+      : null
+  )
+
+  const { data: trayectos } = useSWR(
+    datosEditarCarrera?.id
+      ? [
+          GQLregMallaCurricular.GET_TRAYECTOS_POR_CARRERA,
+          {
+            carrera: parseInt(datosEditarCarrera?.id)
+          }
+        ]
+      : null
+  )
+
+  const { data: carreras } = useSWR(GQLconsultasGenerales.GET_CARRERAS)
+
+  const asignarTrayecto = (variables) => {
+    return request(
+      process.env.NEXT_PUBLIC_URL_BACKEND,
+      GQLregMallaCurricular.ASIGNAR_TRAYECTO,
+      variables
+    )
+  }
+
+  const desasignarTrayecto = (variables) => {
+    return request(
+      process.env.NEXT_PUBLIC_URL_BACKEND,
+      GQLregMallaCurricular.DESASIGNAR_TRAYECTO,
+      variables
+    )
+  }
+
+  const registrarAggTrayecto = (aggMateriaTrayecto, aggMateriaNbMateria) => {
+    asignarTrayecto({
+      idCarrema: parseInt(datosEditarCarrera?.id),
+      idTrayecto: parseInt(aggMateriaTrayecto?.id),
+      idMateria: parseInt(aggMateriaNbMateria?.id)
+    }).then(({ asignarTrayectoMateria: { status, message, type } }) => {
+      setDialogAgregarMateria(false)
+      setActiveDialogEditarCarrera(true)
+      toast.current.show({
+        severity: type,
+        summary: 'Info',
+        detail: message,
+        life: 3000
+      })
+      mutate()
+    })
+  }
+
+  const registrarDelTrayecto = (aggMateriaNbMateria) => {
+    desasignarTrayecto({
+      idCarrema: parseInt(datosEditarCarrera?.id),
+      idMateria: parseInt(datosAggMateria.id_materia)
+    }).then(({ desasignarTrayectoMateria: { status, message, type } }) => {
+      setDialogAgregarMateria(false)
+      setActiveDialogEditarCarrera(true)
+      toast.current.show({
+        severity: type,
+        summary: 'Info',
+        detail: message,
+        life: 3000
+      })
+      mutate()
+    })
+  }
+
   const acceptEliminarMateria = () => {
-    console.log('SI')
+    registrarDelTrayecto()
     setActiveDialogEditarCarrera(true)
   }
 
@@ -61,6 +142,21 @@ const DialogEditarCarrera = ({
   }
 
   const DialogAgregarMateria = () => {
+    const [aggMateriaCarrera, setAggMateriaCarrera] = useState(null)
+    const [aggMateriaNbMateria, setAggMateriaNbMateria] = useState(null)
+    const [aggMateriaTrayecto, setAggMateriaTrayecto] = useState(null)
+
+    useEffect(() => {
+      setAggMateriaCarrera({
+        id: datosEditarCarrera?.id,
+        nombre: datosEditarCarrera?.nombre
+      })
+      setAggMateriaTrayecto({
+        id: datosAggMateria?.idTrayectoCarrera.toString(),
+        nombre: datosAggMateria?.nb_trayecto
+      })
+    }, [datosAggMateria])
+
     return (
       <Dialog
         visible={dialogAgregarMateria}
@@ -71,32 +167,41 @@ const DialogEditarCarrera = ({
         header="Modificar Materia"
         resizable={false}
         draggable={false}
+        style={{ width: '800px' }}
       >
         <div className="grid grid-cols-3 gap-4 m-2">
           <span className="p-float-label field">
-            <InputText
+            <Dropdown
               className="w-full"
               id="carrera_materia"
-              /* value={datosEditarMateria?.carrera_materia} */
-              autoComplete="off"
+              value={aggMateriaCarrera}
+              options={carreras?.obtenerCarreras.response}
+              onChange={(e) => setAggMateriaCarrera(e.value)}
+              optionLabel="nombre"
+              disabled
             />
             <label htmlFor="carrera_materia">Carrera</label>
           </span>
           <span className="p-float-label field">
-            <InputText
+            <Dropdown
               className="w-full"
               id="trayecto_materia"
-              /* value={datosEditarMateria?.carrera_materia} */
-              autoComplete="off"
+              value={aggMateriaTrayecto}
+              options={trayectos?.obtenerTrayectosPorCarrera.response}
+              onChange={(e) => setAggMateriaTrayecto(e.value)}
+              optionLabel="nombre"
+              disabled
             />
             <label htmlFor="trayecto_materia">Trayecto</label>
           </span>
           <span className="p-float-label field">
-            <InputText
+            <Dropdown
               className="w-full"
               id="nb_materia"
-              /* value={datosEditarMateria?.carrera_materia} */
-              autoComplete="off"
+              value={aggMateriaNbMateria}
+              options={materias?.obtenerMateriasPorCarrera.response}
+              onChange={(e) => setAggMateriaNbMateria(e.value)}
+              optionLabel="nombre"
             />
             <label htmlFor="nb_materia">Nombre de la Materia</label>
           </span>
@@ -105,17 +210,44 @@ const DialogEditarCarrera = ({
               label="Agregar"
               icon="pi pi-plus"
               onClick={() => {
-                setDialogAgregarMateria(false)
-                setActiveDialogEditarCarrera(true)
+                registrarAggTrayecto(aggMateriaTrayecto, aggMateriaNbMateria)
               }}
+              disabled={
+                !aggMateriaCarrera ||
+                !aggMateriaTrayecto ||
+                !aggMateriaNbMateria
+              }
             />
           </div>
+          {/* eslint-disable-next-line react/no-unknown-property */}
+          <style jsx global>{`
+            .p-disabled,
+            .p-component:disabled {
+              opacity: 0.9;
+            }
+
+            #trayecto_materia.p-dropdown .p-dropdown-trigger {
+              background: transparent;
+              color: rgba(0, 0, 0, 0);
+              width: 2.357rem;
+              border-top-right-radius: 4px;
+              border-bottom-right-radius: 4px;
+            }
+
+            #carrera_materia.p-dropdown .p-dropdown-trigger {
+              background: transparent;
+              color: rgba(0, 0, 0, 0);
+              width: 2.357rem;
+              border-top-right-radius: 4px;
+              border-bottom-right-radius: 4px;
+            }
+          `}</style>
         </div>
       </Dialog>
     )
   }
 
-  const actionBodyTemplate = () => {
+  const actionBodyTemplate = (rowData) => {
     return (
       <div className="flex justify-center">
         <Button
@@ -126,6 +258,7 @@ const DialogEditarCarrera = ({
           onClick={() => {
             setDialogAgregarMateria(true)
             setActiveDialogEditarCarrera(false)
+            setDatosAggMateria(rowData)
           }}
         />
       </div>
@@ -141,7 +274,10 @@ const DialogEditarCarrera = ({
             icon="pi pi-times"
             iconPos="left"
             className="p-button-danger p-1"
-            onClick={() => setDialogConfirmElminarMateria(true)}
+            onClick={() => {
+              setDialogConfirmElminarMateria(true)
+              setDatosAggMateria(rowData)
+            }}
           />
         )}
       </div>
@@ -150,6 +286,7 @@ const DialogEditarCarrera = ({
 
   return (
     <>
+      <Toast ref={toast} />
       <DialogAgregarMateria />
       <ConfirmDialog
         visible={dialogConfirmElminarMateria}
