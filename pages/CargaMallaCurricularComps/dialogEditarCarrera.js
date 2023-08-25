@@ -151,11 +151,7 @@ const DialogEditarCarrera = ({
         id: datosEditarCarrera?.id,
         nombre: datosEditarCarrera?.nombre
       })
-      setAggMateriaTrayecto({
-        id: datosAggMateria?.idTrayectoCarrera.toString(),
-        nombre: datosAggMateria?.nb_trayecto
-      })
-    }, [datosAggMateria])
+    }, [datosEditarCarrera])
 
     return (
       <Dialog
@@ -190,7 +186,6 @@ const DialogEditarCarrera = ({
               options={trayectos?.obtenerTrayectosPorCarrera.response}
               onChange={(e) => setAggMateriaTrayecto(e.value)}
               optionLabel="nombre"
-              disabled
             />
             <label htmlFor="trayecto_materia">Trayecto</label>
           </span>
@@ -202,6 +197,7 @@ const DialogEditarCarrera = ({
               options={materias?.obtenerMateriasPorCarrera.response}
               onChange={(e) => setAggMateriaNbMateria(e.value)}
               optionLabel="nombre"
+              emptyMessage="Registre una materia para la carrera"
             />
             <label htmlFor="nb_materia">Nombre de la Materia</label>
           </span>
@@ -210,7 +206,11 @@ const DialogEditarCarrera = ({
               label="Agregar"
               icon="pi pi-plus"
               onClick={() => {
-                registrarAggTrayecto(aggMateriaTrayecto, aggMateriaNbMateria)
+                registrarAggTrayecto(
+                  aggMateriaTrayecto,
+                  aggMateriaNbMateria,
+                  aggMateriaTrayecto
+                )
               }}
               disabled={
                 !aggMateriaCarrera ||
@@ -226,14 +226,6 @@ const DialogEditarCarrera = ({
               opacity: 0.9;
             }
 
-            #trayecto_materia.p-dropdown .p-dropdown-trigger {
-              background: transparent;
-              color: rgba(0, 0, 0, 0);
-              width: 2.357rem;
-              border-top-right-radius: 4px;
-              border-bottom-right-radius: 4px;
-            }
-
             #carrera_materia.p-dropdown .p-dropdown-trigger {
               background: transparent;
               color: rgba(0, 0, 0, 0);
@@ -244,24 +236,6 @@ const DialogEditarCarrera = ({
           `}</style>
         </div>
       </Dialog>
-    )
-  }
-
-  const actionBodyTemplate = (rowData) => {
-    return (
-      <div className="flex justify-center">
-        <Button
-          label="Agregar Materia"
-          icon="pi pi-plus"
-          iconPos="left"
-          className="p-button-help text-sm p-1"
-          onClick={() => {
-            setDialogAgregarMateria(true)
-            setActiveDialogEditarCarrera(false)
-            setDatosAggMateria(rowData)
-          }}
-        />
-      </div>
     )
   }
 
@@ -329,6 +303,18 @@ const DialogEditarCarrera = ({
             />
             <label htmlFor="nb_carrera">Carrera</label>
           </span>
+          <div className="flex">
+            <Button
+              label="Agregar Materia"
+              icon="pi pi-plus"
+              iconPos="left"
+              className="p-button-help text-sm h-10 m-1"
+              onClick={() => {
+                setDialogAgregarMateria(true)
+                setActiveDialogEditarCarrera(false)
+              }}
+            />
+          </div>
         </div>
         <motion.div
           initial="initial"
@@ -339,7 +325,7 @@ const DialogEditarCarrera = ({
           <div className="col-span-4 mt-3">
             <DataTable
               value={infoCarrera?.obtenerDetalleCarrera.response}
-              emptyMessage="No se encuentran trayectos registrados."
+              emptyMessage="No se encuentran trayectos con materias registradas."
               rowGroupMode="rowspan"
               groupRowsBy={['nb_trayecto', 'nb_materia']}
             >
@@ -350,11 +336,11 @@ const DialogEditarCarrera = ({
                 body={actionBodyTemplateMateria}
                 style={{ width: '8rem' }}
               />
-              <Column
+              {/* <Column
                 field="nb_trayecto"
                 body={actionBodyTemplate}
                 style={{ width: '8rem' }}
-              />
+              /> */}
             </DataTable>
           </div>
         </motion.div>

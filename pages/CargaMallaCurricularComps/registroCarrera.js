@@ -31,6 +31,9 @@ const RegistroCarrera = ({ cambioVista }) => {
   const [dialogConfirmElminarCarrera, setDialogConfirmElminarCarrera] =
     useState(false)
   const [dataEliminarCarrera, setDataEliminarCarrera] = useState(null)
+  const [dataAprobarCarrera, setDataAprobarCarrera] = useState(null)
+  const [dialogConfirmAprobarCarrera, setDialogConfirmAprobarCarrera] =
+    useState(false)
 
   const { data: tiposCarreras } = useSWR(GQLconsultasGenerales.GET_TIPO_CARRERA)
   const { data: tiposCiclos } = useSWR(GQLconsultasGenerales.GET_TIPO_CICLOS)
@@ -44,6 +47,34 @@ const RegistroCarrera = ({ cambioVista }) => {
       GQLregMallaCurricular.SAVE_CARRERA,
       variables
     )
+  }
+  const actualizarEstatusCarrera = (variables) => {
+    return request(
+      process.env.NEXT_PUBLIC_URL_BACKEND,
+      GQLregMallaCurricular.ACTUALIZAR_ESTATUS_CARRERA,
+      variables
+    )
+  }
+
+  const acceptAprobarCarrera = () => {
+    const InputEstatusCarrera = {
+      estatus: 3,
+      idcarrera: parseInt(dataAprobarCarrera?.id)
+    }
+    actualizarEstatusCarrera({ InputEstatusCarrera }).then(
+      ({ actualizarEstatusCarrera: { status, message, type } }) => {
+        toast.current.show({
+          severity: type,
+          summary: '¡ Atención !',
+          detail: message
+        })
+        mutate()
+      }
+    )
+  }
+
+  const rejectAprobarCarrera = () => {
+    setDialogConfirmAprobarCarrera(false)
   }
 
   const eliminarCarrera = (variables) => {
@@ -101,7 +132,7 @@ const RegistroCarrera = ({ cambioVista }) => {
   }
 
   const rejectElminarCarrera = () => {
-    console.log('NO')
+    setDialogConfirmElminarCarrera(false)
   }
 
   const HeaderTrayectos = () => {
@@ -150,6 +181,16 @@ const RegistroCarrera = ({ cambioVista }) => {
             setDataEliminarCarrera(rowData)
           }}
         />
+        <Button
+          icon="pi pi-check"
+          className="p-button-success ml-1"
+          tooltip="Aprobar"
+          tooltipOptions={{ position: 'top' }}
+          onClick={() => {
+            setDialogConfirmAprobarCarrera(true)
+            setDataAprobarCarrera(rowData)
+          }}
+        />
       </div>
     )
   }
@@ -170,6 +211,17 @@ const RegistroCarrera = ({ cambioVista }) => {
         icon="pi pi-exclamation-triangle"
         accept={acceptElminarCarrera}
         reject={rejectElminarCarrera}
+        acceptLabel="SI"
+        rejectLabel="NO"
+      />
+      <ConfirmDialog
+        visible={dialogConfirmAprobarCarrera}
+        onHide={() => setDialogConfirmAprobarCarrera(false)}
+        message="¿Esta seguro que desea aprobar la carrera?"
+        header="Confirmacion"
+        icon="pi pi-exclamation-triangle"
+        accept={acceptAprobarCarrera}
+        reject={rejectAprobarCarrera}
         acceptLabel="SI"
         rejectLabel="NO"
       />
@@ -317,6 +369,7 @@ const RegistroCarrera = ({ cambioVista }) => {
           <Column field="tipo" header="Tipo" />
           <Column field="ciclo" header="Tipo de Ciclo" />
           <Column field="titulo" header="Titulo" />
+          <Column field="sede" header="Sede" />
           <Column body={accionBodyTemplate} />
         </DataTable>
       </div>

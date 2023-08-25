@@ -1,39 +1,51 @@
 import { Button } from 'primereact/button'
 import { Column } from 'primereact/column'
 import { DataTable } from 'primereact/datatable'
-import { useEffect, useState } from 'react'
-import DialogEditarMalla from './dialogEditarMalla'
+import { useRef, useState } from 'react'
 import DialogVerMalla from './dialogVerMalla'
 import { ConfirmDialog } from 'primereact/confirmdialog'
+import GQLregMallaCurricular from 'graphql/regMallaCurricular'
+import useSWR from 'swr'
+import request from 'graphql-request'
+import { Toast } from 'primereact/toast'
 
 const CargarMalla = ({ cambioVista }) => {
-  const [mallas, setMallas] = useState(null)
+  const toast = useRef(null)
   const [activeDialogVerMalla, setActiveDialogVerMalla] = useState(false)
-  const [dialogEditarMalla, setDialogEditarMalla] = useState(false)
-  const [datosEditarMalla, setDatosEditarMalla] = useState(null)
   const [datosVerMalla, setDatosVerMalla] = useState(null)
   const [dialogConfirmElminarMalla, setDialogConfirmElminarMalla] =
     useState(false)
+  const [datosDesaprovarMalla, setDatosDesaprovarMalla] = useState(null)
 
-  useEffect(() => {
-    setMallas([
-      {
-        carrera: 'Artes Plasticas',
-        status_carrera: 'Habilitada'
-      },
-      {
-        carrera: 'Dibujo Artistico',
-        status_carrera: 'Deshabilitada'
-      }
-    ])
-  }, [])
+  const { data: mallas, mutate } = useSWR(GQLregMallaCurricular.GET_MALLAS)
+
+  const actualizarEstatusCarrera = (variables) => {
+    return request(
+      process.env.NEXT_PUBLIC_URL_BACKEND,
+      GQLregMallaCurricular.ACTUALIZAR_ESTATUS_CARRERA,
+      variables
+    )
+  }
 
   const acceptElminarMalla = () => {
-    console.log('SI')
+    const InputEstatusCarrera = {
+      estatus: 4,
+      idcarrera: parseInt(datosDesaprovarMalla?.id)
+    }
+    actualizarEstatusCarrera({ InputEstatusCarrera }).then(
+      ({ actualizarEstatusCarrera: { status, message, type } }) => {
+        toast.current.show({
+          severity: type,
+          summary: '¡ Atención !',
+          detail: message
+        })
+        mutate()
+      }
+    )
   }
 
   const rejectElminarMalla = () => {
-    console.log('NO')
+    setDialogConfirmElminarMalla(false)
   }
 
   const accionBodyTemplate = (rowData) => {
@@ -50,21 +62,14 @@ const CargarMalla = ({ cambioVista }) => {
           }}
         />
         <Button
-          icon="pi pi-pencil"
-          className="p-button-help mr-1"
-          tooltip="Modificar"
-          onClick={() => {
-            setDatosEditarMalla(rowData)
-            setDialogEditarMalla(true)
-          }}
-          tooltipOptions={{ position: 'top' }}
-        />
-        <Button
           icon="pi pi-times"
           className="p-button-danger"
-          tooltip="Eliminar"
+          tooltip="Desaprobar"
           tooltipOptions={{ position: 'top' }}
-          onClick={() => setDialogConfirmElminarMalla(true)}
+          onClick={() => {
+            setDialogConfirmElminarMalla(true)
+            setDatosDesaprovarMalla(rowData)
+          }}
         />
       </div>
     )
@@ -72,7 +77,7 @@ const CargarMalla = ({ cambioVista }) => {
 
   const bodyStatus = (rowData) => {
     let colorTag = '#cdcdcd'
-    if (rowData.status_carrera === 'Habilitada') {
+    if (rowData.estatus === 'Aprobada') {
       colorTag = '#84bf93'
     } else {
       colorTag = '#d56c6c'
@@ -81,7 +86,7 @@ const CargarMalla = ({ cambioVista }) => {
     return (
       <div className="w-min rounded" style={{ backgroundColor: colorTag }}>
         <h1 className="text-white text-sm font-semibold m-1">
-          {rowData.status_carrera.toUpperCase()}
+          {rowData.estatus.toUpperCase()}
         </h1>
       </div>
     )
@@ -89,6 +94,7 @@ const CargarMalla = ({ cambioVista }) => {
 
   return (
     <div className="grid grid-cols-5 gap-4 m-2 -mt-2">
+      <Toast ref={toast} />
       <div className="col-span-5 flex justify-between">
         <div />
         <h1 className="text-3xl font-semibold text-white">
@@ -114,7 +120,7 @@ const CargarMalla = ({ cambioVista }) => {
       <ConfirmDialog
         visible={dialogConfirmElminarMalla}
         onHide={() => setDialogConfirmElminarMalla(false)}
-        message="¿Esta seguro que desea eliminar la malla curricular?"
+        message="¿Esta seguro que desea desaprovar la malla curricular?"
         header="Confirmacion"
         icon="pi pi-exclamation-triangle"
         accept={acceptElminarMalla}
@@ -128,15 +134,17 @@ const CargarMalla = ({ cambioVista }) => {
         datosVerMalla={datosVerMalla}
         setDatosVerMalla={setDatosVerMalla}
       />
-      <DialogEditarMalla
-        datosEditarMalla={datosEditarMalla}
-        setDatosEditarMalla={setDatosEditarMalla}
-        dialogEditarMalla={dialogEditarMalla}
-        setDialogEditarMalla={setDialogEditarMalla}
-      />
       <div className="col-span-5">
-        <DataTable value={mallas} emptyMessage="No hay carreras registradas.">
-          <Column field="carrera" header="Carrera" />
+        <DataTable
+          value={mallas?.obtenerTodasMallas.response}
+          emptyMessage="No hay carreras registradas."
+        >
+          <Column field="codigo" header="Codigo" />
+          <Column field="nombre" header="Nombre" />
+          <Column field="tipo" header="Tipo" />
+          <Column field="ciclo" header="Tipo de Ciclo" />
+          <Column field="titulo" header="Titulo" />
+          <Column field="sede" header="Sede" />
           <Column body={bodyStatus} header="Estatus" />
           <Column body={accionBodyTemplate} />
         </DataTable>

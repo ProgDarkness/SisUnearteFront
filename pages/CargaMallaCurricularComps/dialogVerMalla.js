@@ -3,8 +3,9 @@ import { Column } from 'primereact/column'
 import { DataTable } from 'primereact/datatable'
 import { Dialog } from 'primereact/dialog'
 import { InputText } from 'primereact/inputtext'
-import { useEffect, useState } from 'react'
-import { motion /* , AnimatePresence */ } from 'framer-motion'
+import GQLregMallaCurricular from 'graphql/regMallaCurricular'
+import { motion } from 'framer-motion'
+import useSWR from 'swr'
 
 const DialogVerMalla = ({
   activeDialogVerMalla,
@@ -12,9 +13,18 @@ const DialogVerMalla = ({
   datosVerMalla,
   setDatosVerMalla
 }) => {
-  const [infoMalla, setInfoMalla] = useState(null)
-  /* const [infoHorario, setInfoHorario] = useState(null)
-  const [animacionVerHorario, setAnimacionVerHorario] = useState(false) */
+  const { data: infoMalla } = useSWR(
+    datosVerMalla?.id
+      ? [
+          GQLregMallaCurricular.VER_DETALLE_CARRERA,
+          {
+            InputCarrera: {
+              carrera: parseInt(datosVerMalla?.id)
+            }
+          }
+        ]
+      : null
+  )
 
   const animation = {
     initial: {
@@ -34,95 +44,6 @@ const DialogVerMalla = ({
     }
   }
 
-  useEffect(() => {
-    setInfoMalla([
-      {
-        trayecto: 'Trayecto 1',
-        lapso: 'Lapso 1',
-        materia: 'Dibujo',
-        profesor: 'Juan Manuel'
-      },
-      {
-        trayecto: 'Trayecto 1',
-        lapso: 'Lapso 1',
-        materia: 'Fotografia',
-        profesor: 'Juan Manuel'
-      },
-      {
-        trayecto: 'Trayecto 1',
-        lapso: 'Lapso 2',
-        materia: 'Arte',
-        profesor: 'Juan Manuel'
-      },
-      {
-        trayecto: 'Trayecto 1',
-        lapso: 'Lapso 2',
-        materia: 'Fotografia 2',
-        profesor: 'Juan Manuel'
-      },
-      /* ------------------------------------ */
-      {
-        trayecto: 'Trayecto 2',
-        lapso: 'Lapso 1',
-        materia: 'Dibujo',
-        profesor: 'Juan Manuel'
-      },
-      {
-        trayecto: 'Trayecto 2',
-        lapso: 'Lapso 2',
-        materia: 'Arte',
-        profesor: 'Juan Manuel'
-      }
-      /* ------------------------------------- */
-    ])
-    /* setInfoHorario([
-      {
-        horas: '8:00-8:45',
-        lunes: '',
-        martes: 'Dibujo / Juan Manuel / Aula 3',
-        miercoles: '',
-        jueves: 'Fotografia / Juan Manuel / Aula 3',
-        viernes: '',
-        sabado: '',
-        domingo: ''
-      },
-      {
-        horas: '8:45-9:45',
-        lunes: '',
-        martes: 'Dibujo / Juan Manuel / Aula 3',
-        miercoles: '',
-        jueves: 'Fotografia / Juan Manuel / Aula 3',
-        viernes: '',
-        sabado: '',
-        domingo: ''
-      }
-    ]) */
-  }, [])
-
-  /* const actionBodyTemplate = () => {
-    return (
-      <div className="flex justify-center">
-        <Button
-          label="Ver Horario"
-          className="p-button-info"
-          onClick={() => setAnimacionVerHorario(!animacionVerHorario)}
-        />
-      </div>
-    )
-  } */
-
-  /* const bodyDiaSemana = (rowData, dia) => {
-    const [materia, nombre, aula] = rowData[`${dia}`].split(' / ')
-
-    return (
-      <div className="text-center">
-        <p>{materia}</p>
-        <p>{nombre}</p>
-        <p>{aula}</p>
-      </div>
-    )
-  } */
-
   return (
     <Dialog
       visible={activeDialogVerMalla}
@@ -140,97 +61,12 @@ const DialogVerMalla = ({
           <InputText
             className="w-full"
             id="carrera"
-            value={datosVerMalla?.carrera}
+            value={datosVerMalla?.nombre}
             disabled
           />
           <label htmlFor="carrera">Carrera</label>
         </span>
-        <span className="p-float-label field">
-          <InputText
-            className="w-full"
-            id="status_carrera"
-            value={datosVerMalla?.status_carrera}
-            disabled
-          />
-          <label htmlFor="status_carrera">Estatus de la Carrera</label>
-        </span>
-        {/* <span className="p-float-label field">
-          <InputText
-            className="w-full"
-            id="cant_cupos"
-            value={datosVerMalla?.cant_cupos}
-            disabled
-          />
-          <label htmlFor="cant_cupos">Cant. Cupos</label>
-        </span> */}
-        {/* <div className="flex justify-center align-middle">
-          {animacionVerHorario && (
-            <Button
-              label="Volver"
-              onClick={() => setAnimacionVerHorario(!animacionVerHorario)}
-              icon="pi pi-check"
-              iconPos="left"
-            />
-          )}
-        </div> */}
       </div>
-      {/* <AnimatePresence initial={animacionVerHorario}>
-        {animacionVerHorario && (
-          <motion.div
-            initial="initial"
-            animate="animate"
-            exit="exit"
-            variants={animation}
-          >
-            <div className="col-span-4 mt-3">
-              <DataTable
-                value={infoHorario}
-                emptyMessage="No existe Horario Registrado."
-                showGridlines
-              >
-                <Column field="horas" header="Horas" />
-                <Column
-                  field="lunes"
-                  header="Lunes"
-                  body={(rowData) => bodyDiaSemana(rowData, 'lunes')}
-                />
-                <Column
-                  field="martes"
-                  header="Martes"
-                  body={(rowData) => bodyDiaSemana(rowData, 'martes')}
-                />
-                <Column
-                  field="miercoles"
-                  header="Miercoles"
-                  body={(rowData) => bodyDiaSemana(rowData, 'miercoles')}
-                />
-                <Column
-                  field="jueves"
-                  header="Jueves"
-                  body={(rowData) => bodyDiaSemana(rowData, 'jueves')}
-                />
-                <Column
-                  field="viernes"
-                  header="Viernes"
-                  body={(rowData) => bodyDiaSemana(rowData, 'viernes')}
-                />
-                <Column
-                  field="sabado"
-                  header="Sabado"
-                  body={(rowData) => bodyDiaSemana(rowData, 'sabado')}
-                />
-                <Column
-                  field="domingo"
-                  header="Domingo"
-                  body={(rowData) => bodyDiaSemana(rowData, 'domingo')}
-                />
-              </DataTable>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence> */}
-      {/* <AnimatePresence initial={!animacionVerHorario}> */}
-      {/* {!animacionVerHorario && ( */}
       <motion.div
         initial="initial"
         animate="animate"
@@ -239,24 +75,16 @@ const DialogVerMalla = ({
       >
         <div className="col-span-2 mt-3">
           <DataTable
-            value={infoMalla}
+            value={infoMalla?.obtenerDetalleCarrera.response}
             emptyMessage="No se encuentran trayectos registrados."
             rowGroupMode="rowspan"
-            groupRowsBy={['trayecto']}
+            groupRowsBy={['nb_trayecto', 'nb_materia']}
           >
-            <Column field="trayecto" header="Trayectos" />
-            <Column field="materia" header="Materias" />
-            {/* <Column field="profesor" header="Profesores" /> */}
-            {/* <Column
-                  field="semestre"
-                  body={actionBodyTemplate}
-                  style={{ width: '8.16rem' }}
-                /> */}
+            <Column field="nb_trayecto" header="Trayectos" />
+            <Column field="nb_materia" header="Materias" />
           </DataTable>
         </div>
       </motion.div>
-      {/* )} */}
-      {/* </AnimatePresence> */}
 
       {/* eslint-disable-next-line react/no-unknown-property */}
       <style jsx global>{`

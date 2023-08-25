@@ -21,6 +21,23 @@ export default {
           ciclo
           estatus
           titulo
+          sede
+        }
+      }
+    }
+  `,
+  GET_MALLAS: gql`
+    query obtenerTodasMallas {
+      obtenerTodasMallas {
+        response {
+          id
+          codigo
+          nombre
+          tipo
+          ciclo
+          estatus
+          titulo
+          sede
         }
       }
     }
@@ -137,6 +154,17 @@ export default {
   DESASIGNAR_TRAYECTO: gql`
     mutation desasignarTrayectoMateria($idCarrema: Int!, $idMateria: Int!) {
       desasignarTrayectoMateria(idCarrema: $idCarrema, idMateria: $idMateria) {
+        status
+        message
+        type
+      }
+    }
+  `,
+  ACTUALIZAR_ESTATUS_CARRERA: gql`
+    mutation actualizarestatuscarrera(
+      $InputEstatusCarrera: InputEstatusCarrera!
+    ) {
+      actualizarEstatusCarrera(input: $InputEstatusCarrera) {
         status
         message
         type
