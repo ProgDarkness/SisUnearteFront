@@ -5,12 +5,12 @@ import { useRef, useState } from 'react'
 import * as XLSX from 'xlsx'
 import GQLvistaPostulado from 'graphql/vistaPostulado'
 import { Toast } from 'primereact/toast'
+import { DataTable } from 'primereact/datatable'
+import { Column } from 'primereact/column'
 
 const Import = ({ cambioVista }) => {
   const toast = useRef(null)
   const [itemsDatos, setItemsDatos] = useState(null)
-
-  console.log(itemsDatos)
 
   const insertEstudiante = (variables) => {
     return request(
@@ -57,6 +57,7 @@ const Import = ({ cambioVista }) => {
           summary: '¡ Atención !',
           detail: message
         })
+        setItemsDatos(null)
       }
     )
   }
@@ -97,6 +98,7 @@ const Import = ({ cambioVista }) => {
           tooltipOptions={{ position: 'top' }}
           onClick={() => subirArchivo()}
           className="ml-2"
+          disabled={!itemsDatos}
         />
       </div>
       <FileUpload
@@ -109,6 +111,19 @@ const Import = ({ cambioVista }) => {
         style={{ display: 'none' }}
         maxFileSize={1000000}
       />
+      <div className="col-span-5">
+        <DataTable
+          value={itemsDatos}
+          emptyMessage="No hay registros adjuntos"
+          header="Previsualizacion"
+        >
+          <Column field="nacionalidad" header="Nacionalidad" />
+          <Column field="cedula" header="Cedula" />
+          <Column field="nombre" header="Nombre" />
+          <Column field="apellido" header="Apellido" />
+          <Column field="sexo" header="Sexo" />
+        </DataTable>
+      </div>
     </div>
   )
 }
