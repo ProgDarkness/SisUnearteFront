@@ -58,6 +58,10 @@ const RegistroPrevio = ({ data }) => {
       return true
     }
 
+    if (!(parseInt(month) <= 12)) {
+      return true
+    }
+
     if (dateObject.getFullYear() < 1910 || dateObject.getFullYear() > 2007) {
       return true
     }
