@@ -200,6 +200,18 @@ const DialogRegPeriodo = ({
     )
   }
 
+  const bodyFeI = (rowData) => {
+    const fechaFormat = format(new Date(parseInt(rowData.fei)), 'dd/MM/yyyy')
+
+    return <div>{fechaFormat}</div>
+  }
+
+  const bodyFeF = (rowData) => {
+    const fechaFormat = format(new Date(parseInt(rowData.fef)), 'dd/MM/yyyy')
+
+    return <div>{fechaFormat}</div>
+  }
+
   function limpiarInpust() {
     setReload(false)
     setCodPeriodo('')
@@ -674,8 +686,8 @@ const DialogRegPeriodo = ({
             <Column field="mensaje" header="Descripción Periodo" />
             <Column field="periodo" header="Tipo Periodo" />
             <Column field="anio" header="Año del Periodo" />
-            <Column field="fei" header="Fecha Inicio" />
-            <Column field="fef" header="Fecha Fin" />
+            <Column field="fei" body={bodyFeI} header="Fecha Inicio" />
+            <Column field="fef" body={bodyFeF} header="Fecha Fin" />
             <Column body={accionBodyTemplate} />
           </DataTable>
         </div>
