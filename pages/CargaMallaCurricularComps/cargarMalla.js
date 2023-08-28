@@ -77,7 +77,7 @@ const CargarMalla = ({ cambioVista }) => {
 
   const bodyStatus = (rowData) => {
     let colorTag = '#cdcdcd'
-    if (rowData.estatus === 'Aprobada') {
+    if (rowData.estatus === 'Aprobado') {
       colorTag = '#84bf93'
     } else {
       colorTag = '#d56c6c'

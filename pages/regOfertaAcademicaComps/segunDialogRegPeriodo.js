@@ -13,6 +13,8 @@ import { useSesion } from 'hooks/useSesion'
 import format from 'date-fns/format'
 import request from 'graphql-request'
 import GQLregOfertaAcademica from 'graphql/regOfertaAcademica'
+import GQLconsultasGenerales from 'graphql/consultasGenerales'
+import useSWR from 'swr'
 
 const DialogRegPeriodo = ({
   activeDialogRegPerido,
@@ -20,7 +22,6 @@ const DialogRegPeriodo = ({
 }) => {
   const { idUser } = useSesion()
   const [reload, setReload] = useState(true)
-  const [periodosInfo, setPeriodosInfo] = useState(null)
   const [activeDialogEditarPeriodo, setActiveDialogEditarPeriodo] =
     useState(false)
   const [activeDialogVerPeriodo, setActiveDialogVerPeriodo] = useState(false)
@@ -48,6 +49,13 @@ const DialogRegPeriodo = ({
   const [feIniNotas, setFeIniNotas] = useState(null)
   const [feFinNotas, setFeFinNotas] = useState(null)
   const toast = useRef(null)
+
+  const { data: meses } = useSWR(GQLconsultasGenerales.GET_MESES)
+  const { data: periodosInfo } = useSWR(
+    GQLregOfertaAcademica.GET_TODOS_PERIODOS
+  )
+
+  console.log(periodosInfo)
 
   const savePeriodo = (variables) => {
     return request(
@@ -160,37 +168,6 @@ const DialogRegPeriodo = ({
 
   const optionTipoPeriodo = [{ nombre: 'regular', id: '1' }]
 
-  useEffect(() => {
-    setPeriodosInfo([
-      {
-        cod_periodo: 'fk55',
-        nb_periodo: 'PERIODO 1',
-        tp_periodo: 'REGULAR',
-        anio_periodo: '2023',
-        mes_inicio: 'Agosto',
-        mes_fin: 'Septiembre',
-        num_semanas: '30',
-        fe_incio: '12/04/2023',
-        fe_fin: '12/04/2023',
-        fe_entregaActa: '12/04/2023',
-        fe_soli_doc: '12/04/2023',
-        fe_soli_pre_grado: '12/04/2023',
-        fe_retiro: '12/04/2023',
-        fe_modificacion: '12/04/2023',
-        fe_ini_pre_inscri: '12/04/2023',
-        fe_ini_inscri: '12/04/2023',
-        fe_fin_inscri: '12/04/2023',
-        fe_ini_oferta: '12/04/2023',
-        fe_fin_oferta: '12/04/2023',
-        fe_ini_retiro: '12/04/2023',
-        fe_fin_retiro: '12/04/2023',
-        fe_ini_notas: '12/04/2023',
-        fe_fin_notas: '12/04/2023',
-        estatus_periodo: 'Activo'
-      }
-    ])
-  }, [])
-
   const accionBodyTemplate = (rowData) => {
     return (
       <div className="flex justify-center">
@@ -294,6 +271,69 @@ const DialogRegPeriodo = ({
     )
   }
 
+  function validarAnioPeriodo(anio, setanio) {
+    const anioActual = new Date().getFullYear()
+    const anioLimite = new Date().getFullYear() + 3
+
+    if (anio) {
+      if (!(anio >= anioActual && anio <= anioLimite)) {
+        setanio('')
+        toast.current.show({
+          severity: 'error',
+          summary: '¡ Atención !',
+          detail: 'Año Invalido'
+        })
+      }
+    }
+  }
+
+  function validarMeses(mes, setmes) {
+    if (mesInicio && mesFin) {
+      if (parseInt(mesInicio) < parseInt(mesFin)) {
+        const cantMeses = parseInt(mesFin) - parseInt(mesInicio)
+
+        setNuSemanas(cantMeses * 4)
+      } else {
+        setReload(false)
+        setMesFin('')
+        setMesInicio('')
+        setNuSemanas('')
+        setTimeout(() => {
+          setReload(true)
+        }, 1)
+        toast.current.show({
+          severity: 'error',
+          summary: '¡ Atención !',
+          detail: 'El mes de finalizacion debe ser mayor al mes de inicio'
+        })
+      }
+    } else {
+      if (nuSemanas) {
+        setReload(false)
+        setNuSemanas('')
+        setTimeout(() => {
+          setReload(true)
+        }, 1)
+      }
+    }
+
+    if (mes) {
+      if (!(parseInt(mes) >= 1 && parseInt(mes) <= 12)) {
+        setReload(false)
+        setmes('')
+        setNuSemanas('')
+        setTimeout(() => {
+          setReload(true)
+        }, 1)
+        toast.current.show({
+          severity: 'error',
+          summary: '¡ Atención !',
+          detail: 'Mes Invalido'
+        })
+      }
+    }
+  }
+
   return (
     <>
       <DialogEditarPeriodo
@@ -307,7 +347,10 @@ const DialogRegPeriodo = ({
       <Dialog
         header="Registrar Periodo"
         visible={activeDialogRegPerido}
-        onHide={() => setActiveDialogRegPerido(false)}
+        onHide={() => {
+          setActiveDialogRegPerido(false)
+          limpiarInpust()
+        }}
         draggable={false}
         resizable={false}
       >
@@ -358,34 +401,37 @@ const DialogRegPeriodo = ({
                 value={anioPeriodo}
                 autoComplete="off"
                 onChange={(e) => setAnioPeriodo(e.target.value)}
+                onBlur={() => validarAnioPeriodo(anioPeriodo, setAnioPeriodo)}
               />
             )}
             <label htmlFor="anio_periodo">Año del Periodo</label>
           </span>
           <span className="p-float-label field">
             {reload && (
-              <InputText
+              <Dropdown
                 className="w-full"
                 id="mes_inicio"
-                keyfilter="pint"
-                maxLength={2}
+                options={meses?.obtenerMes.response}
+                optionLabel="nombre"
+                optionValue="id"
                 value={mesInicio}
-                autoComplete="off"
                 onChange={(e) => setMesInicio(e.target.value)}
+                onBlur={() => validarMeses(mesInicio, setMesInicio)}
               />
             )}
             <label htmlFor="mes_inicio">Mes de Inicio</label>
           </span>
           <span className="p-float-label field">
             {reload && (
-              <InputText
+              <Dropdown
                 className="w-full"
                 id="mes_fin"
-                keyfilter="pint"
-                maxLength={2}
+                options={meses?.obtenerMes.response}
+                optionLabel="nombre"
+                optionValue="id"
                 value={mesFin}
-                autoComplete="off"
                 onChange={(e) => setMesFin(e.target.value)}
+                onBlur={() => validarMeses(mesFin, setMesFin)}
               />
             )}
             <label htmlFor="mes_fin">Mes de Finalizacion</label>
@@ -400,6 +446,7 @@ const DialogRegPeriodo = ({
                 value={nuSemanas}
                 autoComplete="off"
                 onChange={(e) => setNuSemanas(e.target.value)}
+                disabled
               />
             )}
             <label htmlFor="num_semanas">Numero de Semanas</label>
@@ -620,18 +667,25 @@ const DialogRegPeriodo = ({
         <div className="mt-4">
           <h1 className="text-2xl font-semibold ml-4">Periodos</h1>
           <DataTable
-            value={periodosInfo}
+            value={periodosInfo?.obtenerPeriodos.response}
             emptyMessage="No se encuentran periodos registrados."
           >
-            <Column field="cod_periodo" header="Codigo Periodo" />
-            <Column field="nb_periodo" header="Nombre Periodo" />
-            <Column field="tp_periodo" header="Tipo Periodo" />
-            <Column field="anio_periodo" header="Año del Periodo" />
-            <Column field="fe_incio" header="Fecha Inicio" />
-            <Column field="fe_fin" header="Fecha Fin" />
+            <Column field="codigo" header="Codigo Periodo" />
+            <Column field="mensaje" header="Descripción Periodo" />
+            <Column field="periodo" header="Tipo Periodo" />
+            <Column field="anio" header="Año del Periodo" />
+            <Column field="fei" header="Fecha Inicio" />
+            <Column field="fef" header="Fecha Fin" />
             <Column body={accionBodyTemplate} />
           </DataTable>
         </div>
+        {/* eslint-disable-next-line react/no-unknown-property */}
+        <style jsx global>{`
+          .p-disabled,
+          .p-component:disabled {
+            opacity: 1;
+          }
+        `}</style>
       </Dialog>
     </>
   )

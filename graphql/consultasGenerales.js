@@ -223,5 +223,15 @@ export default {
         }
       }
     }
+  `,
+  GET_MESES: gql`
+    query obtenermeses {
+      obtenerMes {
+        response {
+          id
+          nombre
+        }
+      }
+    }
   `
 }

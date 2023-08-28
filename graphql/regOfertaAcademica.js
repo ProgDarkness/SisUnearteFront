@@ -34,7 +34,6 @@ export default {
           feinota
           fefnota
           estatus
-          trayecto
         }
       }
     }
