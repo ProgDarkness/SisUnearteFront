@@ -233,5 +233,15 @@ export default {
         }
       }
     }
+  `,
+  GET_MATERIAS_ONE: gql`
+    query obtenermaterias {
+      obtenerMaterias {
+        response {
+          id
+          nombre
+        }
+      }
+    }
   `
 }

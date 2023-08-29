@@ -12,6 +12,7 @@ import GQLregMallaCurricular from 'graphql/regMallaCurricular'
 import GQLconsultasGenerales from 'graphql/consultasGenerales'
 import { Toast } from 'primereact/toast'
 import { Dropdown } from 'primereact/dropdown'
+import DialogTrasMateria from './dialogTraspasarMateria'
 import useSWR from 'swr'
 import DialogRegMateria from './dialogCrearMateria'
 
@@ -27,6 +28,7 @@ const RegistroCarrera = ({ cambioVista }) => {
   const [datosVerCarrera, setDatosVerCarrera] = useState(null)
   const [dialogEditarCarrera, setDialogEditarCarrera] = useState(false)
   const [dialogAsigSede, setDialogAsigSede] = useState(false)
+  const [dialogTrasMateria, setDialogTrasMateria] = useState(false)
   const [datosEditarCarrera, setDatosEditarCarrera] = useState(null)
   const [dialogRegMateria, setDialogRegMateria] = useState(false)
   const [dialogConfirmElminarCarrera, setDialogConfirmElminarCarrera] =
@@ -40,7 +42,6 @@ const RegistroCarrera = ({ cambioVista }) => {
   const { data: tiposCiclos } = useSWR(GQLconsultasGenerales.GET_TIPO_CICLOS)
   const { data: tiposTitulo } = useSWR(GQLconsultasGenerales.GET_TIPO_TITULO)
   const { data: carreras, mutate } = useSWR(GQLregMallaCurricular.GET_CARRERAS)
-  
 
   const crearCarrera = (variables) => {
     return request(
@@ -134,7 +135,7 @@ const RegistroCarrera = ({ cambioVista }) => {
     setDialogConfirmElminarCarrera(false)
   }
 
-  const HeaderTrayectos = () => {
+  const HeaderCarrera = () => {
     return (
       <div className="h-8 flex justify-end bg-[#ae8e8e] mt-3">
         <Button
@@ -148,6 +149,19 @@ const RegistroCarrera = ({ cambioVista }) => {
           icon="pi pi-plus"
           className="mr-2"
           onClick={() => setDialogRegMateria(true)}
+        />
+      </div>
+    )
+  }
+
+  const SubHeaderCarreras = () => {
+    return (
+      <div className="h-8 flex justify-end bg-[#ae8e8e] mt-3">
+        <Button
+          label="Traspaso de Materias"
+          icon="pi pi-plus"
+          className="mr-2"
+          onClick={() => setDialogTrasMateria(true)}
         />
       </div>
     )
@@ -206,6 +220,11 @@ const RegistroCarrera = ({ cambioVista }) => {
       <DialogRegMateria
         dialogRegMateria={dialogRegMateria}
         setDialogRegMateria={setDialogRegMateria}
+        carreras={carreras}
+      />
+      <DialogTrasMateria
+        dialogTrasMateria={dialogTrasMateria}
+        setDialogTrasMateria={setDialogTrasMateria}
         carreras={carreras}
       />
       <DialogAsigSede
@@ -355,7 +374,8 @@ const RegistroCarrera = ({ cambioVista }) => {
         <label htmlFor="tp_carrera">Tipo de carrera</label>
       </span>
       <div className="col-span-5">
-        <HeaderTrayectos />
+        <SubHeaderCarreras />
+        <HeaderCarrera />
         <DataTable
           value={carreras?.obtenerTodasCarreras.response}
           emptyMessage="No se encuentran trayectos registrados."

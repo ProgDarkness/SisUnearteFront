@@ -210,5 +210,22 @@ export default {
         type
       }
     }
+  `,
+  TRASPASAR_MATERIA: gql`
+    mutation traspasarMateria(
+      $idCarrera: Int!
+      $idMateria: Int!
+      $horasSemanales: Int!
+    ) {
+      traspasarMateria(
+        idCarrera: $idCarrera
+        idMateria: $idMateria
+        horasSemanales: $horasSemanales
+      ) {
+        status
+        message
+        type
+      }
+    }
   `
 }

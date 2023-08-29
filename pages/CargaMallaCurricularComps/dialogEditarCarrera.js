@@ -148,7 +148,7 @@ const DialogEditarCarrera = ({
 
     useEffect(() => {
       setAggMateriaCarrera({
-        id: datosEditarCarrera?.id,
+        id: datosEditarCarrera?.id.toString(),
         nombre: datosEditarCarrera?.nombre
       })
     }, [datosEditarCarrera])
