@@ -21,7 +21,6 @@ export default {
           ciclo
           estatus
           titulo
-          sede
         }
       }
     }
@@ -67,6 +66,7 @@ export default {
           estatus
           tipo
           carrera
+          idtipo
         }
       }
     }
@@ -165,6 +165,46 @@ export default {
       $InputEstatusCarrera: InputEstatusCarrera!
     ) {
       actualizarEstatusCarrera(input: $InputEstatusCarrera) {
+        status
+        message
+        type
+      }
+    }
+  `,
+  ASIGNAR_SEDE_CARRERA: gql`
+    mutation asignarSedeCarrera($idCarrera: Int!, $idSede: Int!) {
+      asignarSedeCarrera(idCarrera: $idCarrera, idSede: $idSede) {
+        status
+        message
+        type
+      }
+    }
+  `,
+  GET_SEDES_CARRERAS: gql`
+    query obtenerSedeCarreras {
+      obtenerSedeCarreras {
+        id_scarrera
+        id_sede
+        nb_sede
+        id_carrera
+        nb_carrera
+      }
+    }
+  `,
+  ELIMINAR_SEDE_CARRERA: gql`
+    mutation eliminarSedeCarrera($idSedeCarrera: Int!) {
+      eliminarSedeCarrera(idSedeCarrera: $idSedeCarrera) {
+        status
+        message
+        type
+      }
+    }
+  `,
+  ACTUALIZAR_MATERIA: gql`
+    mutation actualizarMateria(
+      $InputActualizarMateria: InputActualizarMateria!
+    ) {
+      actualizarMateria(input: $InputActualizarMateria) {
         status
         message
         type

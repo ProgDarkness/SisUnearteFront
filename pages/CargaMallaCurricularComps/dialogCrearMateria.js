@@ -23,7 +23,6 @@ const DialogRegMateria = ({
   const [codMateria, setCodMateria] = useState('')
   const [nombMateria, setNombMateria] = useState('')
   const [idTpMateria, setIdTpMateria] = useState(null)
-  const [idSede, setIdSede] = useState(null)
   const [unCredito, setUnCredito] = useState('')
   const [horasSemanales, setHorasSemanales] = useState('')
   const [datosEditarMateria, setDatosEditarMateria] = useState(null)
@@ -34,14 +33,6 @@ const DialogRegMateria = ({
 
   const { data: tpmateria } = useSWR(GQLconsultasGenerales.GET_TIPO_MATERIA)
   const { data: materias, mutate } = useSWR(GQLregMallaCurricular.GET_MATERIAS)
-  const { data: sedeMateria } = useSWR(
-    idCarrera
-      ? [
-          GQLregMallaCurricular.GET_SEDE_CARRERA_MATERIA,
-          { carrera: parseInt(idCarrera) }
-        ]
-      : null
-  )
 
   const crearMateria = (variables) => {
     return request(
@@ -65,7 +56,6 @@ const DialogRegMateria = ({
       credito: parseInt(unCredito),
       tipo: parseInt(idTpMateria),
       hora: parseInt(horasSemanales),
-      sede: parseInt(idSede),
       carrera: parseInt(idCarrera)
     }
     crearMateria({ InputCrearMateria }).then(
@@ -74,7 +64,6 @@ const DialogRegMateria = ({
         setCodMateria('')
         setNombMateria('')
         setIdTpMateria(null)
-        setIdSede(null)
         setHorasSemanales('')
         setUnCredito('')
         toast.current.show({
@@ -233,20 +222,6 @@ const DialogRegMateria = ({
             />
             <label htmlFor="new_uni_cre_carrera">Horas Semanales</label>
           </span>
-          <span className="p-float-label field">
-            <Dropdown
-              className="w-full"
-              id="new_sede_carrera"
-              options={sedeMateria?.obtenerSedesPorCarrera.response}
-              optionLabel="nombre"
-              optionValue="id"
-              value={idSede}
-              onChange={(e) => setIdSede(e.value)}
-              autoComplete="off"
-              emptyMessage="Seleccione una carrera"
-            />
-            <label htmlFor="new_sede_carrera">Sede</label>
-          </span>
           <div className="flex">
             <Button
               label="Registrar"
@@ -258,8 +233,7 @@ const DialogRegMateria = ({
                 !nombMateria ||
                 !idTpMateria ||
                 !unCredito ||
-                !horasSemanales ||
-                !idSede
+                !horasSemanales
               }
             />
           </div>

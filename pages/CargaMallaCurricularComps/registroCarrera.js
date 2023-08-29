@@ -5,6 +5,7 @@ import { InputText } from 'primereact/inputtext'
 import React, { useRef, useState } from 'react'
 import DialogVerCarrera from './dialogVerCarrera'
 import DialogEditarCarrera from './dialogEditarCarrera'
+import DialogAsigSede from './dialogRegSede'
 import { ConfirmDialog } from 'primereact/confirmdialog'
 import request from 'graphql-request'
 import GQLregMallaCurricular from 'graphql/regMallaCurricular'
@@ -17,7 +18,6 @@ import DialogRegMateria from './dialogCrearMateria'
 const RegistroCarrera = ({ cambioVista }) => {
   const toast = useRef(null)
   const [codCarrera, setCodCarrera] = useState('')
-  const [sedeCarrera, setSedeCarrera] = useState(null)
   const [nombCarrera, setNombCarrera] = useState('')
   const [tpCiclos, setTpCiclos] = useState(null)
   const [tituloCarrera, setTituloCarrera] = useState('')
@@ -26,6 +26,7 @@ const RegistroCarrera = ({ cambioVista }) => {
   const [dialogVerCarrera, setDialogVerCarrera] = useState(false)
   const [datosVerCarrera, setDatosVerCarrera] = useState(null)
   const [dialogEditarCarrera, setDialogEditarCarrera] = useState(false)
+  const [dialogAsigSede, setDialogAsigSede] = useState(false)
   const [datosEditarCarrera, setDatosEditarCarrera] = useState(null)
   const [dialogRegMateria, setDialogRegMateria] = useState(false)
   const [dialogConfirmElminarCarrera, setDialogConfirmElminarCarrera] =
@@ -39,7 +40,7 @@ const RegistroCarrera = ({ cambioVista }) => {
   const { data: tiposCiclos } = useSWR(GQLconsultasGenerales.GET_TIPO_CICLOS)
   const { data: tiposTitulo } = useSWR(GQLconsultasGenerales.GET_TIPO_TITULO)
   const { data: carreras, mutate } = useSWR(GQLregMallaCurricular.GET_CARRERAS)
-  const { data: sedes } = useSWR(GQLconsultasGenerales.GET_SEDES)
+  
 
   const crearCarrera = (variables) => {
     return request(
@@ -92,8 +93,7 @@ const RegistroCarrera = ({ cambioVista }) => {
       tipo: parseInt(tipoCarrera),
       ciclo: parseInt(tpCiclos),
       titulo: parseInt(tituloCarrera),
-      cantTrayectos: parseInt(cantTrayectos),
-      sede: parseInt(sedeCarrera)
+      cantTrayectos: parseInt(cantTrayectos)
     }
     crearCarrera({ InputCrearCarrera }).then(
       ({ crearCarrera: { status, message, type } }) => {
@@ -103,7 +103,6 @@ const RegistroCarrera = ({ cambioVista }) => {
         setTpCiclos(null)
         setTituloCarrera('')
         setCantTrayectos(null)
-        setSedeCarrera(null)
         toast.current.show({
           severity: type,
           summary: '¡ Atención !',
@@ -138,6 +137,12 @@ const RegistroCarrera = ({ cambioVista }) => {
   const HeaderTrayectos = () => {
     return (
       <div className="h-8 flex justify-end bg-[#ae8e8e] mt-3">
+        <Button
+          label="Asignar Sedes"
+          icon="pi pi-plus"
+          className="mr-2"
+          onClick={() => setDialogAsigSede(true)}
+        />
         <Button
           label="Registrar Materias"
           icon="pi pi-plus"
@@ -202,6 +207,10 @@ const RegistroCarrera = ({ cambioVista }) => {
         dialogRegMateria={dialogRegMateria}
         setDialogRegMateria={setDialogRegMateria}
         carreras={carreras}
+      />
+      <DialogAsigSede
+        dialogAsigSede={dialogAsigSede}
+        setDialogAsigSede={setDialogAsigSede}
       />
       <ConfirmDialog
         visible={dialogConfirmElminarCarrera}
@@ -312,8 +321,7 @@ const RegistroCarrera = ({ cambioVista }) => {
             !tituloCarrera ||
             !tpCiclos ||
             !cantTrayectos ||
-            !tipoCarrera ||
-            !sedeCarrera
+            !tipoCarrera
           }
         />
       </div>
@@ -346,18 +354,6 @@ const RegistroCarrera = ({ cambioVista }) => {
         />
         <label htmlFor="tp_carrera">Tipo de carrera</label>
       </span>
-      <span className="p-float-label field">
-        <Dropdown
-          className="w-full"
-          id="tp_carrera"
-          value={sedeCarrera}
-          onChange={(e) => setSedeCarrera(e.target.value)}
-          options={sedes?.obtenerSedes.response}
-          optionLabel="nombre"
-          optionValue="id"
-        />
-        <label htmlFor="tp_carrera">Sede de la Carrera</label>
-      </span>
       <div className="col-span-5">
         <HeaderTrayectos />
         <DataTable
@@ -369,7 +365,6 @@ const RegistroCarrera = ({ cambioVista }) => {
           <Column field="tipo" header="Tipo" />
           <Column field="ciclo" header="Tipo de Ciclo" />
           <Column field="titulo" header="Titulo" />
-          <Column field="sede" header="Sede" />
           <Column body={accionBodyTemplate} />
         </DataTable>
       </div>
