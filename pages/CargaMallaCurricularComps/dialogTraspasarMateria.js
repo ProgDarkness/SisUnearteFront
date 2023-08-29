@@ -14,6 +14,7 @@ import request from 'graphql-request'
 const DialogTrasMateria = ({ dialogTrasMateria, setDialogTrasMateria }) => {
   const toast = useRef(null)
   const [dialogTraspaso, setDialogTraspaso] = useState(false)
+  const [reloadTabla, setReloadTabla] = useState(true)
 
   const { data: materias, mutate } = useSWR(GQLregMallaCurricular.GET_MATERIAS)
   const { data: materiasDrop } = useSWR(GQLconsultasGenerales.GET_MATERIAS_ONE)
@@ -40,6 +41,7 @@ const DialogTrasMateria = ({ dialogTrasMateria, setDialogTrasMateria }) => {
       idMateria: parseInt(materiaTraspaso),
       horasSemanales: parseInt(horasSemanales)
     }).then(({ traspasarMateria: { status, message, type } }) => {
+      setReloadTabla(false)
       setMateriaTraspaso(null)
       setCarreraTraspaso(null)
       setHorasSemanales('')
@@ -49,6 +51,9 @@ const DialogTrasMateria = ({ dialogTrasMateria, setDialogTrasMateria }) => {
         detail: message
       })
       mutate()
+      setTimeout(() => {
+        setReloadTabla(true)
+      }, 1)
     })
   }
 
@@ -153,27 +158,29 @@ const DialogTrasMateria = ({ dialogTrasMateria, setDialogTrasMateria }) => {
             tooltipOptions={{ position: 'top' }}
           />
         </div>
-        <DataTable
-          value={materias?.obtenerTodasMaterias.response}
-          emptyMessage="No se encuentran materias registradas."
-          rowGroupMode="rowspan"
-          groupRowsBy={['carrera']}
-        >
-          <Column field="carrera" header="Carrera" />
-          <Column field="codigo" header="Codigo" />
-          <Column field="nombre" header="Materia" />
-          <Column field="tipo" header="Tecnica" />
-          <Column
-            field="credito"
-            header="Unidades de Credito"
-            style={{ width: '10%' }}
-          />
-          <Column
-            field="hora"
-            header="Horas Semanales"
-            style={{ width: '10%' }}
-          />
-        </DataTable>
+        {reloadTabla && (
+          <DataTable
+            value={materias?.obtenerTodasMaterias.response}
+            emptyMessage="No se encuentran materias registradas."
+            rowGroupMode="rowspan"
+            groupRowsBy={['carrera']}
+          >
+            <Column field="carrera" header="Carrera" />
+            <Column field="codigo" header="Codigo" />
+            <Column field="nombre" header="Materia" />
+            <Column field="tipo" header="Tecnica" />
+            <Column
+              field="credito"
+              header="Unidades de Credito"
+              style={{ width: '10%' }}
+            />
+            <Column
+              field="hora"
+              header="Horas Semanales"
+              style={{ width: '10%' }}
+            />
+          </DataTable>
+        )}
       </Dialog>
     </>
   )

@@ -19,8 +19,6 @@ const CargarMalla = ({ cambioVista }) => {
 
   const { data: mallas, mutate } = useSWR(GQLregMallaCurricular.GET_MALLAS)
 
-  console.log(mallas)
-
   const actualizarEstatusCarrera = (variables) => {
     return request(
       process.env.NEXT_PUBLIC_URL_BACKEND,
