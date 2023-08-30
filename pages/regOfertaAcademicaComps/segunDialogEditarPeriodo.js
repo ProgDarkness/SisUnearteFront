@@ -4,7 +4,8 @@ import { InputText } from 'primereact/inputtext'
 
 const DialogEditarPeriodo = ({
   activeDialogEditarPeriodo,
-  setActiveDialogEditarPeriodo
+  setActiveDialogEditarPeriodo,
+  editarDatosPeriodo
 }) => {
   return (
     <Dialog
@@ -82,7 +83,7 @@ const DialogEditarPeriodo = ({
           <InputText
             className="w-full"
             id="fe_incio"
-            /* value={datosEditarMateria?.carrera_materia} */
+            /* value={editarDatosPeriodo?.fei} */
             autoComplete="off"
           />
           <label htmlFor="fe_incio">Fecha de Inicio</label>

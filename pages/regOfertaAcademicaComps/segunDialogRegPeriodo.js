@@ -51,6 +51,7 @@ const DialogRegPeriodo = ({
   const [feFinNotas, setFeFinNotas] = useState(null)
   const toast = useRef(null)
   const [verDatosPeriodo, setVerDatosPeriodo] = useState(null)
+  const [editarDatosPeriodo, setEditarDatosPeriodo] = useState(null)
   const [dialogConfirmElminarPeriodo, setDialogConfirmElminarPeriodo] =
     useState(false)
   const [dataEliminarPeriodo, setDataEliminarPeriodo] = useState(null)
@@ -220,6 +221,7 @@ const DialogRegPeriodo = ({
           tooltip="Modificar"
           onClick={() => {
             setActiveDialogEditarPeriodo(true)
+            setEditarDatosPeriodo(rowData)
           }}
           tooltipOptions={{ position: 'top' }}
         />
@@ -399,6 +401,7 @@ const DialogRegPeriodo = ({
       <DialogEditarPeriodo
         activeDialogEditarPeriodo={activeDialogEditarPeriodo}
         setActiveDialogEditarPeriodo={setActiveDialogEditarPeriodo}
+        editarDatosPeriodo={editarDatosPeriodo}
       />
       <DialogVerPeriodo
         activeDialogVerPeriodo={activeDialogVerPeriodo}
