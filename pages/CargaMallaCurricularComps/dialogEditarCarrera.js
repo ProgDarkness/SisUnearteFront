@@ -25,6 +25,13 @@ const DialogEditarCarrera = ({
   const [datosAggMateria, setDatosAggMateria] = useState(null)
   const toast = useRef(null)
 
+  useEffect(() => {
+    mutateCarrera()
+    mutateTrayectos()
+    mutateMaterias()
+    mutate()
+  }, [activeDialogEditarCarrera])
+
   const { data: infoCarrera, mutate } = useSWR(
     datosEditarCarrera?.id
       ? [
@@ -38,7 +45,7 @@ const DialogEditarCarrera = ({
       : null
   )
 
-  const { data: materias } = useSWR(
+  const { data: materias, mutate: mutateMaterias } = useSWR(
     datosEditarCarrera?.id
       ? [
           GQLregMallaCurricular.GET_CARRERAS_POR_MATERIA,
@@ -49,7 +56,7 @@ const DialogEditarCarrera = ({
       : null
   )
 
-  const { data: trayectos } = useSWR(
+  const { data: trayectos, mutate: mutateTrayectos } = useSWR(
     datosEditarCarrera?.id
       ? [
           GQLregMallaCurricular.GET_TRAYECTOS_POR_CARRERA,
@@ -60,7 +67,9 @@ const DialogEditarCarrera = ({
       : null
   )
 
-  const { data: carreras } = useSWR(GQLconsultasGenerales.GET_CARRERAS)
+  const { data: carreras, mutate: mutateCarrera } = useSWR(
+    GQLconsultasGenerales.GET_CARRERAS
+  )
 
   const asignarTrayecto = (variables) => {
     return request(

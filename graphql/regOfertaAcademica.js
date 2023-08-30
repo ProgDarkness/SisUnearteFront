@@ -66,5 +66,14 @@ export default {
         type
       }
     }
+  `,
+  ELMINAR_PERIODO: gql`
+    mutation eliminarPeriodo($InputEliminarPeriodo: InputEliminarPeriodo!) {
+      eliminarPeriodo(input: $InputEliminarPeriodo) {
+        status
+        message
+        type
+      }
+    }
   `
 }

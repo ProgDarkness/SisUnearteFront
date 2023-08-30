@@ -10,11 +10,15 @@ import { Toast } from 'primereact/toast'
 import { Dropdown } from 'primereact/dropdown'
 import { InputText } from 'primereact/inputtext'
 import request from 'graphql-request'
+import { ConfirmDialog } from 'primereact/confirmdialog'
 
 const DialogTrasMateria = ({ dialogTrasMateria, setDialogTrasMateria }) => {
   const toast = useRef(null)
   const [dialogTraspaso, setDialogTraspaso] = useState(false)
   const [reloadTabla, setReloadTabla] = useState(true)
+  const [dialogConfirmElminarTraspaso, setDialogConfirmElminarTraspaso] =
+    useState(false)
+  const [dataEliminarTraspaso, setDataEliminarTraspaso] = useState(null)
 
   const { data: materias, mutate } = useSWR(GQLregMallaCurricular.GET_MATERIAS)
   const { data: materiasDrop } = useSWR(GQLconsultasGenerales.GET_MATERIAS_ONE)
@@ -26,6 +30,27 @@ const DialogTrasMateria = ({ dialogTrasMateria, setDialogTrasMateria }) => {
       GQLregMallaCurricular.TRASPASAR_MATERIA,
       variables
     )
+  }
+
+  const deleteTraspMateria = (variables) => {
+    return request(
+      process.env.NEXT_PUBLIC_URL_BACKEND,
+      GQLregMallaCurricular.ELIMINAR_TRASPASO,
+      variables
+    )
+  }
+
+  const eliminarTrasMateria = (variables) => {
+    deleteTraspMateria({
+      idcarrema: parseInt(dataEliminarTraspaso?.idcarrema)
+    }).then(({ eliminarTraspaso: { status, message, type } }) => {
+      toast.current.show({
+        severity: type,
+        summary: '¡ Atención !',
+        detail: message
+      })
+      mutate()
+    })
   }
 
   const regTraspMateria = (
@@ -55,6 +80,23 @@ const DialogTrasMateria = ({ dialogTrasMateria, setDialogTrasMateria }) => {
         setReloadTabla(true)
       }, 1)
     })
+  }
+
+  const accionBodyTemplate = (rowData) => {
+    return (
+      <div className="flex justify-center">
+        <Button
+          icon="pi pi-times"
+          className="p-button-danger"
+          tooltip="Eliminar"
+          tooltipOptions={{ position: 'top' }}
+          onClick={() => {
+            setDialogConfirmElminarTraspaso(true)
+            setDataEliminarTraspaso(rowData)
+          }}
+        />
+      </div>
+    )
   }
 
   const DialogTraspaso = () => {
@@ -134,10 +176,29 @@ const DialogTrasMateria = ({ dialogTrasMateria, setDialogTrasMateria }) => {
     )
   }
 
+  const acceptEliminarMateria = () => {
+    eliminarTrasMateria()
+  }
+
+  const rejectEliminarMateria = () => {
+    setDialogConfirmElminarTraspaso(false)
+  }
+
   return (
     <>
       <Toast ref={toast} />
       <DialogTraspaso />
+      <ConfirmDialog
+        visible={dialogConfirmElminarTraspaso}
+        onHide={() => setDialogConfirmElminarTraspaso(false)}
+        message="¿Esta seguro que desea eliminar el traspaso?"
+        header="Confirmacion"
+        icon="pi pi-exclamation-triangle"
+        accept={acceptEliminarMateria}
+        reject={rejectEliminarMateria}
+        acceptLabel="SI"
+        rejectLabel="NO"
+      />
       <Dialog
         visible={dialogTrasMateria}
         onHide={() => setDialogTrasMateria(false)}
@@ -179,6 +240,7 @@ const DialogTrasMateria = ({ dialogTrasMateria, setDialogTrasMateria }) => {
               header="Horas Semanales"
               style={{ width: '10%' }}
             />
+            <Column body={accionBodyTemplate} />
           </DataTable>
         )}
       </Dialog>

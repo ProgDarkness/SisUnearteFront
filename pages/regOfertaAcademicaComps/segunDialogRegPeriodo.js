@@ -15,6 +15,7 @@ import request from 'graphql-request'
 import GQLregOfertaAcademica from 'graphql/regOfertaAcademica'
 import GQLconsultasGenerales from 'graphql/consultasGenerales'
 import useSWR from 'swr'
+import { ConfirmDialog } from 'primereact/confirmdialog'
 
 const DialogRegPeriodo = ({
   activeDialogRegPerido,
@@ -49,19 +50,44 @@ const DialogRegPeriodo = ({
   const [feIniNotas, setFeIniNotas] = useState(null)
   const [feFinNotas, setFeFinNotas] = useState(null)
   const toast = useRef(null)
-
+  const [verDatosPeriodo, setVerDatosPeriodo] = useState(null)
+  const [dialogConfirmElminarPeriodo, setDialogConfirmElminarPeriodo] =
+    useState(false)
+  const [dataEliminarPeriodo, setDataEliminarPeriodo] = useState(null)
   const { data: meses } = useSWR(GQLconsultasGenerales.GET_MESES)
-  const { data: periodosInfo } = useSWR(
+  const { data: periodosInfo, mutate } = useSWR(
     GQLregOfertaAcademica.GET_TODOS_PERIODOS
   )
-
-  console.log(periodosInfo)
 
   const savePeriodo = (variables) => {
     return request(
       process.env.NEXT_PUBLIC_URL_BACKEND,
       GQLregOfertaAcademica.SAVE_PERIODO,
       variables
+    )
+  }
+
+  const eliminarPeriodo = (variables) => {
+    return request(
+      process.env.NEXT_PUBLIC_URL_BACKEND,
+      GQLregOfertaAcademica.ELMINAR_PERIODO,
+      variables
+    )
+  }
+
+  const regEliminarPeriodo = () => {
+    const InputEliminarPeriodo = {
+      idperiodo: parseInt(dataEliminarPeriodo?.id)
+    }
+    eliminarPeriodo({ InputEliminarPeriodo }).then(
+      ({ eliminarPeriodo: { status, message, type } }) => {
+        toast.current.show({
+          severity: type,
+          summary: '¡ Atención !',
+          detail: message
+        })
+        mutate()
+      }
     )
   }
 
@@ -159,6 +185,13 @@ const DialogRegPeriodo = ({
     }
   }
 
+  const acceptElminarPeriodo = () => {
+    regEliminarPeriodo()
+  }
+  const rejectElminarPeriodo = () => {
+    setDialogConfirmElminarPeriodo(false)
+  }
+
   function formatFecha(fecha) {
     const [day, month, year] = fecha?.split('/')
     const dateObject = new Date(year, month - 1, day)
@@ -178,6 +211,7 @@ const DialogRegPeriodo = ({
           tooltipOptions={{ position: 'top' }}
           onClick={() => {
             setActiveDialogVerPeriodo(true)
+            setVerDatosPeriodo(rowData)
           }}
         />
         <Button
@@ -194,7 +228,10 @@ const DialogRegPeriodo = ({
           className="p-button-danger"
           tooltip="Eliminar"
           tooltipOptions={{ position: 'top' }}
-          /* onClick={() => setDialogConfirmElminarOferta(true)} */
+          onClick={() => {
+            setDialogConfirmElminarPeriodo(true)
+            setDataEliminarPeriodo(rowData)
+          }}
         />
       </div>
     )
@@ -348,6 +385,17 @@ const DialogRegPeriodo = ({
 
   return (
     <>
+      <ConfirmDialog
+        visible={dialogConfirmElminarPeriodo}
+        onHide={() => setDialogConfirmElminarPeriodo(false)}
+        message="¿Esta seguro que desea eliminar la carrera?"
+        header="Confirmacion"
+        icon="pi pi-exclamation-triangle"
+        accept={acceptElminarPeriodo}
+        reject={rejectElminarPeriodo}
+        acceptLabel="SI"
+        rejectLabel="NO"
+      />
       <DialogEditarPeriodo
         activeDialogEditarPeriodo={activeDialogEditarPeriodo}
         setActiveDialogEditarPeriodo={setActiveDialogEditarPeriodo}
@@ -355,6 +403,7 @@ const DialogRegPeriodo = ({
       <DialogVerPeriodo
         activeDialogVerPeriodo={activeDialogVerPeriodo}
         setActiveDialogVerPeriodo={setActiveDialogVerPeriodo}
+        verDatosPeriodo={verDatosPeriodo}
       />
       <Dialog
         header="Registrar Periodo"

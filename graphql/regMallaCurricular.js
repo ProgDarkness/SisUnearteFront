@@ -67,6 +67,7 @@ export default {
           tipo
           carrera
           idtipo
+          idcarrema
         }
       }
     }
@@ -222,6 +223,15 @@ export default {
         idMateria: $idMateria
         horasSemanales: $horasSemanales
       ) {
+        status
+        message
+        type
+      }
+    }
+  `,
+  ELIMINAR_TRASPASO: gql`
+    mutation eliminarTraspaso($idcarrema: Int!) {
+      eliminarTraspaso(idcarrema: $idcarrema) {
         status
         message
         type
