@@ -15,6 +15,8 @@ import GQLregOfertaAcademica from 'graphql/regOfertaAcademica'
 import GQLconsultasGenerales from 'graphql/consultasGenerales'
 import useSWR from 'swr'
 import { ConfirmDialog } from 'primereact/confirmdialog'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faTriangleExclamation } from '@fortawesome/free-solid-svg-icons'
 
 const DialogRegPeriodo = ({
   activeDialogRegPerido,
@@ -23,6 +25,7 @@ const DialogRegPeriodo = ({
   const { idUser } = useSesion()
   const [reload, setReload] = useState(true)
   const [activeDialogVerPeriodo, setActiveDialogVerPeriodo] = useState(false)
+  const [editarId, setEditarId] = useState(null)
   const [codPeriodo, setCodPeriodo] = useState('')
   const [nombPeriodo, setNombPeriodo] = useState('')
   const [tipoPeriodo, setTipoPeriodo] = useState(null)
@@ -50,11 +53,76 @@ const DialogRegPeriodo = ({
   const [verDatosPeriodo, setVerDatosPeriodo] = useState(null)
   const [dialogConfirmElminarPeriodo, setDialogConfirmElminarPeriodo] =
     useState(false)
+  const [dialogConfirmRegPeriodo, setDialogConfirmRegPeriodo] = useState(false)
   const [dataEliminarPeriodo, setDataEliminarPeriodo] = useState(null)
   const { data: meses } = useSWR(GQLconsultasGenerales.GET_MESES)
   const { data: periodosInfo, mutate } = useSWR(
     GQLregOfertaAcademica.GET_TODOS_PERIODOS
   )
+
+  /* 
+    {
+    "id": "4",
+    "codigo": "1",
+    "periodo": "Regular",
+    "idperiodo": 1,
+    "anio": 2024,
+    "mesi": "Enero",
+    "idmesi": 1,
+    "mesf": "Marzo",
+    "idmesf": 3,
+    "semana": 3,
+    "personal": "Ana",
+    "mensaje": "Hola",
+    "fei": "16/08/2023",
+    "fef": "16/08/2023",
+    "feacta": "16/08/2023",
+    "fedoc": "16/08/2023",
+    "fepregrado": "16/08/2023",
+    "feretiro": "16/08/2023",
+    "femodificacion": "16/08/2023",
+    "feipre": "16/08/2023",
+    "fefpre": "16/08/2023",
+    "feinsc": "16/08/2023",
+    "fefinsc": "16/08/2023",
+    "feioferta": "16/08/2023",
+    "fefoferta": "16/08/2023",
+    "feiretiro": "16/08/2023",
+    "fefretiro": "16/08/2023",
+    "feinota": "16/08/2023",
+    "fefnota": "16/08/2023",
+    "estatus": "Inactivo"
+    }
+  */
+
+  const funCargEditar = (rowData) => {
+    if (rowData) {
+      setEditarId(rowData?.id)
+      setCodPeriodo(rowData?.codigo)
+      setNombPeriodo(rowData?.mensaje)
+      setTipoPeriodo(rowData.idperiodo.toString())
+      setAnioPeriodo(rowData?.anio)
+      setMesInicio(rowData.idmesi.toString())
+      setMesFin(rowData.idmesf.toString())
+      setNuSemanas(rowData?.semana)
+      setFeIni(rowData?.fei)
+      setFeFin(rowData?.fef)
+      setFeEntregaActa(rowData?.feacta)
+      setFeSoliDoc(rowData?.fedoc)
+      setFeSoliPreGrado(rowData?.fepregrado)
+      setFeRetiro(rowData?.feretiro)
+      setFeModificacion(rowData?.femodificacion)
+      setFeIniPreInscri(rowData?.feipre)
+      setFeIniInscri(rowData?.feinsc)
+      setFeFinInscri(rowData?.fefinsc)
+      setFeIniOferta(rowData?.feioferta)
+      setFeFinOferta(rowData?.fefoferta)
+      setFeIniRetiro(rowData?.feiretiro)
+      setFeFinRetiro(rowData?.fefretiro)
+      setFeIniNotas(rowData?.feinota)
+      setFeFinNotas(rowData?.fefnota)
+    }
+  }
 
   const savePeriodo = (variables) => {
     return request(
@@ -64,11 +132,61 @@ const DialogRegPeriodo = ({
     )
   }
 
+  const updatePeriodo = (variables) => {
+    return request(
+      process.env.NEXT_PUBLIC_URL_BACKEND,
+      GQLregOfertaAcademica.UPDATE_PERIODO,
+      variables
+    )
+  }
+
   const eliminarPeriodo = (variables) => {
     return request(
       process.env.NEXT_PUBLIC_URL_BACKEND,
       GQLregOfertaAcademica.ELMINAR_PERIODO,
       variables
+    )
+  }
+
+  const actualizarPeriodo = () => {
+    const InputActualizarPeriodo = {
+      codigo: codPeriodo,
+      tipo: parseInt(tipoPeriodo),
+      anio: parseInt(anioPeriodo),
+      mesinicio: parseInt(mesInicio),
+      mesfin: parseInt(mesFin),
+      nusemana: parseInt(nuSemanas),
+      personal: parseInt(idUser),
+      mensaje: nombPeriodo,
+      feinicio: formatFecha(feIni),
+      fefin: formatFecha(feFin),
+      feentregaacta: formatFecha(feEntregaActa),
+      fesolicdocumento: formatFecha(feSoliDoc),
+      fesolicgrado: formatFecha(feSoliPreGrado),
+      feretiro: formatFecha(feRetiro),
+      femodificacion: formatFecha(feModificacion),
+      feiniciopreinscripcion: formatFecha(feIniPreInscri),
+      fefinpreinscripcion: formatFecha(feIniInscri),
+      feinicioinscripcion: formatFecha(feIniInscri),
+      fefininscripcion: formatFecha(feFinInscri),
+      feiniciooferta: formatFecha(feIniOferta),
+      fefinoferta: formatFecha(feFinOferta),
+      feinicioretiro: formatFecha(feIniRetiro),
+      fefinretiro: formatFecha(feFinRetiro),
+      feinicionotas: formatFecha(feIniNotas),
+      fefinnotas: formatFecha(feFinNotas),
+      idperiodo: parseInt(editarId)
+    }
+    updatePeriodo({ InputActualizarPeriodo }).then(
+      ({ actualizarPeriodo: { status, message, type } }) => {
+        toast.current.show({
+          severity: type,
+          summary: '¡ Atención !',
+          detail: message
+        })
+        mutate()
+        limpiarInpust()
+      }
     )
   }
 
@@ -192,8 +310,21 @@ const DialogRegPeriodo = ({
   const acceptElminarPeriodo = () => {
     regEliminarPeriodo()
   }
+
+  const acceptRegPeriodo = () => {
+    if (editarId) {
+      actualizarPeriodo()
+    } else {
+      guardarPeriodo()
+    }
+  }
+
   const rejectElminarPeriodo = () => {
     setDialogConfirmElminarPeriodo(false)
+  }
+
+  const rejectRegPeriodo = () => {
+    setDialogConfirmRegPeriodo(false)
   }
 
   const optionTipoPeriodo = [{ nombre: 'regular', id: '1' }]
@@ -212,6 +343,13 @@ const DialogRegPeriodo = ({
           }}
         />
         <Button
+          icon="pi pi-pencil"
+          className="p-button-help mr-1"
+          tooltip="Modificar"
+          onClick={() => funCargEditar(rowData)}
+          tooltipOptions={{ position: 'top' }}
+        />
+        <Button
           icon="pi pi-times"
           className="p-button-danger"
           tooltip="Eliminar"
@@ -226,6 +364,7 @@ const DialogRegPeriodo = ({
   }
 
   function limpiarInpust() {
+    setEditarId(null)
     setReload(false)
     setCodPeriodo('')
     setNombPeriodo('')
@@ -258,7 +397,7 @@ const DialogRegPeriodo = ({
   const guardarPeriodo = () => {
     const InputPeriodo = {
       codigo: codPeriodo,
-      tipo: parseInt(tipoPeriodo.id),
+      tipo: parseInt(tipoPeriodo),
       anio: parseInt(anioPeriodo),
       mesinicio: parseInt(mesInicio),
       mesfin: parseInt(mesFin),
@@ -372,6 +511,23 @@ const DialogRegPeriodo = ({
         acceptLabel="SI"
         rejectLabel="NO"
       />
+      <ConfirmDialog
+        visible={dialogConfirmRegPeriodo}
+        onHide={() => setDialogConfirmRegPeriodo(false)}
+        message={
+          <p className="text-center">
+            <FontAwesomeIcon size="3x" icon={faTriangleExclamation} /> <br />
+            ¡ Atención ! <br /> los datos registrados deben ser correctos <br />{' '}
+            por favor verifique antes de confirmar el registro, <br /> luego no
+            podran ser modificados
+          </p>
+        }
+        header="Confirmacion"
+        accept={acceptRegPeriodo}
+        reject={rejectRegPeriodo}
+        acceptLabel="SI"
+        rejectLabel="NO"
+      />
       <DialogVerPeriodo
         activeDialogVerPeriodo={activeDialogVerPeriodo}
         setActiveDialogVerPeriodo={setActiveDialogVerPeriodo}
@@ -420,6 +576,7 @@ const DialogRegPeriodo = ({
               options={optionTipoPeriodo}
               value={tipoPeriodo}
               optionLabel="nombre"
+              optionValue="id"
               onChange={(e) => setTipoPeriodo(e.value)}
             />
             <label htmlFor="tp_periodo">Tipo Periodo</label>
@@ -690,11 +847,19 @@ const DialogRegPeriodo = ({
           </span>
           <div className="col-span-6 flex justify-center my-auto">
             <Button
-              label="Registrar"
+              label={editarId ? 'Guardar' : 'Registrar'}
               icon="pi pi-plus"
-              onClick={guardarPeriodo}
+              onClick={() => setDialogConfirmRegPeriodo(true)}
               disabled={validateForm()}
             />
+            {editarId && (
+              <Button
+                label="Cancelar"
+                icon="pi pi-times"
+                className="p-button-danger ml-1"
+                onClick={() => limpiarInpust()}
+              />
+            )}
           </div>
         </div>
         <div className="mt-4">

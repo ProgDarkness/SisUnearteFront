@@ -11,9 +11,12 @@ export default {
           id
           codigo
           periodo
+          idperiodo
           anio
           mesi
+          idmesi
           mesf
+          idmesf
           semana
           personal
           mensaje
