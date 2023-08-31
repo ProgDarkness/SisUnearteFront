@@ -4,7 +4,6 @@ import { DataTable } from 'primereact/datatable'
 import { Dialog } from 'primereact/dialog'
 import { InputText } from 'primereact/inputtext'
 import { useRef, useState } from 'react'
-import DialogEditarPeriodo from './segunDialogEditarPeriodo'
 import DialogVerPeriodo from './segunDialogVerPeriodo'
 import { InputMask } from 'primereact/inputmask'
 import { Dropdown } from 'primereact/dropdown'
@@ -23,8 +22,6 @@ const DialogRegPeriodo = ({
 }) => {
   const { idUser } = useSesion()
   const [reload, setReload] = useState(true)
-  const [activeDialogEditarPeriodo, setActiveDialogEditarPeriodo] =
-    useState(false)
   const [activeDialogVerPeriodo, setActiveDialogVerPeriodo] = useState(false)
   const [codPeriodo, setCodPeriodo] = useState('')
   const [nombPeriodo, setNombPeriodo] = useState('')
@@ -51,7 +48,6 @@ const DialogRegPeriodo = ({
   const [feFinNotas, setFeFinNotas] = useState(null)
   const toast = useRef(null)
   const [verDatosPeriodo, setVerDatosPeriodo] = useState(null)
-  const [editarDatosPeriodo, setEditarDatosPeriodo] = useState(null)
   const [dialogConfirmElminarPeriodo, setDialogConfirmElminarPeriodo] =
     useState(false)
   const [dataEliminarPeriodo, setDataEliminarPeriodo] = useState(null)
@@ -90,6 +86,59 @@ const DialogRegPeriodo = ({
         mutate()
       }
     )
+  }
+
+  function validateDate(fecha, setfecha) {
+    if (fecha) {
+      const [day, month, year] = fecha?.split('/')
+      const dateObject = new Date(year, month - 1, day)
+      dateObject.setHours(new Date().getHours())
+      dateObject.setMinutes(new Date().getMinutes())
+      dateObject.setSeconds(new Date().getSeconds())
+      dateObject.setMilliseconds(new Date().getMilliseconds())
+
+      const ahora = new Date()
+      ahora.setDate(new Date().getDate() + 3)
+      const limite = new Date()
+      limite.setFullYear(ahora.getFullYear() + 3)
+
+      if (new Date(year, month, 0).getDate() < day) {
+        setfecha(null)
+        setfecha('')
+        toast.current.show({
+          severity: 'error',
+          summary: '¡ Atención !',
+          detail: 'Fecha Invalida'
+        })
+      }
+
+      if (!(parseInt(month) <= 12)) {
+        setfecha(null)
+        setfecha('')
+        toast.current.show({
+          severity: 'error',
+          summary: '¡ Atención !',
+          detail: 'Fecha Invalida'
+        })
+      }
+
+      if (!(dateObject >= ahora && dateObject <= limite)) {
+        setfecha(null)
+        setfecha('')
+        toast.current.show({
+          severity: 'error',
+          summary: '¡ Atención !',
+          detail: 'Fecha Invalida'
+        })
+      }
+    }
+  }
+
+  function formatFecha(fecha) {
+    const [day, month, year] = fecha?.split('/')
+    const dateObject = new Date(year, month - 1, day)
+
+    return format(dateObject, 'yyyy-MM-dd')
   }
 
   function validateForm() {
@@ -140,64 +189,11 @@ const DialogRegPeriodo = ({
     }
   }
 
-  function validateDate(fecha, setfecha) {
-    if (fecha) {
-      const [day, month, year] = fecha?.split('/')
-      const dateObject = new Date(year, month - 1, day)
-      dateObject.setHours(new Date().getHours())
-      dateObject.setMinutes(new Date().getMinutes())
-      dateObject.setSeconds(new Date().getSeconds())
-      dateObject.setMilliseconds(new Date().getMilliseconds())
-
-      const ahora = new Date()
-      ahora.setDate(new Date().getDate() + 3)
-      const limite = new Date()
-      limite.setFullYear(ahora.getFullYear() + 3)
-
-      if (new Date(year, month, 0).getDate() < day) {
-        setfecha(null)
-        setfecha('')
-        toast.current.show({
-          severity: 'error',
-          summary: '¡ Atención !',
-          detail: 'Fecha Invalida'
-        })
-      }
-
-      if (!(parseInt(month) <= 12)) {
-        setfecha(null)
-        setfecha('')
-        toast.current.show({
-          severity: 'error',
-          summary: '¡ Atención !',
-          detail: 'Fecha Invalida'
-        })
-      }
-
-      if (!(dateObject >= ahora && dateObject <= limite)) {
-        setfecha(null)
-        setfecha('')
-        toast.current.show({
-          severity: 'error',
-          summary: '¡ Atención !',
-          detail: 'Fecha Invalida'
-        })
-      }
-    }
-  }
-
   const acceptElminarPeriodo = () => {
     regEliminarPeriodo()
   }
   const rejectElminarPeriodo = () => {
     setDialogConfirmElminarPeriodo(false)
-  }
-
-  function formatFecha(fecha) {
-    const [day, month, year] = fecha?.split('/')
-    const dateObject = new Date(year, month - 1, day)
-
-    return format(dateObject, 'yyyy-MM-dd')
   }
 
   const optionTipoPeriodo = [{ nombre: 'regular', id: '1' }]
@@ -216,16 +212,6 @@ const DialogRegPeriodo = ({
           }}
         />
         <Button
-          icon="pi pi-pencil"
-          className="p-button-help mr-1"
-          tooltip="Modificar"
-          onClick={() => {
-            setActiveDialogEditarPeriodo(true)
-            setEditarDatosPeriodo(rowData)
-          }}
-          tooltipOptions={{ position: 'top' }}
-        />
-        <Button
           icon="pi pi-times"
           className="p-button-danger"
           tooltip="Eliminar"
@@ -237,18 +223,6 @@ const DialogRegPeriodo = ({
         />
       </div>
     )
-  }
-
-  const bodyFeI = (rowData) => {
-    const fechaFormat = format(new Date(parseInt(rowData.fei)), 'dd/MM/yyyy')
-
-    return <div>{fechaFormat}</div>
-  }
-
-  const bodyFeF = (rowData) => {
-    const fechaFormat = format(new Date(parseInt(rowData.fef)), 'dd/MM/yyyy')
-
-    return <div>{fechaFormat}</div>
   }
 
   function limpiarInpust() {
@@ -397,11 +371,6 @@ const DialogRegPeriodo = ({
         reject={rejectElminarPeriodo}
         acceptLabel="SI"
         rejectLabel="NO"
-      />
-      <DialogEditarPeriodo
-        activeDialogEditarPeriodo={activeDialogEditarPeriodo}
-        setActiveDialogEditarPeriodo={setActiveDialogEditarPeriodo}
-        editarDatosPeriodo={editarDatosPeriodo}
       />
       <DialogVerPeriodo
         activeDialogVerPeriodo={activeDialogVerPeriodo}
@@ -738,8 +707,8 @@ const DialogRegPeriodo = ({
             <Column field="mensaje" header="Descripción Periodo" />
             <Column field="periodo" header="Tipo Periodo" />
             <Column field="anio" header="Año del Periodo" />
-            <Column field="fei" body={bodyFeI} header="Fecha Inicio" />
-            <Column field="fef" body={bodyFeF} header="Fecha Fin" />
+            <Column field="fei" header="Fecha Inicio" />
+            <Column field="fef" header="Fecha Fin" />
             <Column body={accionBodyTemplate} />
           </DataTable>
         </div>

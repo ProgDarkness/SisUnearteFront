@@ -22,6 +22,7 @@ export default {
           feacta
           fedoc
           fepregrado
+          feretiro
           femodificacion
           feipre
           fefpre

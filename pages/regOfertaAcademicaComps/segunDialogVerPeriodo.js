@@ -1,38 +1,11 @@
 import { Dialog } from 'primereact/dialog'
 import { InputText } from 'primereact/inputtext'
-import format from 'date-fns/format'
 
 const DialogVerPeriodo = ({
   activeDialogVerPeriodo,
   setActiveDialogVerPeriodo,
   verDatosPeriodo
 }) => {
-  function formatFechas(fecha) {
-    const formatFecha = verDatosPeriodo?.fei
-      ? format(new Date(parseInt(fecha)), 'dd/MM/yyyy')
-      : null
-
-    return formatFecha
-  }
-
-  const modDatosPeriodo = { ...verDatosPeriodo }
-  modDatosPeriodo.fei = formatFechas(verDatosPeriodo?.fei)
-  modDatosPeriodo.fef = formatFechas(verDatosPeriodo?.fef)
-  modDatosPeriodo.feacta = formatFechas(verDatosPeriodo?.feacta)
-  modDatosPeriodo.fedoc = formatFechas(verDatosPeriodo?.fedoc)
-  modDatosPeriodo.fepregrado = formatFechas(verDatosPeriodo?.fepregrado)
-  modDatosPeriodo.femodificacion = formatFechas(verDatosPeriodo?.femodificacion)
-  modDatosPeriodo.feipre = formatFechas(verDatosPeriodo?.feipre)
-  modDatosPeriodo.fefpre = formatFechas(verDatosPeriodo?.fefpre)
-  modDatosPeriodo.feinsc = formatFechas(verDatosPeriodo?.feinsc)
-  modDatosPeriodo.fefinsc = formatFechas(verDatosPeriodo?.fefinsc)
-  modDatosPeriodo.feioferta = formatFechas(verDatosPeriodo?.feioferta)
-  modDatosPeriodo.fefoferta = formatFechas(verDatosPeriodo?.fefoferta)
-  modDatosPeriodo.feiretiro = formatFechas(verDatosPeriodo?.feiretiro)
-  modDatosPeriodo.fefretiro = formatFechas(verDatosPeriodo?.fefretiro)
-  modDatosPeriodo.feinota = formatFechas(verDatosPeriodo?.feinota)
-  modDatosPeriodo.fefnota = formatFechas(verDatosPeriodo?.fefnota)
-
   return (
     <Dialog
       header="Ver Periodo"
@@ -116,7 +89,7 @@ const DialogVerPeriodo = ({
           <InputText
             className="w-full"
             id="fe_incio"
-            value={modDatosPeriodo?.fei}
+            value={verDatosPeriodo?.fei}
             autoComplete="off"
             disabled
           />
@@ -126,7 +99,7 @@ const DialogVerPeriodo = ({
           <InputText
             className="w-full"
             id="fe_fin"
-            value={modDatosPeriodo?.fef}
+            value={verDatosPeriodo?.fef}
             autoComplete="off"
             disabled
           />
@@ -136,7 +109,7 @@ const DialogVerPeriodo = ({
           <InputText
             className="w-full"
             id="fe_entregaActa"
-            value={modDatosPeriodo?.feacta}
+            value={verDatosPeriodo?.feacta}
             autoComplete="off"
             disabled
           />
@@ -146,7 +119,7 @@ const DialogVerPeriodo = ({
           <InputText
             className="w-full"
             id="fe_soli_doc"
-            value={modDatosPeriodo?.fedoc}
+            value={verDatosPeriodo?.fedoc}
             autoComplete="off"
             disabled
           />
@@ -156,7 +129,7 @@ const DialogVerPeriodo = ({
           <InputText
             className="w-full"
             id="fe_soli_pre_grado"
-            value={modDatosPeriodo?.fepregrado}
+            value={verDatosPeriodo?.fepregrado}
             autoComplete="off"
             disabled
           />
@@ -168,7 +141,7 @@ const DialogVerPeriodo = ({
           <InputText
             className="w-full"
             id="fe_retiro"
-            value={modDatosPeriodo?.feiretiro}
+            value={verDatosPeriodo?.feretiro}
             autoComplete="off"
             disabled
           />
@@ -178,7 +151,7 @@ const DialogVerPeriodo = ({
           <InputText
             className="w-full"
             id="fe_modificacion"
-            value={modDatosPeriodo?.femodificacion}
+            value={verDatosPeriodo?.femodificacion}
             autoComplete="off"
             disabled
           />
@@ -188,7 +161,7 @@ const DialogVerPeriodo = ({
           <InputText
             className="w-full"
             id="fe_ini_pre_inscri"
-            value={modDatosPeriodo?.feipre}
+            value={verDatosPeriodo?.feipre}
             autoComplete="off"
             disabled
           />
@@ -200,7 +173,7 @@ const DialogVerPeriodo = ({
           <InputText
             className="w-full"
             id="fe_ini_inscri"
-            value={modDatosPeriodo?.feinsc}
+            value={verDatosPeriodo?.feinsc}
             autoComplete="off"
             disabled
           />
@@ -210,7 +183,7 @@ const DialogVerPeriodo = ({
           <InputText
             className="w-full"
             id="fe_fin_inscri"
-            value={modDatosPeriodo?.fefinsc}
+            value={verDatosPeriodo?.fefinsc}
             autoComplete="off"
             disabled
           />
@@ -222,7 +195,7 @@ const DialogVerPeriodo = ({
           <InputText
             className="w-full"
             id="fe_ini_oferta"
-            value={modDatosPeriodo?.feioferta}
+            value={verDatosPeriodo?.feioferta}
             autoComplete="off"
             disabled
           />
@@ -232,7 +205,7 @@ const DialogVerPeriodo = ({
           <InputText
             className="w-full"
             id="fe_fin_oferta"
-            value={modDatosPeriodo?.fefoferta}
+            value={verDatosPeriodo?.fefoferta}
             autoComplete="off"
             disabled
           />
@@ -242,7 +215,7 @@ const DialogVerPeriodo = ({
           <InputText
             className="w-full"
             id="fe_ini_retiro"
-            value={modDatosPeriodo?.feiretiro}
+            value={verDatosPeriodo?.feiretiro}
             autoComplete="off"
             disabled
           />
@@ -252,7 +225,7 @@ const DialogVerPeriodo = ({
           <InputText
             className="w-full"
             id="fe_fin_retiro"
-            value={modDatosPeriodo?.fefretiro}
+            value={verDatosPeriodo?.fefretiro}
             autoComplete="off"
             disabled
           />
@@ -262,7 +235,7 @@ const DialogVerPeriodo = ({
           <InputText
             className="w-full"
             id="fe_ini_notas"
-            value={modDatosPeriodo?.feinota}
+            value={verDatosPeriodo?.feinota}
             autoComplete="off"
             disabled
           />
@@ -272,7 +245,7 @@ const DialogVerPeriodo = ({
           <InputText
             className="w-full"
             id="fe_fin_notas"
-            value={modDatosPeriodo?.fefnota}
+            value={verDatosPeriodo?.fefnota}
             autoComplete="off"
             disabled
           />
