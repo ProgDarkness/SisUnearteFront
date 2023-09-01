@@ -7,13 +7,14 @@ import Image from 'next/image'
 import imageInicio from '../../public/images/inicio.png'
 import InscripcionElectiva from './inscripcionElectiva'
 import Postulaciones from './postulaciones'
-import CargaMallaCurricular from './cargarMallaCurricular'
+import CargaMallaCurricular from '../CargaMallaCurricularComps/cargarMallaCurricular'
 import request from 'graphql-request'
 import GQLConsultasGenerales from 'graphql/consultasGenerales'
-import RegistroPrevio from './registroprevio'
-import RegOfertaAcademica from './registroOfertaAcademica'
+import RegistroPrevio from '../informacionDelEstudianteComps/registroprevio'
+import RegOfertaAcademica from '../regOfertaAcademicaComps/registroOfertaAcademica'
 import GestionDePostulaciones from './gestionDePostulaciones'
-import InformacionDelEstudiante from './informacionDelEstudiante'
+import InformacionDelEstudiante from '../informacionDelEstudianteComps/informacionDelEstudiante'
+import GestionDePersonal from 'pages/gestionDePersonal/gestionDePersonal'
 import PruebasImportExport from './pruebasImportExport'
 
 const VistasContext = createContext({})
@@ -29,7 +30,8 @@ export default function index({ data }) {
     regOfertaAcademica: false,
     gestionDePostulaciones: false,
     informacionDelEstudiante: false,
-    pruebasImportExport: false
+    pruebasImportExport: false,
+    gestionDePersonal: false
   }
   const [mostrarVistas, setMostrarVistas] = useState(templateContext)
 
@@ -85,6 +87,7 @@ export default function index({ data }) {
                 <InformacionDelEstudiante />
               )}
               {mostrarVistas?.pruebasImportExport && <PruebasImportExport />}
+              {mostrarVistas?.gestionDePersonal && <GestionDePersonal />}
             </Card>
             {/* eslint-disable-next-line react/no-unknown-property */}
             <style jsx global>{`

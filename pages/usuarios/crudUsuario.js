@@ -168,7 +168,7 @@ const DialogCrudUser = ({ active, setActive }) => {
             icon="pi pi-plus"
             className="p-button-success"
             label="Registrar Usuario"
-            onClick={() => router.push('/inicio/registrarUsuario')}
+            onClick={() => router.push('/usuarios/registrarUsuario')}
           />
         </div>
       </div>

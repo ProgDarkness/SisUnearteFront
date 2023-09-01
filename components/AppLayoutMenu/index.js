@@ -31,6 +31,28 @@ export default function Index({ children, verMenu = true }) {
               Registro Previo
             </h1>
             <h1
+              className={`text-white font-medium text-sm rounded-md mt-2 cursor-pointer hover:bg-[#805e5e] ${
+                mostrarVistas?.gestionDePersonal
+                  ? 'bg-[#805e5e]'
+                  : 'bg-[#ae8e8e]'
+              }`}
+              onClick={() => {
+                const newVistas = {
+                  [`gestionDePersonal`]: !mostrarVistas?.gestionDePersonal
+                }
+                setMostrarVistas((prevState) => ({
+                  ...prevState,
+                  ...newVistas,
+                  ...Object.keys(prevState).reduce((acc, key) => {
+                    if (key !== 'gestionDePersonal') acc[key] = false
+                    return acc
+                  }, {})
+                }))
+              }}
+            >
+              Gestion de Personal
+            </h1>
+            <h1
               className={`text-white font-medium rounded-md mt-2 cursor-pointer hover:bg-[#805e5e] ${
                 mostrarVistas?.postulaciones ? 'bg-[#805e5e]' : 'bg-[#ae8e8e]'
               }`}
@@ -193,8 +215,7 @@ export default function Index({ children, verMenu = true }) {
               }`}
               onClick={() => {
                 const newVistas = {
-                  [`pruebasImportExport`]:
-                    !mostrarVistas?.pruebasImportExport
+                  [`pruebasImportExport`]: !mostrarVistas?.pruebasImportExport
                 }
                 setMostrarVistas((prevState) => ({
                   ...prevState,

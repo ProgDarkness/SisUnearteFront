@@ -7,7 +7,7 @@ import { useRouter } from 'next/router'
 import { useSWRConfig } from 'swr'
 import { Button } from 'primereact/button'
 import { useState } from 'react'
-import DialogCrudUser from 'pages/inicio/crudUsuario'
+import DialogCrudUser from 'pages/usuarios/crudUsuario'
 import { useSesion } from 'hooks/useSesion'
 
 export default function Header({ verMenu }) {
@@ -62,7 +62,13 @@ export default function Header({ verMenu }) {
 
       <div className="mx-3 text-center flex justify-start">
         <div className="inline-block w-[9.5rem] -mt-11 -ml-5">
-          <Image src={logo} layout="responsive" alt="Logo" loading="eager" priority={true} />
+          <Image
+            src={logo}
+            layout="responsive"
+            alt="Logo"
+            loading="eager"
+            priority={true}
+          />
         </div>
       </div>
 

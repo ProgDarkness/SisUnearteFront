@@ -50,6 +50,7 @@ const RegistroCarrera = ({ cambioVista }) => {
       variables
     )
   }
+  
   const actualizarEstatusCarrera = (variables) => {
     return request(
       process.env.NEXT_PUBLIC_URL_BACKEND,
