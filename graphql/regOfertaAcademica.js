@@ -88,6 +88,7 @@ export default {
         type
         response {
           id_oferta
+          co_oferta
           tx_mensaje
           id_carrera
           nb_carrera

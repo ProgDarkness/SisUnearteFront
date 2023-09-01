@@ -59,42 +59,6 @@ const DialogRegPeriodo = ({
   const { data: periodosInfo, mutate } = useSWR(
     GQLregOfertaAcademica.GET_TODOS_PERIODOS
   )
-  
-
-  /* 
-    {
-    "id": "4",
-    "codigo": "1",
-    "periodo": "Regular",
-    "idperiodo": 1,
-    "anio": 2024,
-    "mesi": "Enero",
-    "idmesi": 1,
-    "mesf": "Marzo",
-    "idmesf": 3,
-    "semana": 3,
-    "personal": "Ana",
-    "mensaje": "Hola",
-    "fei": "16/08/2023",
-    "fef": "16/08/2023",
-    "feacta": "16/08/2023",
-    "fedoc": "16/08/2023",
-    "fepregrado": "16/08/2023",
-    "feretiro": "16/08/2023",
-    "femodificacion": "16/08/2023",
-    "feipre": "16/08/2023",
-    "fefpre": "16/08/2023",
-    "feinsc": "16/08/2023",
-    "fefinsc": "16/08/2023",
-    "feioferta": "16/08/2023",
-    "fefoferta": "16/08/2023",
-    "feiretiro": "16/08/2023",
-    "fefretiro": "16/08/2023",
-    "feinota": "16/08/2023",
-    "fefnota": "16/08/2023",
-    "estatus": "Inactivo"
-    }
-  */
 
   const funCargEditar = (rowData) => {
     if (rowData) {

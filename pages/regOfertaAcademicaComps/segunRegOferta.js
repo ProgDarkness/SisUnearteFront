@@ -175,7 +175,7 @@ const RegistroOferta = ({ cambioVista }) => {
             value={ofertas?.obtenerOfertaAcademica?.response}
             emptyMessage="No se encuentran trayectos registrados."
           >
-            <Column field="cod_oferta" header="Codigo de Oferta" />
+            <Column field="co_oferta" header="Codigo de Oferta" />
             <Column field="nb_carrera" header="Nombre de Carrera" />
             <Column field="nb_tp_carrera" header="Tipo de Carrera" />
             <Column field="nb_ciclo" header="Tipo de Ciclo" />
