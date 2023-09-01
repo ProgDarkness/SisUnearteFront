@@ -59,6 +59,7 @@ const DialogRegPeriodo = ({
   const { data: periodosInfo, mutate } = useSWR(
     GQLregOfertaAcademica.GET_TODOS_PERIODOS
   )
+  
 
   /* 
     {
@@ -97,6 +98,11 @@ const DialogRegPeriodo = ({
 
   const funCargEditar = (rowData) => {
     if (rowData) {
+      const mainDiv = document.querySelector('#main')
+      mainDiv.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      })
       setEditarId(rowData?.id)
       setCodPeriodo(rowData?.codigo)
       setNombPeriodo(rowData?.mensaje)
@@ -542,9 +548,14 @@ const DialogRegPeriodo = ({
         }}
         draggable={false}
         resizable={false}
+        contentStyle={{ overflowY: 'hidden' }}
       >
         <Toast ref={toast} />
-        <div className="grid grid-cols-6 gap-4 mt-3">
+        <div
+          id="main"
+          className="grid grid-cols-6 gap-4 mt-3 overflow-y-auto pt-2"
+          style={{ maxHeight: '70vh'}}
+        >
           <span className="p-float-label field">
             {reload && (
               <InputText
@@ -861,21 +872,21 @@ const DialogRegPeriodo = ({
               />
             )}
           </div>
-        </div>
-        <div className="mt-4">
-          <h1 className="text-2xl font-semibold ml-4">Periodos</h1>
-          <DataTable
-            value={periodosInfo?.obtenerPeriodos.response}
-            emptyMessage="No se encuentran periodos registrados."
-          >
-            <Column field="codigo" header="Codigo Periodo" />
-            <Column field="mensaje" header="Descripción Periodo" />
-            <Column field="periodo" header="Tipo Periodo" />
-            <Column field="anio" header="Año del Periodo" />
-            <Column field="fei" header="Fecha Inicio" />
-            <Column field="fef" header="Fecha Fin" />
-            <Column body={accionBodyTemplate} />
-          </DataTable>
+          <div className="mt-4 col-span-6">
+            <h1 className="text-2xl font-semibold ml-4">Periodos</h1>
+            <DataTable
+              value={periodosInfo?.obtenerPeriodos.response}
+              emptyMessage="No se encuentran periodos registrados."
+            >
+              <Column field="codigo" header="Codigo Periodo" />
+              <Column field="mensaje" header="Descripción Periodo" />
+              <Column field="periodo" header="Tipo Periodo" />
+              <Column field="anio" header="Año del Periodo" />
+              <Column field="fei" header="Fecha Inicio" />
+              <Column field="fef" header="Fecha Fin" />
+              <Column body={accionBodyTemplate} />
+            </DataTable>
+          </div>
         </div>
         {/* eslint-disable-next-line react/no-unknown-property */}
         <style jsx global>{`

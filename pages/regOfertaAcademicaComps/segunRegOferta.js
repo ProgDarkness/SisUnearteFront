@@ -1,15 +1,19 @@
 import { Button } from 'primereact/button'
 import { Column } from 'primereact/column'
 import { DataTable } from 'primereact/datatable'
-import React, { useEffect, useState } from 'react'
+import React, { useRef, useState } from 'react'
 import DialogVerRegOferta from './segunDialogVerRegOferta'
 import DialogEditarRegOferta from './segunDialogEditarRegOferta'
 import { ConfirmDialog } from 'primereact/confirmdialog'
 import DialogRegOferta from './segunDialogRegOferta'
 import DialogRegPeriodo from './segunDialogRegPeriodo'
+import useSWR, { mutate } from 'swr'
+import GQLregOfertaAcademica from 'graphql/regOfertaAcademica'
+import request from 'graphql-request'
+import { Toast } from 'primereact/toast'
 
 const RegistroOferta = ({ cambioVista }) => {
-  const [carreras, setCarreras] = useState([])
+  const toast = useRef(null)
   const [dialogVerCarrera, setDialogVerCarrera] = useState(false)
   const [datosVerCarrera, setDatosVerCarrera] = useState(null)
   const [dialogEditarCarrera, setDialogEditarCarrera] = useState(false)
@@ -18,21 +22,34 @@ const RegistroOferta = ({ cambioVista }) => {
   const [dialogConfirmElminarOferta, setDialogConfirmElminarOferta] =
     useState(false)
   const [activeDialogRegPerido, setActiveDialogRegPerido] = useState(false)
+  const { data: ofertas, mutate } = useSWR(
+    GQLregOfertaAcademica.OBTENER_OFERTAS
+  )
+  const [datosEliminarOferta, setDatosEliminarOferta] = useState(null)
 
-  useEffect(() => {
-    setCarreras([
-      {
-        cod_oferta: 'OF-ART-20',
-        cod_carrera: 'ART20-1',
-        nb_carrera: 'Arte',
-        tp_carrera: 'Pre-Grado',
-        tp_ciclo: 'Anual'
+  const deleteOferta = (variables) => {
+    return request(
+      process.env.NEXT_PUBLIC_URL_BACKEND,
+      GQLregOfertaAcademica.ELIMINAR_OFERTA,
+      variables
+    )
+  }
+
+  const eliminarOferta = () => {
+    deleteOferta({ idOferta: parseInt(datosEliminarOferta?.id_oferta) }).then(
+      ({ eliminarOferta: { status, message, type } }) => {
+        toast.current.show({
+          severity: type,
+          summary: '¡ Atención !',
+          detail: message
+        })
+        mutate()
       }
-    ])
-  }, [])
+    )
+  }
 
   const acceptEliminarOferta = () => {
-    console.log('SI')
+    eliminarOferta()
   }
 
   const rejectEliminarOferta = () => {
@@ -86,7 +103,10 @@ const RegistroOferta = ({ cambioVista }) => {
           className="p-button-danger"
           tooltip="Eliminar"
           tooltipOptions={{ position: 'top' }}
-          onClick={() => setDialogConfirmElminarOferta(true)}
+          onClick={() => {
+            setDialogConfirmElminarOferta(true)
+            setDatosEliminarOferta(rowData)
+          }}
         />
       </div>
     )
@@ -94,6 +114,7 @@ const RegistroOferta = ({ cambioVista }) => {
 
   return (
     <>
+      <Toast ref={toast} />
       <DialogRegOferta
         dialogRegOferta={dialogRegOferta}
         setDialogRegOferta={setDialogRegOferta}
@@ -151,14 +172,15 @@ const RegistroOferta = ({ cambioVista }) => {
         <div className="col-span-5">
           <HeaderTrayectos />
           <DataTable
-            value={carreras}
+            value={ofertas?.obtenerOfertaAcademica?.response}
             emptyMessage="No se encuentran trayectos registrados."
           >
             <Column field="cod_oferta" header="Codigo de Oferta" />
-            <Column field="cod_carrera" header="Codigo de Carrera" />
             <Column field="nb_carrera" header="Nombre de Carrera" />
-            <Column field="tp_carrera" header="Tipo de Carrera" />
-            <Column field="tp_ciclo" header="Tipo de Ciclo" />
+            <Column field="nb_tp_carrera" header="Tipo de Carrera" />
+            <Column field="nb_ciclo" header="Tipo de Ciclo" />
+            <Column field="nb_sede" header="Sede" />
+            <Column field="nb_estatus_oferta" header="Estatus" />
             <Column body={accionBodyTemplate} />
           </DataTable>
         </div>

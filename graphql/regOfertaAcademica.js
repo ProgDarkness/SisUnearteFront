@@ -79,5 +79,37 @@ export default {
         type
       }
     }
+  `,
+  OBTENER_OFERTAS: gql`
+    query obtenerOfertaAcademica {
+      obtenerOfertaAcademica {
+        status
+        message
+        type
+        response {
+          id_oferta
+          tx_mensaje
+          id_carrera
+          nb_carrera
+          nb_tp_carrera
+          nb_ciclo
+          nu_cupos
+          nu_seccion
+          id_sede
+          nb_sede
+          id_estatus_oferta
+          nb_estatus_oferta
+        }
+      }
+    }
+  `,
+  ELIMINAR_OFERTA: gql`
+    mutation eliminarOferta($idOferta: Int!) {
+      eliminarOferta(idOferta: $idOferta) {
+        status
+        message
+        type
+      }
+    }
   `
 }
