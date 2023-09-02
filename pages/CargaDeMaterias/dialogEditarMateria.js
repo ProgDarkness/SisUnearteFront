@@ -13,7 +13,7 @@ const DialogEditarMateria = ({
   dialogEditarMateria,
   setDialogEditarMateria,
   datosEditarMateria,
-  setDialogRegMateria
+  mutateEditarCarrera
 }) => {
   const toast = useRef(null)
   const [idTpMateria, setIdTpMateria] = useState(null)
@@ -21,6 +21,8 @@ const DialogEditarMateria = ({
   const [nombMateria, setNombMateria] = useState('')
   const [unCredito, setUnCredito] = useState('')
   const [horasSemanales, setHorasSemanales] = useState('')
+
+  const { data: tpmateria } = useSWR(GQLconsultasGenerales.GET_TIPO_MATERIA)
 
   const actualizarMateria = (variables) => {
     return request(
@@ -47,6 +49,7 @@ const DialogEditarMateria = ({
           summary: '¡ Atención !',
           detail: message
         })
+        mutateEditarCarrera()
         setTimeout(() => {
           setDialogEditarMateria(false)
         }, 1000)
@@ -62,26 +65,11 @@ const DialogEditarMateria = ({
     setHorasSemanales(datosEditarMateria?.hora)
   }, [datosEditarMateria, dialogEditarMateria])
 
-  /* {
-    "id": "18",
-    "codigo": "ART",
-    "nombre": "ARTE",
-    "credito": 12,
-    "hora": 24,
-    "estatus": "Activo",
-    "tipo": "Trayecto",
-    "carrera": "ARTE",
-    "idtipo": 12
-} */
-
-  const { data: tpmateria } = useSWR(GQLconsultasGenerales.GET_TIPO_MATERIA)
-
   return (
     <Dialog
       visible={dialogEditarMateria}
       onHide={() => {
         setDialogEditarMateria(false)
-        setDialogRegMateria(true)
       }}
       header="Modificar Materia"
       resizable={false}
@@ -89,16 +77,6 @@ const DialogEditarMateria = ({
     >
       <Toast ref={toast} />
       <div className="grid grid-cols-5 gap-4 m-2">
-        <span className="p-float-label field">
-          <InputText
-            className="w-full"
-            id="new_carrera_materia"
-            value={datosEditarMateria?.carrera}
-            autoComplete="off"
-            disabled
-          />
-          <label htmlFor="new_carrera_materia">Carrera</label>
-        </span>
         <span className="p-float-label field">
           <InputText
             className="w-full"

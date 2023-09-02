@@ -46,14 +46,7 @@ const DialogEditarCarrera = ({
   )
 
   const { data: materias, mutate: mutateMaterias } = useSWR(
-    datosEditarCarrera?.id
-      ? [
-          GQLregMallaCurricular.GET_CARRERAS_POR_MATERIA,
-          {
-            carrera: parseInt(datosEditarCarrera?.id)
-          }
-        ]
-      : null
+    GQLregMallaCurricular.GET_MATERIAS
   )
 
   const { data: trayectos, mutate: mutateTrayectos } = useSWR(
@@ -87,28 +80,40 @@ const DialogEditarCarrera = ({
     )
   }
 
-  const registrarAggTrayecto = (aggMateriaTrayecto, aggMateriaNbMateria) => {
+  const registrarAggTrayecto = (
+    aggMateriaCarrera,
+    aggMateriaTrayecto,
+    aggMateriaNbMateria
+  ) => {
     asignarTrayecto({
-      idCarrema: parseInt(datosEditarCarrera?.id),
+      idCarrera: parseInt(aggMateriaCarrera?.id),
       idTrayecto: parseInt(aggMateriaTrayecto?.id),
       idMateria: parseInt(aggMateriaNbMateria?.id)
     }).then(({ asignarTrayectoMateria: { status, message, type } }) => {
-      setDialogAgregarMateria(false)
-      setActiveDialogEditarCarrera(true)
-      toast.current.show({
-        severity: type,
-        summary: 'Info',
-        detail: message,
-        life: 3000
-      })
-      mutate()
+      if (status === 202) {
+        toast.current.show({
+          severity: type,
+          summary: 'Info',
+          detail: message,
+          life: 3000
+        })
+      } else {
+        setDialogAgregarMateria(false)
+        setActiveDialogEditarCarrera(true)
+        toast.current.show({
+          severity: type,
+          summary: 'Info',
+          detail: message,
+          life: 3000
+        })
+        mutate()
+      }
     })
   }
 
-  const registrarDelTrayecto = (aggMateriaNbMateria) => {
+  const registrarDelTrayecto = () => {
     desasignarTrayecto({
-      idCarrema: parseInt(datosEditarCarrera?.id),
-      idMateria: parseInt(datosAggMateria.id_materia)
+      idCarrema: parseInt(datosAggMateria.id_carrema)
     }).then(({ desasignarTrayectoMateria: { status, message, type } }) => {
       setDialogAgregarMateria(false)
       setActiveDialogEditarCarrera(true)
@@ -203,7 +208,7 @@ const DialogEditarCarrera = ({
               className="w-full"
               id="nb_materia"
               value={aggMateriaNbMateria}
-              options={materias?.obtenerMateriasPorCarrera.response}
+              options={materias?.obtenerTodasMaterias.response}
               onChange={(e) => setAggMateriaNbMateria(e.value)}
               optionLabel="nombre"
               emptyMessage="Registre una materia para la carrera"
@@ -216,6 +221,7 @@ const DialogEditarCarrera = ({
               icon="pi pi-plus"
               onClick={() => {
                 registrarAggTrayecto(
+                  aggMateriaCarrera,
                   aggMateriaTrayecto,
                   aggMateriaNbMateria,
                   aggMateriaTrayecto

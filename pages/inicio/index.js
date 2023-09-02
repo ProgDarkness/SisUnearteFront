@@ -15,6 +15,7 @@ import RegOfertaAcademica from '../regOfertaAcademicaComps/registroOfertaAcademi
 import GestionDePostulaciones from './gestionDePostulaciones'
 import InformacionDelEstudiante from '../informacionDelEstudianteComps/informacionDelEstudiante'
 import GestionDePersonal from 'pages/gestionDePersonal/gestionDePersonal'
+import RegistrarMateria from 'pages/CargaDeMaterias/registrarMateria'
 import PruebasImportExport from './pruebasImportExport'
 
 const VistasContext = createContext({})
@@ -26,6 +27,7 @@ export default function index({ data }) {
     inscripcionesRegulares: false,
     postulaciones: false,
     cargaMallaCurricular: false,
+    cargaDeMaterias: false,
     registroPrevio: false,
     regOfertaAcademica: false,
     gestionDePostulaciones: false,
@@ -78,6 +80,7 @@ export default function index({ data }) {
               {mostrarVistas?.inscripcionElectiva && <InscripcionElectiva />}
               {mostrarVistas?.postulaciones && <Postulaciones data={data} />}
               {mostrarVistas?.cargaMallaCurricular && <CargaMallaCurricular />}
+              {mostrarVistas?.cargaDeMaterias && <RegistrarMateria />}
               {mostrarVistas?.registroPrevio && <RegistroPrevio data={data} />}
               {mostrarVistas?.regOfertaAcademica && <RegOfertaAcademica />}
               {mostrarVistas?.gestionDePostulaciones && (

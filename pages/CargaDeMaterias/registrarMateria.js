@@ -1,7 +1,6 @@
 import { Button } from 'primereact/button'
 import { Column } from 'primereact/column'
 import { DataTable } from 'primereact/datatable'
-import { Dialog } from 'primereact/dialog'
 import { Dropdown } from 'primereact/dropdown'
 import { InputText } from 'primereact/inputtext'
 import { useRef, useState } from 'react'
@@ -13,13 +12,9 @@ import DialogEditarMateria from './dialogEditarMateria'
 import { ConfirmDialog } from 'primereact/confirmdialog'
 import { Toast } from 'primereact/toast'
 
-const DialogRegMateria = ({
-  dialogRegMateria,
-  setDialogRegMateria,
-  carreras
-}) => {
+const RegistrarMateria = () => {
   const toast = useRef(null)
-  const [idCarrera, setIdCarrera] = useState(null)
+  const [reload, setReload] = useState(true)
   const [codMateria, setCodMateria] = useState('')
   const [nombMateria, setNombMateria] = useState('')
   const [idTpMateria, setIdTpMateria] = useState(null)
@@ -55,17 +50,19 @@ const DialogRegMateria = ({
       nombre: nombMateria,
       credito: parseInt(unCredito),
       tipo: parseInt(idTpMateria),
-      hora: parseInt(horasSemanales),
-      carrera: parseInt(idCarrera)
+      hora: parseInt(horasSemanales)
     }
     crearMateria({ InputCrearMateria }).then(
       ({ crearMateria: { message } }) => {
-        setIdCarrera(null)
+        setReload(false)
         setCodMateria('')
         setNombMateria('')
         setIdTpMateria(null)
         setHorasSemanales('')
         setUnCredito('')
+        setTimeout(() => {
+          setReload(true)
+        }, 1)
         toast.current.show({
           severity: 'success',
           summary: '¡ Atención !',
@@ -121,8 +118,7 @@ const DialogRegMateria = ({
   }
 
   const rejectEliminarMateria = () => {
-    console.log('NO')
-    setDialogRegMateria(true)
+    setDialogConfirmElminarMateria(false)
   }
 
   return (
@@ -132,7 +128,7 @@ const DialogRegMateria = ({
         dialogEditarMateria={dialogEditarMateria}
         setDialogEditarMateria={setDialogEditarMateria}
         datosEditarMateria={datosEditarMateria}
-        setDialogRegMateria={setDialogRegMateria}
+        mutateEditarCarrera={mutate}
       />
       <ConfirmDialog
         visible={dialogConfirmElminarMateria}
@@ -145,26 +141,8 @@ const DialogRegMateria = ({
         acceptLabel="SI"
         rejectLabel="NO"
       />
-      <Dialog
-        visible={dialogRegMateria}
-        onHide={() => setDialogRegMateria(false)}
-        header="Materias"
-        resizable={false}
-        draggable={false}
-      >
-        <div className="grid grid-cols-5 gap-4 m-2">
-          <span className="p-float-label field">
-            <Dropdown
-              className="w-full"
-              id="new_carrera_materia"
-              options={carreras?.obtenerTodasCarreras.response}
-              onChange={(e) => setIdCarrera(e.value)}
-              value={idCarrera}
-              optionLabel="nombre"
-              optionValue="id"
-            />
-            <label htmlFor="new_carrera_materia">Carrera de la Materia</label>
-          </span>
+      <div className="grid grid-cols-5 gap-4 m-2">
+        {reload && (
           <span className="p-float-label field">
             <InputText
               className="w-full"
@@ -175,6 +153,8 @@ const DialogRegMateria = ({
             />
             <label htmlFor="new_cod_carrera">Codigo de la Materia</label>
           </span>
+        )}
+        {reload && (
           <span className="p-float-label field">
             <InputText
               className="w-full"
@@ -185,6 +165,8 @@ const DialogRegMateria = ({
             />
             <label htmlFor="new_nb_carrera">Nombre de la Materia</label>
           </span>
+        )}
+        {reload && (
           <span className="p-float-label field">
             <Dropdown
               className="w-full"
@@ -198,6 +180,8 @@ const DialogRegMateria = ({
             />
             <label htmlFor="new_tec_carrera">Tecnica de la Materia</label>
           </span>
+        )}
+        {reload && (
           <span className="p-float-label field">
             <InputText
               className="w-full"
@@ -210,6 +194,8 @@ const DialogRegMateria = ({
             />
             <label htmlFor="new_uni_cre_carrera">Unidades de Credito</label>
           </span>
+        )}
+        {reload && (
           <span className="p-float-label field">
             <InputText
               className="w-full"
@@ -222,39 +208,37 @@ const DialogRegMateria = ({
             />
             <label htmlFor="new_uni_cre_carrera">Horas Semanales</label>
           </span>
-          <div className="flex">
-            <Button
-              label="Registrar"
-              icon="pi pi-plus"
-              onClick={regMateria}
-              disabled={
-                !idCarrera ||
-                !codMateria ||
-                !nombMateria ||
-                !idTpMateria ||
-                !unCredito ||
-                !horasSemanales
-              }
-            />
-          </div>
+        )}
+        <div className="flex col-span-5 justify-center">
+          <Button
+            label="Registrar"
+            icon="pi pi-plus"
+            onClick={regMateria}
+            disabled={
+              !codMateria ||
+              !nombMateria ||
+              !idTpMateria ||
+              !unCredito ||
+              !horasSemanales
+            }
+          />
         </div>
-        <div className="col-span-5">
-          <DataTable
-            value={materias?.obtenerTodasMaterias.response}
-            emptyMessage="No se encuentran materias registradas."
-          >
-            <Column field="carrera" header="Carrera" />
-            <Column field="codigo" header="Codigo" />
-            <Column field="nombre" header="Materia" />
-            <Column field="tipo" header="Tecnica" />
-            <Column field="credito" header="Unidades de Credito" />
-            <Column field="hora" header="Horas Semanales" />
-            <Column body={accionBodyTemplateMaterias} />
-          </DataTable>
-        </div>
-      </Dialog>
+      </div>
+      <div className="col-span-5">
+        <DataTable
+          value={materias?.obtenerTodasMaterias.response}
+          emptyMessage="No se encuentran materias registradas."
+        >
+          <Column field="codigo" header="Codigo" />
+          <Column field="nombre" header="Materia" />
+          <Column field="tipo" header="Tecnica" />
+          <Column field="credito" header="Unidades de Credito" />
+          <Column field="hora" header="Horas Semanales" />
+          <Column body={accionBodyTemplateMaterias} />
+        </DataTable>
+      </div>
     </>
   )
 }
 
-export default DialogRegMateria
+export default RegistrarMateria

@@ -65,9 +65,7 @@ export default {
           hora
           estatus
           tipo
-          carrera
           idtipo
-          idcarrema
         }
       }
     }
@@ -137,12 +135,12 @@ export default {
   `,
   ASIGNAR_TRAYECTO: gql`
     mutation asignarTrayectoMateria(
-      $idCarrema: Int!
+      $idCarrera: Int!
       $idTrayecto: Int!
       $idMateria: Int!
     ) {
       asignarTrayectoMateria(
-        idCarrema: $idCarrema
+        idCarrera: $idCarrera
         idTrayecto: $idTrayecto
         idMateria: $idMateria
       ) {
@@ -153,8 +151,8 @@ export default {
     }
   `,
   DESASIGNAR_TRAYECTO: gql`
-    mutation desasignarTrayectoMateria($idCarrema: Int!, $idMateria: Int!) {
-      desasignarTrayectoMateria(idCarrema: $idCarrema, idMateria: $idMateria) {
+    mutation desasignarTrayectoMateria($idCarrema: Int!) {
+      desasignarTrayectoMateria(idCarrema: $idCarrema) {
         status
         message
         type

@@ -14,7 +14,6 @@ import { Toast } from 'primereact/toast'
 import { Dropdown } from 'primereact/dropdown'
 import DialogTrasMateria from './dialogTraspasarMateria'
 import useSWR from 'swr'
-import DialogRegMateria from './dialogCrearMateria'
 
 const RegistroCarrera = ({ cambioVista }) => {
   const toast = useRef(null)
@@ -30,7 +29,6 @@ const RegistroCarrera = ({ cambioVista }) => {
   const [dialogAsigSede, setDialogAsigSede] = useState(false)
   const [dialogTrasMateria, setDialogTrasMateria] = useState(false)
   const [datosEditarCarrera, setDatosEditarCarrera] = useState(null)
-  const [dialogRegMateria, setDialogRegMateria] = useState(false)
   const [dialogConfirmElminarCarrera, setDialogConfirmElminarCarrera] =
     useState(false)
   const [dataEliminarCarrera, setDataEliminarCarrera] = useState(null)
@@ -145,17 +143,11 @@ const RegistroCarrera = ({ cambioVista }) => {
           className="mr-2"
           onClick={() => setDialogAsigSede(true)}
         />
-        <Button
-          label="Registrar Materias"
-          icon="pi pi-plus"
-          className="mr-2"
-          onClick={() => setDialogRegMateria(true)}
-        />
       </div>
     )
   }
 
-  const SubHeaderCarreras = () => {
+  /* const SubHeaderCarreras = () => {
     return (
       <div className="h-8 flex justify-end bg-[#ae8e8e] mt-3">
         <Button
@@ -166,7 +158,7 @@ const RegistroCarrera = ({ cambioVista }) => {
         />
       </div>
     )
-  }
+  } */
 
   const accionBodyTemplate = (rowData) => {
     return (
@@ -218,11 +210,6 @@ const RegistroCarrera = ({ cambioVista }) => {
   return (
     <div className="grid grid-cols-5 gap-4 m-2 -mt-2">
       <Toast ref={toast} />
-      <DialogRegMateria
-        dialogRegMateria={dialogRegMateria}
-        setDialogRegMateria={setDialogRegMateria}
-        carreras={carreras}
-      />
       <DialogTrasMateria
         dialogTrasMateria={dialogTrasMateria}
         setDialogTrasMateria={setDialogTrasMateria}
@@ -375,7 +362,7 @@ const RegistroCarrera = ({ cambioVista }) => {
         <label htmlFor="tp_carrera">Tipo de carrera</label>
       </span>
       <div className="col-span-5">
-        <SubHeaderCarreras />
+        {/* <SubHeaderCarreras /> */}
         <HeaderCarrera />
         <DataTable
           value={carreras?.obtenerTodasCarreras.response}

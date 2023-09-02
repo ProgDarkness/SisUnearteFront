@@ -9,7 +9,7 @@ export default function Index({ children, verMenu = true }) {
     <AppLayout>
       <div className="flex flex-row items-stretch w-full h-full">
         <div className="basis-[10rem] -mt-24 bg-[#805e5e] mr-3 p-2">
-          <div className="bg-[#ae8e8e9e] h-full w-full rounded-md text-center p-2">
+          <div className="bg-[#ae8e8e9e] h-full w-full rounded-md text-center p-2 overflow-y-auto">
             <h1
               className={`text-white font-medium text-sm rounded-md mt-2 cursor-pointer hover:bg-[#805e5e] ${
                 mostrarVistas?.registroPrevio ? 'bg-[#805e5e]' : 'bg-[#ae8e8e]'
@@ -94,6 +94,26 @@ export default function Index({ children, verMenu = true }) {
               }}
             >
               Gestion De Postulaciones
+            </h1>
+            <h1
+              className={`text-white font-medium text-sm rounded-md mt-2 cursor-pointer hover:bg-[#805e5e] ${
+                mostrarVistas?.cargaDeMaterias ? 'bg-[#805e5e]' : 'bg-[#ae8e8e]'
+              }`}
+              onClick={() => {
+                const newVistas = {
+                  [`cargaDeMaterias`]: !mostrarVistas?.cargaDeMaterias
+                }
+                setMostrarVistas((prevState) => ({
+                  ...prevState,
+                  ...newVistas,
+                  ...Object.keys(prevState).reduce((acc, key) => {
+                    if (key !== 'cargaDeMaterias') acc[key] = false
+                    return acc
+                  }, {})
+                }))
+              }}
+            >
+              Carga de Materias
             </h1>
             <h1
               className={`text-white font-medium text-sm rounded-md mt-2 cursor-pointer hover:bg-[#805e5e] ${
