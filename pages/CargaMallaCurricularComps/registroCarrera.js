@@ -48,7 +48,15 @@ const RegistroCarrera = ({ cambioVista }) => {
       variables
     )
   }
-  
+
+  const validarSede = (variables) => {
+    return request(
+      process.env.NEXT_PUBLIC_URL_BACKEND,
+      GQLregMallaCurricular.GET_SEDES_CARRERA,
+      variables
+    )
+  }
+
   const actualizarEstatusCarrera = (variables) => {
     return request(
       process.env.NEXT_PUBLIC_URL_BACKEND,
@@ -58,18 +66,30 @@ const RegistroCarrera = ({ cambioVista }) => {
   }
 
   const acceptAprobarCarrera = () => {
-    const InputEstatusCarrera = {
-      estatus: 3,
-      idcarrera: parseInt(dataAprobarCarrera?.id)
-    }
-    actualizarEstatusCarrera({ InputEstatusCarrera }).then(
-      ({ actualizarEstatusCarrera: { status, message, type } }) => {
-        toast.current.show({
-          severity: type,
-          summary: '¡ Atención !',
-          detail: message
-        })
-        mutate()
+    validarSede({ idCarrera: parseInt(dataAprobarCarrera?.id) }).then(
+      ({ obtenerSedeCarrera: { status, message, type } }) => {
+        if (status === 200) {
+          const InputEstatusCarrera = {
+            estatus: 3,
+            idcarrera: parseInt(dataAprobarCarrera?.id)
+          }
+          actualizarEstatusCarrera({ InputEstatusCarrera }).then(
+            ({ actualizarEstatusCarrera: { status, message, type } }) => {
+              toast.current.show({
+                severity: type,
+                summary: '¡ Atención !',
+                detail: message
+              })
+              mutate()
+            }
+          )
+        } else {
+          toast.current.show({
+            severity: type,
+            summary: '¡ Atención !',
+            detail: message
+          })
+        }
       }
     )
   }
@@ -146,19 +166,6 @@ const RegistroCarrera = ({ cambioVista }) => {
       </div>
     )
   }
-
-  /* const SubHeaderCarreras = () => {
-    return (
-      <div className="h-8 flex justify-end bg-[#ae8e8e] mt-3">
-        <Button
-          label="Traspaso de Materias"
-          icon="pi pi-plus"
-          className="mr-2"
-          onClick={() => setDialogTrasMateria(true)}
-        />
-      </div>
-    )
-  } */
 
   const accionBodyTemplate = (rowData) => {
     return (
@@ -362,7 +369,6 @@ const RegistroCarrera = ({ cambioVista }) => {
         <label htmlFor="tp_carrera">Tipo de carrera</label>
       </span>
       <div className="col-span-5">
-        {/* <SubHeaderCarreras /> */}
         <HeaderCarrera />
         <DataTable
           value={carreras?.obtenerTodasCarreras.response}

@@ -235,5 +235,14 @@ export default {
         type
       }
     }
+  `,
+  GET_SEDES_CARRERA: gql`
+    mutation obtenerSedeCarrera($idCarrera: Int!) {
+      obtenerSedeCarrera(idCarrera: $idCarrera) {
+        status
+        message
+        type
+      }
+    }
   `
 }
