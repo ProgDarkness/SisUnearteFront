@@ -1,38 +1,60 @@
 import { Button } from 'primereact/button'
-import { useEffect, useState } from 'react'
+import { useRef, useState } from 'react'
 import { DataTable } from 'primereact/datatable'
 import { Column } from 'primereact/column'
-import DialogVerMalla from 'pages/CargaMallaCurricularComps/dialogVerMalla'
+import { Toast } from 'primereact/toast'
+import DialogVerInfoPostulacion from 'pages/postulacionEstudiante/dialogVerInfoPostulacion'
+import GQLregMallaCurricular from 'graphql/regMallaCurricular'
+import GQLpostulaciones from 'graphql/postulaciones'
 import { useSesion } from 'hooks/useSesion'
 import { ConfirmDialog } from 'primereact/confirmdialog'
+import useSWR from 'swr'
+import request from 'graphql-request'
 
 const Postulaciones = ({ data }) => {
-  const [mallas, setMallas] = useState(null)
   const [activeDialogVerMalla, setActiveDialogVerMalla] = useState(false)
   const [datosVerMalla, setDatosVerMalla] = useState(null)
+  const [datosPostularse, setDatosPostularse] = useState(null)
   const [confirmPostulacion, setConfirmPostulacion] = useState(false)
-  const { rolUser } = useSesion()
+  const { rolUser, idUser } = useSesion()
+  const toast = useRef(null)
+  const { data: carreraSedes } = useSWR(
+    GQLregMallaCurricular.GET_SEDES_CARRERAS
+  )
+
+  const crearPostulacion = (variables) => {
+    return request(
+      process.env.NEXT_PUBLIC_URL_BACKEND,
+      GQLpostulaciones.SAVE_POSTULACION,
+      variables
+    )
+  }
 
   const acceptPostu = () => {
-    setConfirmPostulacion(true)
+    const InputPostulacion = {
+      usuario: parseInt(idUser),
+      carrera: parseInt(datosPostularse.id_carrera),
+      sede: parseInt(datosPostularse.id_sede),
+      fepostulacion: new Date().toLocaleDateString('es-ES', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric'
+      })
+    }
+    crearPostulacion({ InputPostulacion }).then(
+      ({ crearPostulacion: { status, message, type } }) => {
+        toast.current.show({
+          severity: type,
+          summary: 'Info',
+          detail: message,
+          life: 3000
+        })
+      }
+    )
   }
   const rechazarPostu = () => {
     setConfirmPostulacion(false)
   }
-
-  useEffect(() => {
-    setMallas([
-      {
-        carrera: 'Artes Plasticas',
-        status_carrera: 'Habilitada'
-      },
-      { carrera: 'Museologia', status_carrera: 'Habilitada' },
-      {
-        carrera: 'Dibujo Artistico',
-        status_carrera: 'Deshabilitada'
-      }
-    ])
-  }, [])
 
   const accionBodyTemplate = (rowData) => {
     return (
@@ -53,6 +75,7 @@ const Postulaciones = ({ data }) => {
             tooltip="Postularse"
             className="p-button-success"
             onClick={() => {
+              setDatosPostularse(rowData)
               setConfirmPostulacion(true)
             }}
           />
@@ -65,6 +88,7 @@ const Postulaciones = ({ data }) => {
       <div className="text-3xl font-semibold text-white text-center mr-32 mb-6 -mt-3">
         <h1>Postulacion</h1>
       </div>
+      <Toast ref={toast} />
       <ConfirmDialog
         draggable={false}
         resizable={false}
@@ -80,7 +104,7 @@ const Postulaciones = ({ data }) => {
         reject={rechazarPostu}
       />
 
-      <DialogVerMalla
+      <DialogVerInfoPostulacion
         setActiveDialogVerMalla={setActiveDialogVerMalla}
         activeDialogVerMalla={activeDialogVerMalla}
         datosVerMalla={datosVerMalla}
@@ -89,12 +113,35 @@ const Postulaciones = ({ data }) => {
 
       <div className="mt-3">
         <div className="col-span-5">
-          <DataTable value={mallas} emptyMessage="No hay carreras registradas.">
-            <Column field="carrera" header="Carrera" />
+          <DataTable
+            value={carreraSedes?.obtenerSedeCarreras}
+            emptyMessage="No hay carreras registradas."
+            filterDisplay="row"
+            id="filter"
+          >
+            <Column
+              filter
+              filterPlaceholder="Buscar"
+              field="nb_sede"
+              header="Sede"
+            />
+            <Column
+              filter
+              filterPlaceholder="Buscar"
+              field="nb_carrera"
+              header="Carrera"
+            />
             <Column body={accionBodyTemplate} />
           </DataTable>
         </div>
       </div>
+      {/* eslint-disable-next-line react/no-unknown-property */}
+      <style jsx global>{`
+        #filter .p-column-filter-menu-button,
+        .p-column-filter-clear-button {
+          display: none;
+        }
+      `}</style>
     </div>
   )
 }
