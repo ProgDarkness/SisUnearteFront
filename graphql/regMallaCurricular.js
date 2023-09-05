@@ -191,8 +191,11 @@ export default {
     }
   `,
   ELIMINAR_SEDE_CARRERA: gql`
-    mutation eliminarSedeCarrera($idSedeCarrera: Int!) {
-      eliminarSedeCarrera(idSedeCarrera: $idSedeCarrera) {
+    mutation eliminarSedeCarrera($idSedeCarrera: Int!, $idCarrera: Int!) {
+      eliminarSedeCarrera(
+        idSedeCarrera: $idSedeCarrera
+        idCarrera: $idCarrera
+      ) {
         status
         message
         type

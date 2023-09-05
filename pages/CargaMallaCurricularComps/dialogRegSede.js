@@ -53,18 +53,20 @@ const DialogAsigSede = ({ dialogAsigSede, setDialogAsigSede }) => {
   }
 
   const eliminarSede = (rowData) => {
-    eliminarSedeCarrera({ idSedeCarrera: parseInt(rowData?.id_scarrera) }).then(
-      ({ eliminarSedeCarrera: { status, message, type } }) => {
-        toast.current.show({
-          severity: type,
-          summary: '¡ Atención !',
-          detail: message
-        })
-        mutate()
-      }
-    )
+    eliminarSedeCarrera({
+      idSedeCarrera: parseInt(rowData?.id_scarrera),
+      idCarrera: parseInt(rowData?.id_carrera)
+    }).then(({ eliminarSedeCarrera: { status, message, type } }) => {
+      toast.current.show({
+        severity: type,
+        summary: '¡ Atención !',
+        detail: message
+      })
+      mutate()
+    })
   }
 
+  
   const accionBodyTemplate = (rowData) => {
     return (
       <div>
