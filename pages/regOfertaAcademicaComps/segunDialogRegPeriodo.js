@@ -38,7 +38,6 @@ const DialogRegPeriodo = ({
   const [feEntregaActa, setFeEntregaActa] = useState(null)
   const [feSoliDoc, setFeSoliDoc] = useState(null)
   const [feSoliPreGrado, setFeSoliPreGrado] = useState(null)
-  const [feRetiro, setFeRetiro] = useState(null)
   const [feModificacion, setFeModificacion] = useState(null)
   const [feIniPreInscri, setFeIniPreInscri] = useState(null)
   const [feIniInscri, setFeIniInscri] = useState(null)
@@ -49,6 +48,8 @@ const DialogRegPeriodo = ({
   const [feFinRetiro, setFeFinRetiro] = useState(null)
   const [feIniNotas, setFeIniNotas] = useState(null)
   const [feFinNotas, setFeFinNotas] = useState(null)
+  const [feIniPostulacion, setFeIniPostulacion] = useState(null)
+  const [feFinPostulacion, setFeFinPostulacion] = useState(null)
   const toast = useRef(null)
   const [verDatosPeriodo, setVerDatosPeriodo] = useState(null)
   const [dialogConfirmElminarPeriodo, setDialogConfirmElminarPeriodo] =
@@ -80,7 +81,6 @@ const DialogRegPeriodo = ({
       setFeEntregaActa(rowData?.feacta)
       setFeSoliDoc(rowData?.fedoc)
       setFeSoliPreGrado(rowData?.fepregrado)
-      setFeRetiro(rowData?.feretiro)
       setFeModificacion(rowData?.femodificacion)
       setFeIniPreInscri(rowData?.feipre)
       setFeIniInscri(rowData?.feinsc)
@@ -91,6 +91,8 @@ const DialogRegPeriodo = ({
       setFeFinRetiro(rowData?.fefretiro)
       setFeIniNotas(rowData?.feinota)
       setFeFinNotas(rowData?.fefnota)
+      setFeIniPostulacion(rowData?.feipostulacion)
+      setFeFinPostulacion(rowData?.fefpostulacion)
     }
   }
 
@@ -133,7 +135,6 @@ const DialogRegPeriodo = ({
       feentregaacta: formatFecha(feEntregaActa),
       fesolicdocumento: formatFecha(feSoliDoc),
       fesolicgrado: formatFecha(feSoliPreGrado),
-      feretiro: formatFecha(feRetiro),
       femodificacion: formatFecha(feModificacion),
       feiniciopreinscripcion: formatFecha(feIniPreInscri),
       fefinpreinscripcion: formatFecha(feIniInscri),
@@ -145,7 +146,9 @@ const DialogRegPeriodo = ({
       fefinretiro: formatFecha(feFinRetiro),
       feinicionotas: formatFecha(feIniNotas),
       fefinnotas: formatFecha(feFinNotas),
-      idperiodo: parseInt(editarId)
+      idperiodo: parseInt(editarId),
+      feiniciopostulacion: formatFecha(feIniPostulacion),
+      fefinpostulacion: formatFecha(feFinPostulacion)
     }
     updatePeriodo({ InputActualizarPeriodo }).then(
       ({ actualizarPeriodo: { status, message, type } }) => {
@@ -248,8 +251,6 @@ const DialogRegPeriodo = ({
       feSoliDoc.includes('_') ||
       !feSoliPreGrado ||
       feSoliPreGrado.includes('_') ||
-      !feRetiro ||
-      feRetiro.includes('_') ||
       !feModificacion ||
       feModificacion.includes('_') ||
       !feIniPreInscri ||
@@ -269,7 +270,11 @@ const DialogRegPeriodo = ({
       !feIniNotas ||
       feIniNotas.includes('_') ||
       !feFinNotas ||
-      feFinNotas.includes('_')
+      feFinNotas.includes('_') ||
+      !feIniPostulacion ||
+      feIniPostulacion.includes('_') ||
+      !feFinPostulacion ||
+      feFinPostulacion.includes('_')
     ) {
       return true
     } else {
@@ -348,7 +353,6 @@ const DialogRegPeriodo = ({
     setFeEntregaActa(null)
     setFeSoliDoc(null)
     setFeSoliPreGrado(null)
-    setFeRetiro(null)
     setFeModificacion(null)
     setFeIniPreInscri(null)
     setFeIniInscri(null)
@@ -359,10 +363,16 @@ const DialogRegPeriodo = ({
     setFeFinRetiro(null)
     setFeIniNotas(null)
     setFeFinNotas(null)
+    setFeFinPostulacion(null)
+    setFeIniPostulacion(null)
     setTimeout(() => {
       setReload(true)
     }, 1)
   }
+
+  /* 
+¡ Atención !
+Error: inserción o actualización en la tabla «t006t_periodo_lectivo» viola la llave foránea «t006t_periodo_doc_fk» */
 
   const guardarPeriodo = () => {
     const InputPeriodo = {
@@ -379,7 +389,6 @@ const DialogRegPeriodo = ({
       feentregaacta: formatFecha(feEntregaActa),
       fesolicdocumento: formatFecha(feSoliDoc),
       fesolicgrado: formatFecha(feSoliPreGrado),
-      feretiro: formatFecha(feRetiro),
       femodificacion: formatFecha(feModificacion),
       feiniciopreinscripcion: formatFecha(feIniPreInscri),
       fefinpreinscripcion: formatFecha(feIniInscri),
@@ -390,7 +399,9 @@ const DialogRegPeriodo = ({
       feinicioretiro: formatFecha(feIniRetiro),
       fefinretiro: formatFecha(feFinRetiro),
       feinicionotas: formatFecha(feIniNotas),
-      fefinnotas: formatFecha(feFinNotas)
+      fefinnotas: formatFecha(feFinNotas),
+      feiniciopostulacion: formatFecha(feIniPostulacion),
+      fefinpostulacion: formatFecha(feFinPostulacion)
     }
 
     savePeriodo({ InputPeriodo }).then(
@@ -518,7 +529,7 @@ const DialogRegPeriodo = ({
         <div
           id="main"
           className="grid grid-cols-6 gap-4 mt-3 overflow-y-auto pt-2"
-          style={{ maxHeight: '70vh'}}
+          style={{ maxHeight: '70vh' }}
         >
           <span className="p-float-label field">
             {reload && (
@@ -684,18 +695,6 @@ const DialogRegPeriodo = ({
             <InputMask
               mask="99/99/9999"
               className="w-full"
-              id="fe_retiro"
-              value={feRetiro}
-              autoComplete="off"
-              onChange={(e) => setFeRetiro(e.target.value)}
-              onBlur={() => validateDate(feRetiro, setFeRetiro)}
-            />
-            <label htmlFor="fe_retiro">Fecha de retiro</label>
-          </span>
-          <span className="p-float-label field col-span-2">
-            <InputMask
-              mask="99/99/9999"
-              className="w-full"
               id="fe_modificacion"
               value={feModificacion}
               autoComplete="off"
@@ -786,6 +785,30 @@ const DialogRegPeriodo = ({
             <InputMask
               mask="99/99/9999"
               className="w-full"
+              id="fe_ini_postu"
+              value={feIniPostulacion}
+              autoComplete="off"
+              onChange={(e) => setFeIniPostulacion(e.target.value)}
+              onBlur={() => validateDate(feIniPostulacion, setFeIniPostulacion)}
+            />
+            <label htmlFor="fe_ini_postu">Fecha de inicio de postulacion</label>
+          </span>
+          <span className="p-float-label field col-span-2">
+            <InputMask
+              mask="99/99/9999"
+              className="w-full"
+              id="fe_fin_postu"
+              value={feFinPostulacion}
+              autoComplete="off"
+              onChange={(e) => setFeFinPostulacion(e.target.value)}
+              onBlur={() => validateDate(feFinPostulacion, setFeFinPostulacion)}
+            />
+            <label htmlFor="fe_fin_postu">Fecha de fin de postulacion</label>
+          </span>
+          <span className="p-float-label field col-span-2">
+            <InputMask
+              mask="99/99/9999"
+              className="w-full"
               id="fe_fin_retiro"
               value={feFinRetiro}
               autoComplete="off"
@@ -820,6 +843,7 @@ const DialogRegPeriodo = ({
             />
             <label htmlFor="fe_fin_notas">Fecha de fin de notas</label>
           </span>
+
           <div className="col-span-6 flex justify-center my-auto">
             <Button
               label={editarId ? 'Guardar' : 'Registrar'}

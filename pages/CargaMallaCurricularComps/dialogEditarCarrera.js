@@ -133,7 +133,6 @@ const DialogEditarCarrera = ({
   }
 
   const rejectEliminarMateria = () => {
-    console.log('NO')
     setActiveDialogEditarCarrera(true)
   }
 

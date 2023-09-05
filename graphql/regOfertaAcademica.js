@@ -25,7 +25,6 @@ export default {
           feacta
           fedoc
           fepregrado
-          feretiro
           femodificacion
           feipre
           fefpre
@@ -37,6 +36,8 @@ export default {
           fefretiro
           feinota
           fefnota
+          feipostulacion
+          fefpostulacion
           estatus
         }
       }

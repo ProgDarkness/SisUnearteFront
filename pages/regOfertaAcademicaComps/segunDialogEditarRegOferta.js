@@ -19,12 +19,10 @@ const DialogEditarRegOferta = ({
     useState(false)
 
   const acceptEliminarMateria = () => {
-    console.log('SI')
     setActiveDialogEditarCarrera(true)
   }
 
   const rejectEliminarMateria = () => {
-    console.log('NO')
     setActiveDialogEditarCarrera(true)
   }
 

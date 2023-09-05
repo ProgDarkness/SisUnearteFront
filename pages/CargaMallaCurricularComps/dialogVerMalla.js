@@ -61,7 +61,7 @@ const DialogVerMalla = ({
           <InputText
             className="w-full"
             id="carrera"
-            value={datosVerMalla?.nombre}
+            value={datosVerMalla?.nombre || ''}
             disabled
           />
           <label htmlFor="carrera">Carrera</label>

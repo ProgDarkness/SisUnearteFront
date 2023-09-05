@@ -53,7 +53,7 @@ const RegistroOferta = ({ cambioVista }) => {
   }
 
   const rejectEliminarOferta = () => {
-    console.log('NO')
+    setDialogConfirmElminarOferta(false)
   }
 
   const HeaderTrayectos = () => {
