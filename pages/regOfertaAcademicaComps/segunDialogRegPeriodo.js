@@ -412,6 +412,7 @@ Error: inserción o actualización en la tabla «t006t_periodo_lectivo» viola l
           detail: message
         })
         limpiarInpust()
+        mutate()
       }
     )
   }
