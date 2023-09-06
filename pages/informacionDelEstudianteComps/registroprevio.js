@@ -27,6 +27,8 @@ const RegistroPrevio = ({ data }) => {
   const [correoElectronico, setCorreoElectronico] = useState('')
   const [fechanaci, setFechaNaci] = useState(null)
   const [paisNacimiento, setPaisNacimiento] = useState(null)
+  const [estadoNacimiento, setEstadoNacimiento] = useState(null)
+  const [ciudadNacimiento, setCiudadNacimiento] = useState(null)
   const [discapacidad, setDiscapacidad] = useState(null)
   const [etnia, setEtnia] = useState(null)
   const [sexo, setSexo] = useState(null)
@@ -118,6 +120,8 @@ const RegistroPrevio = ({ data }) => {
       setDiscapacidad(infoUser?.getInfoUsuario.response.discapacidad)
       setBlockedPanel(infoUser?.getInfoUsuario.response.bl_registro)
       setEtnia(infoUser?.getInfoUsuario.response.etnia)
+      setCiudadNacimiento(infoUser?.getInfoUsuario.response.ciudadNac)
+      setEstadoNacimiento(infoUser?.getInfoUsuario.response.estadoNac)
     }
   }, [infoUser])
 
@@ -141,7 +145,8 @@ const RegistroPrevio = ({ data }) => {
     correoElectronico,
     fechanaci,
     paisNacimiento,
-    paisNacimiento,
+    estadoNacimiento,
+    ciudadNacimiento,
     discapacidad,
     sexo,
     estadoCivil,
@@ -182,7 +187,10 @@ const RegistroPrevio = ({ data }) => {
       !nombreDeVia ||
       !tipoDeVivienda ||
       !numeroDeVivienda ||
-      !etnia
+      !etnia ||
+      !paisNacimiento ||
+      !estadoNacimiento ||
+      !ciudadNacimiento
 
     const valueNotInVenezuela =
       !nacionalidad ||
@@ -202,7 +210,9 @@ const RegistroPrevio = ({ data }) => {
       !tipoDeVia ||
       !nombreDeVia ||
       !tipoDeVivienda ||
-      !numeroDeVivienda
+      !numeroDeVivienda ||
+      !paisNacimiento ||
+      !estadoNacimiento
 
     if (pais?.id === '239') {
       setEvalToFormForPais(valueInVenezuela)
@@ -231,7 +241,10 @@ const RegistroPrevio = ({ data }) => {
     nombreDeVia,
     tipoDeVivienda,
     numeroDeVivienda,
-    etnia
+    etnia,
+    paisNacimiento,
+    estadoNacimiento,
+    ciudadNacimiento
   ])
 
   const savePerfilUser = (variables) => {
@@ -274,9 +287,11 @@ const RegistroPrevio = ({ data }) => {
       idpostal: parseInt(nombreDeZona?.codigo_postal),
       blregistro: true,
       idusuario: idUser,
-      idZona: parseInt(nombreDeZona.id),
-      idDiscapacidad: parseInt(discapacidad.id),
-      idEtnia: parseInt(etnia.id)
+      idZona: parseInt(nombreDeZona?.id),
+      idDiscapacidad: parseInt(discapacidad?.id),
+      idEtnia: parseInt(etnia?.id),
+      idEstadoNac: parseInt(estadoNacimiento?.id),
+      idCiudadNac: parseInt(ciudadNacimiento?.id)
     }
 
     setConfirmRegistrar(true)
@@ -304,6 +319,19 @@ const RegistroPrevio = ({ data }) => {
       : null
   )
 
+  const { data: estadosPorPaisNac } = useSWR(
+    paisNacimiento
+      ? [
+          GQLConsultasGenerales.GET_ESTADOS_POR_PAIS,
+          {
+            InputPais: {
+              pais: parseInt(paisNacimiento.id)
+            }
+          }
+        ]
+      : null
+  )
+
   const { data: municipiosPorEstado } = useSWR(
     estado
       ? [
@@ -324,6 +352,19 @@ const RegistroPrevio = ({ data }) => {
           {
             InputEstado: {
               estado: parseInt(estado.id)
+            }
+          }
+        ]
+      : null
+  )
+
+  const { data: ciudadesPorEstadoNac } = useSWR(
+    estadoNacimiento
+      ? [
+          GQLConsultasGenerales.GET_CIUDADES_POR_ESTADO,
+          {
+            InputEstado: {
+              estado: parseInt(estadoNacimiento.id)
             }
           }
         ]
@@ -502,8 +543,47 @@ const RegistroPrevio = ({ data }) => {
               filterBy="nombre"
               optionLabel="nombre"
             />
-            <label htmlFor="paisNacimiento">Pais Nacimiento</label>
+            <label htmlFor="paisNacimiento">Pais de Nacimiento</label>
           </span>
+
+          <span className="p-float-label field">
+            <Dropdown
+              className="w-full"
+              id="estadoNacimiento"
+              options={estadosPorPaisNac?.obtenerEstadosPorPais.response}
+              value={estadoNacimiento}
+              onChange={(e) => {
+                setEstadoNacimiento(e.value)
+              }}
+              filter
+              filterBy="nombre"
+              optionLabel="nombre"
+              emptyMessage="Seleccione un pais de nacimiento"
+            />
+            <label htmlFor="estadoNacimiento">Estado de Nacimiento</label>
+          </span>
+          {paisNacimiento === null || parseInt(paisNacimiento?.id) === 239 ? (
+            <span className="p-float-label field">
+              <Dropdown
+                className="w-full"
+                id="estadoNacimiento"
+                options={
+                  ciudadesPorEstadoNac?.obtenerCiudadesPorEstado.response
+                }
+                value={ciudadNacimiento}
+                onChange={(e) => {
+                  setCiudadNacimiento(e.value)
+                }}
+                filter
+                filterBy="nombre"
+                optionLabel="nombre"
+                emptyMessage="Seleccione un estado de nacimiento"
+              />
+              <label htmlFor="estadoNacimiento">Ciudad de Nacimiento</label>
+            </span>
+          ) : (
+            ''
+          )}
           <span className="p-float-label field">
             <Dropdown
               className="w-full"

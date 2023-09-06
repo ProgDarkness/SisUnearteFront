@@ -91,6 +91,14 @@ export default {
             id
             nombre
           }
+          estadoNac {
+            id
+            nombre
+          }
+          ciudadNac {
+            id
+            nombre
+          }
         }
       }
     }
