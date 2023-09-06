@@ -1,6 +1,23 @@
 import { gql } from 'graphql-request'
 
 export default {
+  GET_SEDES_CRUD: gql`
+    query obtenerCrudSede {
+      obtenerCrudSede {
+        status
+        message
+        type
+        response {
+          id_sede
+          co_sede
+          nb_sede
+          id_geografico_sede
+          id_estatus
+          estatus
+        }
+      }
+    }
+  `,
   SAVE_CARRERA: gql`
     mutation crearCarrera($InputCrearCarrera: InputCrearCarrera!) {
       crearCarrera(input: $InputCrearCarrera) {
