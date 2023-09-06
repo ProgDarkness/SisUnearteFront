@@ -87,6 +87,12 @@ export default function RegistrarUsuario() {
               detail: message,
               life: 3000
             })
+            setClave('')
+            setNombre('')
+            setUsuario('')
+            setApellido('')
+            setCedula('')
+            setNacionalidad(null)
             setSubmitting(false)
             if (!token) {
               setTimeout(() => {

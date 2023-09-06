@@ -18,7 +18,6 @@ export default {
           mesf
           idmesf
           semana
-          personal
           mensaje
           fei
           fef

@@ -2,7 +2,7 @@ import { Dropdown } from 'primereact/dropdown'
 import useSWR from 'swr'
 import GQLconsultasGenerales from 'graphql/consultasGenerales'
 import GQLregMallaCurricular from 'graphql/regMallaCurricular'
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Button } from 'primereact/button'
 import request from 'graphql-request'
 import { Dialog } from 'primereact/dialog'
@@ -16,11 +16,18 @@ const DialogAsigSede = ({ dialogAsigSede, setDialogAsigSede }) => {
   const [sedeCarrera, setSedeCarrera] = useState(null)
   const [carrera, setCarrera] = useState(null)
   const { data: sedes } = useSWR(GQLconsultasGenerales.GET_SEDES)
-  const { data: carreras } = useSWR(GQLconsultasGenerales.GET_CARRERAS)
+  const { data: carreras, mutate: mutateCarreras } = useSWR(
+    GQLconsultasGenerales.GET_CARRERAS
+  )
   const { data: sedesCarreras, mutate } = useSWR(
     GQLregMallaCurricular.GET_SEDES_CARRERAS
   )
   const [dialogRegSede, setDialogRegSede] = useState(false)
+
+  useEffect(() => {
+    mutate()
+    mutateCarreras()
+  }, [dialogAsigSede])
 
   const asignarSede = (variables) => {
     return request(
