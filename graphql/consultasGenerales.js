@@ -243,5 +243,25 @@ export default {
         }
       }
     }
+  `,
+  GET_PROFESIONES: gql`
+    query obtenerProfesion {
+      obtenerProfesion {
+        response {
+          id
+          nombre
+        }
+      }
+    }
+  `,
+  GET_TIPO_PERSONAL: gql`
+    query obtenerTipoPersonal {
+      obtenerTipoPersonal {
+        response {
+          id
+          nombre
+        }
+      }
+    }
   `
 }

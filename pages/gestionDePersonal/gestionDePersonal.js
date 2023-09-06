@@ -6,6 +6,9 @@ import DialogRegPersonal from './dialogRegPersonal'
 import DialogVerDatosPersonal from './dialogVerDatosPersonal'
 import DialogEditarPersonal from './dialogEditarPersonal'
 import { ConfirmDialog } from 'primereact/confirmdialog'
+import GQLpersonal from 'graphql/personal'
+import useSWR from 'swr'
+import { Toast } from 'primereact/toast'
 
 const GestionDePersonal = () => {
   const [personal, setPersonal] = useState(null)
@@ -19,6 +22,8 @@ const GestionDePersonal = () => {
   const [datosEditarPersonal, setDatosEditarPersonal] = useState(null)
   const [datosVerPersonal, setDatosVerPersonal] = useState(null)
   const [dataEliminarPersonal, setDataEliminarPersonal] = useState(null)
+
+  const { data: todoPersonal, mutate } = useSWR(GQLpersonal.GET_PERSONAL)
 
   console.log(dataEliminarPersonal)
 
@@ -97,6 +102,7 @@ const GestionDePersonal = () => {
       <DialogRegPersonal
         activeDialogRegPersonal={activeDialogRegPersonal}
         setActiveDialogRegPersonal={setActiveDialogRegPersonal}
+        mutatePersonal={mutate}
       />
       <DialogVerDatosPersonal
         activeDialogVerDatosPersonal={activeDialogVerDatosPersonal}
@@ -124,16 +130,22 @@ const GestionDePersonal = () => {
           Gestion de Personal
         </h1>
       </div>
-      <HeaderPersonal />
-      <DataTable value={personal}>
-        <Column field="tp_personal" header="Tipo Personal" />
-        <Column field="tp_nacionalidad" header="Nacionalidad" />
-        <Column field="nu_cedula" header="Cedula" />
-        <Column field="nombre" header="Nombre" />
-        <Column field="apellido" header="Apellido" />
-        <Column field="estatus" header="Estatus" />
-        <Column body={accionBodyTemplate} />
-      </DataTable>
+      <div className="col-span-5">
+        <HeaderPersonal />
+        <DataTable
+          value={todoPersonal?.obtenerPersonal.response}
+          emptyMessage="No se encuentran trayectos registrados."
+        >
+          <Column field="cedula" header="Cédula" />
+          <Column field="nombre" header="Nombre" />
+          <Column field="apellido" header="Apellido" />
+          <Column field="sexo" header="Sexo" />
+          <Column field="civil" header="Civil" />
+          <Column field="profesion" header="Profesión" />
+          <Column field="cargahoraria" header="Carga Horaria" />
+          <Column body={accionBodyTemplate} />
+        </DataTable>
+      </div>
     </div>
   )
 }
