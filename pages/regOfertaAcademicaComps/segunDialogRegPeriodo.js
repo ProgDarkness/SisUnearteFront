@@ -128,7 +128,6 @@ const DialogRegPeriodo = ({
       mesinicio: parseInt(mesInicio),
       mesfin: parseInt(mesFin),
       nusemana: parseInt(nuSemanas),
-      personal: parseInt(idUser),
       mensaje: nombPeriodo,
       feinicio: formatFecha(feIni),
       fefin: formatFecha(feFin),
