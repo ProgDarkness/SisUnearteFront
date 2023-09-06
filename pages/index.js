@@ -37,7 +37,7 @@ export default function Index() {
   }
 
   const registrarse = () => {
-    router.push('inicio/registrarUsuario')
+    router.push('/usuarios/registrarUsuario')
   }
 
   const entrar = () => {
