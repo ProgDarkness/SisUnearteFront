@@ -7,7 +7,7 @@ import GQLregMallaCurricular from 'graphql/regMallaCurricular'
 import GQLconsultasGenerales from 'graphql/consultasGenerales'
 import useSWR from 'swr'
 import { Button } from 'primereact/button'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 
 const DialogRegistrarSede = ({ dialogRegSede, setDialogRegSede }) => {
   const [estado, setEstado] = useState(null)
@@ -25,6 +25,10 @@ const DialogRegistrarSede = ({ dialogRegSede, setDialogRegSede }) => {
 
   const { data: sedes } = useSWR(GQLregMallaCurricular.GET_SEDES_CRUD)
   const { data: estados } = useSWR(GQLregMallaCurricular.GET_ESTADOS_CRUD)
+
+  useEffect(() => {
+    setCodPostal(nombZona?.codigo_postal)
+  }, [nombZona])
 
   const { data: municipiosPorEstado } = useSWR(
     estado
@@ -159,6 +163,7 @@ const DialogRegistrarSede = ({ dialogRegSede, setDialogRegSede }) => {
             options={ciudadesPorEstado?.obtenerCiudadesPorEstado.response}
             optionLabel="nombre"
             optionValue="id"
+            emptyMessage="Seleccione un Estado"
           />
           <label htmlFor="ciudad">Ciudad</label>
         </span>
@@ -171,6 +176,7 @@ const DialogRegistrarSede = ({ dialogRegSede, setDialogRegSede }) => {
             options={municipiosPorEstado?.obtenerMunicipiosPorEstado.response}
             optionLabel="nombre"
             optionValue="id"
+            emptyMessage="Seleccione una Ciudad"
           />
           <label htmlFor="municipio">Municipio</label>
         </span>
@@ -185,6 +191,7 @@ const DialogRegistrarSede = ({ dialogRegSede, setDialogRegSede }) => {
             }
             optionLabel="nombre"
             optionValue="id"
+            emptyMessage="Seleccione un Municipio"
           />
           <label htmlFor="parroquia">Parroquia</label>
         </span>
@@ -230,7 +237,7 @@ const DialogRegistrarSede = ({ dialogRegSede, setDialogRegSede }) => {
             onChange={(e) => setNombZona(e.target.value)}
             options={zonasPorParroquias?.obtenerZonasPorParroquias.response}
             optionLabel="nombre"
-            optionValue="id"
+            emptyMessage="Seleccione una zona"
           />
           <label htmlFor="nombZona">Nombre de Zona</label>
         </span>
@@ -242,6 +249,7 @@ const DialogRegistrarSede = ({ dialogRegSede, setDialogRegSede }) => {
             value={codPostal}
             onChange={(e) => setCodPostal(e.target.value.toUpperCase())}
             autoComplete="off"
+            disabled
           />
           <label htmlFor="codPostal">Codigo Postal</label>
         </span>
@@ -255,6 +263,14 @@ const DialogRegistrarSede = ({ dialogRegSede, setDialogRegSede }) => {
           />
           <label htmlFor="descDireccion">Descripcion de direccion</label>
         </span>
+        <div className="my-auto">
+          <Button
+            icon="pi pi-plus"
+            label="Registrar"
+            /* onClick={registrarAsignarSede}
+            disabled={!sedeCarrera || !carrera} */
+          />
+        </div>
         <div className="col-span-4">
           <DataTable value={sedes?.obtenerCrudSede.response}>
             <Column field="co_sede" header="Codigo" />
@@ -264,6 +280,13 @@ const DialogRegistrarSede = ({ dialogRegSede, setDialogRegSede }) => {
           </DataTable>
         </div>
       </div>
+      {/* eslint-disable-next-line react/no-unknown-property */}
+      <style jsx global>{`
+        .p-disabled,
+        .p-component:disabled {
+          opacity: 1;
+        }
+      `}</style>
     </Dialog>
   )
 }
