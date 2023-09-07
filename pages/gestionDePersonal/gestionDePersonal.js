@@ -1,7 +1,7 @@
 import { Button } from 'primereact/button'
 import { Column } from 'primereact/column'
 import { DataTable } from 'primereact/datatable'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import DialogRegPersonal from './dialogRegPersonal'
 import DialogVerDatosPersonal from './dialogVerDatosPersonal'
 import DialogEditarPersonal from './dialogEditarPersonal'
@@ -9,8 +9,10 @@ import { ConfirmDialog } from 'primereact/confirmdialog'
 import GQLpersonal from 'graphql/personal'
 import useSWR from 'swr'
 import { Toast } from 'primereact/toast'
+import request from 'graphql-request'
 
 const GestionDePersonal = () => {
+  const toast = useRef(null)
   const [personal, setPersonal] = useState(null)
   const [activeDialogRegPersonal, setActiveDialogRegPersonal] = useState(false)
   const [activeDialogVerDatosPersonal, setActiveDialogVerDatosPersonal] =
@@ -26,6 +28,14 @@ const GestionDePersonal = () => {
   const { data: todoPersonal, mutate } = useSWR(GQLpersonal.GET_PERSONAL)
 
   console.log(dataEliminarPersonal)
+
+  const eliminarPersonal = (variables) => {
+    return request(
+      process.env.NEXT_PUBLIC_URL_BACKEND,
+      GQLpersonal.DELETE_PERSONAL,
+      variables
+    )
+  }
 
   useEffect(() => {
     setPersonal([
@@ -90,15 +100,29 @@ const GestionDePersonal = () => {
   }
 
   const acceptEliminarPersonal = () => {
-    console.log('SI')
+    const InputEliminarPersonal = {
+      idpersonal: parseInt(dataEliminarPersonal?.id_personal)
+    }
+    eliminarPersonal({ InputEliminarPersonal }).then(
+      ({ eliminarPersonal: { message } }) => {
+        setDataEliminarPersonal(null)
+        toast.current.show({
+          severity: 'error',
+          summary: '¡ Atención !',
+          detail: message
+        })
+        mutate()
+      }
+    )
   }
 
   const rejectEliminarPersonal = () => {
-    console.log('NO')
+    setDialogConfirmElminarPersonal(false)
   }
 
   return (
     <div>
+      <Toast ref={toast} />
       <DialogRegPersonal
         activeDialogRegPersonal={activeDialogRegPersonal}
         setActiveDialogRegPersonal={setActiveDialogRegPersonal}
@@ -113,6 +137,7 @@ const GestionDePersonal = () => {
         activeDialogEditarPersonal={activeDialogEditarPersonal}
         setActiveDialogEditarPersonal={setActiveDialogEditarPersonal}
         datosEditarPersonal={datosEditarPersonal}
+        mutatePersonal={mutate}
       />
       <ConfirmDialog
         visible={dialogConfirmElminarPersonal}
