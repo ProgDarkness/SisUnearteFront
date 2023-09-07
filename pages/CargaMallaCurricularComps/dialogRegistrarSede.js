@@ -8,6 +8,7 @@ import GQLconsultasGenerales from 'graphql/consultasGenerales'
 import useSWR from 'swr'
 import { Button } from 'primereact/button'
 import { useState, useEffect } from 'react'
+import request from 'graphql-request'
 
 const DialogRegistrarSede = ({ dialogRegSede, setDialogRegSede }) => {
   const [estado, setEstado] = useState(null)
@@ -29,6 +30,36 @@ const DialogRegistrarSede = ({ dialogRegSede, setDialogRegSede }) => {
   useEffect(() => {
     setCodPostal(nombZona?.codigo_postal)
   }, [nombZona])
+
+  const registrarSede = (variables) => {
+    return request(
+      process.env.NEXT_PUBLIC_URL_BACKEND,
+      GQLregMallaCurricular.SAVE_SEDE_CRUD,
+      variables
+    )
+  }
+
+  const RegSede = () => {
+    const InputRegSede = {
+      co_sede: null,
+      nb_sede: null,
+      id_tp_via: null,
+      nb_via: null,
+      id_tp_zona: null,
+      nb_zona: null,
+      tx_direccion: null,
+      id_zona_postal: null,
+      id_ciudad: null,
+      id_estado: null,
+      id_municipio: null,
+      id_parroquia: null
+    }
+    registrarSede({ InputRegSede }).then(
+      ({ registrarSede: { status, message, type } }) => {
+        console.log(status)
+      }
+    )
+  }
 
   const { data: municipiosPorEstado } = useSWR(
     estado

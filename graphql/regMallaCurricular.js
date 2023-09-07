@@ -1,6 +1,15 @@
 import { gql } from 'graphql-request'
 
 export default {
+  SAVE_SEDE_CRUD: gql`
+    mutation registrarSede($InputRegSede: InputRegSede!) {
+      registrarSede(InputRegSede: $InputRegSede) {
+        status
+        message
+        type
+      }
+    }
+  `,
   GET_ESTADOS_CRUD: gql`
     query obtenerCrudEstados {
       obtenerCrudEstados {
