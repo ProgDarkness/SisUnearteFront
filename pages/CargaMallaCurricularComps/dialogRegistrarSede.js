@@ -50,8 +50,7 @@ const DialogRegistrarSede = ({ dialogRegSede, setDialogRegSede }) => {
   }
 
   const eliminarSede = (rowData) => {
-    console.log(rowData)
-    /* deleteSede({ idSede: null }).then(
+    deleteSede({ idSede: rowData?.id_sede }).then(
       ({ eliminarSede: { status, message, type } }) => {
         toast.current.show({
           severity: type,
@@ -60,7 +59,7 @@ const DialogRegistrarSede = ({ dialogRegSede, setDialogRegSede }) => {
         })
         mutate()
       }
-    ) */
+    )
   }
 
   const RegSede = () => {
@@ -176,7 +175,7 @@ const DialogRegistrarSede = ({ dialogRegSede, setDialogRegSede }) => {
           className="p-button-danger"
           tooltip="Eliminar"
           tooltipOptions={{ position: 'top' }}
-          /* onClick={() => eliminarSede(rowData)} */
+          onClick={() => eliminarSede(rowData)}
         />
       </div>
     )
