@@ -1,6 +1,15 @@
 import { gql } from 'graphql-request'
 
 export default {
+  DELETE_SEDE_CRUD: gql`
+    mutation eliminarSede($idSede: Int!) {
+      eliminarSede(idSede: $idSede) {
+        status
+        message
+        type
+      }
+    }
+  `,
   SAVE_SEDE_CRUD: gql`
     mutation registrarSede($InputRegSede: InputRegSede!) {
       registrarSede(InputRegSede: $InputRegSede) {

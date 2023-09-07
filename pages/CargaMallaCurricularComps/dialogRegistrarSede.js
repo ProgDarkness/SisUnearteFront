@@ -41,6 +41,28 @@ const DialogRegistrarSede = ({ dialogRegSede, setDialogRegSede }) => {
     )
   }
 
+  const deleteSede = (variables) => {
+    return request(
+      process.env.NEXT_PUBLIC_URL_BACKEND,
+      GQLregMallaCurricular.DELETE_SEDE_CRUD,
+      variables
+    )
+  }
+
+  const eliminarSede = (rowData) => {
+    console.log(rowData)
+    /* deleteSede({ idSede: null }).then(
+      ({ eliminarSede: { status, message, type } }) => {
+        toast.current.show({
+          severity: type,
+          summary: '¡ Atención !',
+          detail: message
+        })
+        mutate()
+      }
+    ) */
+  }
+
   const RegSede = () => {
     const InputRegSede = {
       co_sede: codSede,
