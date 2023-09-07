@@ -5,9 +5,35 @@ import { Dropdown } from 'primereact/dropdown'
 import { InputText } from 'primereact/inputtext'
 import GQLregMallaCurricular from 'graphql/regMallaCurricular'
 import useSWR from 'swr'
+import { Button } from 'primereact/button'
 
 const DialogRegistrarSede = ({ dialogRegSede, setDialogRegSede }) => {
   const { data: sedes } = useSWR(GQLregMallaCurricular.GET_SEDES_CRUD)
+
+  const accionBodyTemplate = (rowData) => {
+    return (
+      <div className="flex justify-center">
+        <Button
+          icon="pi pi-pencil"
+          className="p-button-help mr-1"
+          tooltip="Modificar"
+          /*   onClick={() => {
+            setDatosEditarCarrera(rowData)
+            setDialogEditarCarrera(true)
+          }} */
+          tooltipOptions={{ position: 'top' }}
+        />
+
+        <Button
+          icon="pi pi-times"
+          className="p-button-danger"
+          tooltip="Eliminar"
+          tooltipOptions={{ position: 'top' }}
+          /* onClick={() => eliminarSede(rowData)} */
+        />
+      </div>
+    )
+  }
 
   return (
     <Dialog
@@ -161,7 +187,7 @@ const DialogRegistrarSede = ({ dialogRegSede, setDialogRegSede }) => {
             <Column field="co_sede" header="Codigo" />
             <Column field="nb_sede" header="Sede" />
             <Column field="estatus" header="Estatus" />
-            <Column />
+            <Column body={accionBodyTemplate} />
           </DataTable>
         </div>
       </div>
