@@ -21,6 +21,7 @@ const DialogRegistrarSede = ({ dialogRegSede, setDialogRegSede }) => {
   const [codSede, setCodSede] = useState('')
   const [nombSede, setNombSede] = useState('')
   const [descDireccion, setDescDireccion] = useState('')
+  const [ciudad, setCiudad] = useState(null)
 
   const { data: sedes } = useSWR(GQLregMallaCurricular.GET_SEDES_CRUD)
   const { data: estados } = useSWR(GQLregMallaCurricular.GET_ESTADOS_CRUD)
@@ -120,137 +121,139 @@ const DialogRegistrarSede = ({ dialogRegSede, setDialogRegSede }) => {
         <span className="p-float-label field">
           <InputText
             className="w-full"
-            id="cod_carrera"
-            /*   value={codCarrera}
-            onChange={(e) => setCodCarrera(e.target.value.toUpperCase())} */
+            id="codSede"
+            value={codSede}
+            onChange={(e) => setCodSede(e.target.value.toUpperCase())}
             autoComplete="off"
           />
-          <label htmlFor="cod_carrera">Código de Sede</label>
+          <label htmlFor="codSede">Código de Sede</label>
         </span>
         <span className="p-float-label field col-span-2">
           <InputText
             className="w-full"
-            id="cod_carrera"
-            /*   value={codCarrera}
-            onChange={(e) => setCodCarrera(e.target.value.toUpperCase())} */
+            id="nombSede"
+            value={nombSede}
+            onChange={(e) => setNombSede(e.target.value.toUpperCase())}
             autoComplete="off"
           />
-          <label htmlFor="cod_carrera">Nombre de Sede</label>
+          <label htmlFor="nombSede">Nombre de Sede</label>
         </span>
         <span className="p-float-label field">
           <Dropdown
             className="w-full"
-            id="tp_carrera"
-            /*  value={sedeCarrera} */
-            /* onChange={(e) => setSedeCarrera(e.target.value)} */
-            /*   options={sedes?.obtenerSedes.response} */
+            id="estado"
+            value={estado}
+            onChange={(e) => setEstado(e.target.value)}
+            options={estados?.obtenerCrudEstados.response}
             optionLabel="nombre"
             optionValue="id"
           />
-          <label htmlFor="tp_carrera">Estado</label>
+          <label htmlFor="estado">Estado</label>
         </span>
         <span className="p-float-label field">
           <Dropdown
             className="w-full"
-            id="tp_carrera"
-            /*  value={sedeCarrera} */
-            /* onChange={(e) => setSedeCarrera(e.target.value)} */
-            /*   options={sedes?.obtenerSedes.response} */
+            id="ciudad"
+            value={ciudad}
+            onChange={(e) => setCiudad(e.target.value)}
+            options={ciudadesPorEstado?.obtenerCiudadesPorEstado.response}
             optionLabel="nombre"
             optionValue="id"
           />
-          <label htmlFor="tp_carrera">Ciudad</label>
+          <label htmlFor="ciudad">Ciudad</label>
         </span>
         <span className="p-float-label field">
           <Dropdown
             className="w-full"
-            id="tp_carrera"
-            /*  value={sedeCarrera} */
-            /* onChange={(e) => setSedeCarrera(e.target.value)} */
-            /*   options={sedes?.obtenerSedes.response} */
+            id="municipio"
+            value={municipio}
+            onChange={(e) => setMunicipio(e.target.value)}
+            options={municipiosPorEstado?.obtenerMunicipiosPorEstado.response}
             optionLabel="nombre"
             optionValue="id"
           />
-          <label htmlFor="tp_carrera">Municipio</label>
+          <label htmlFor="municipio">Municipio</label>
         </span>
         <span className="p-float-label field">
           <Dropdown
             className="w-full"
-            id="tp_carrera"
-            /*  value={sedeCarrera} */
-            /* onChange={(e) => setSedeCarrera(e.target.value)} */
-            /*   options={sedes?.obtenerSedes.response} */
+            id="parroquia"
+            value={parroquia}
+            onChange={(e) => setParroquia(e.target.value)}
+            options={
+              parroquiasPorMunicipio?.obtenerParrquiasPorMunicipio.response
+            }
             optionLabel="nombre"
             optionValue="id"
           />
-          <label htmlFor="tp_carrera">Parroquia</label>
+          <label htmlFor="parroquia">Parroquia</label>
         </span>
         <span className="p-float-label field">
           <Dropdown
             className="w-full"
-            id="tp_carrera"
-            /*  value={sedeCarrera} */
-            /* onChange={(e) => setSedeCarrera(e.target.value)} */
-            /*   options={sedes?.obtenerSedes.response} */
+            id="tpvia"
+            value={tpvia}
+            onChange={(e) => setTpvia(e.target.value)}
+            options={tipoVias?.obtenerTipoVia.response}
             optionLabel="nombre"
             optionValue="id"
           />
-          <label htmlFor="tp_carrera">Tipo Via</label>
+          <label htmlFor="tpvia">Tipo Via</label>
         </span>
         <span className="p-float-label field">
           <InputText
             className="w-full"
-            id="cod_carrera"
-            /*   value={codCarrera}
-            onChange={(e) => setCodCarrera(e.target.value.toUpperCase())} */
+            id="nombVia"
+            value={nombVia}
+            onChange={(e) => setNombVia(e.target.value.toUpperCase())}
             autoComplete="off"
           />
-          <label htmlFor="cod_carrera">Nombre de Via</label>
+          <label htmlFor="nombVia">Nombre de Via</label>
         </span>
         <span className="p-float-label field">
           <Dropdown
             className="w-full"
-            id="tp_carrera"
-            /*  value={sedeCarrera} */
-            /* onChange={(e) => setSedeCarrera(e.target.value)} */
-            /*   options={sedes?.obtenerSedes.response} */
+            id="tpzona"
+            value={tpzona}
+            onChange={(e) => setTpzona(e.target.value)}
+            options={tipoZonas?.obtenerTipoZona.response}
             optionLabel="nombre"
             optionValue="id"
           />
-          <label htmlFor="tp_carrera">Tipo Zona</label>
+          <label htmlFor="tpzona">Tipo Zona</label>
         </span>
         <span className="p-float-label field">
           <Dropdown
             className="w-full"
-            id="tp_carrera"
-            /*  value={sedeCarrera} */
-            /* onChange={(e) => setSedeCarrera(e.target.value)} */
-            /*   options={sedes?.obtenerSedes.response} */
+            id="nombZona"
+            value={nombZona}
+            onChange={(e) => setNombZona(e.target.value)}
+            options={zonasPorParroquias?.obtenerZonasPorParroquias.response}
             optionLabel="nombre"
             optionValue="id"
           />
-          <label htmlFor="tp_carrera">Nombre de Zona</label>
+          <label htmlFor="nombZona">Nombre de Zona</label>
         </span>
 
         <span className="p-float-label field">
           <InputText
             className="w-full"
-            id="cod_carrera"
-            /*   value={codCarrera}
-            onChange={(e) => setCodCarrera(e.target.value.toUpperCase())} */
+            id="codPostal"
+            value={codPostal}
+            onChange={(e) => setCodPostal(e.target.value.toUpperCase())}
             autoComplete="off"
           />
-          <label htmlFor="cod_carrera">Codigo Postal</label>
+          <label htmlFor="codPostal">Codigo Postal</label>
         </span>
         <span className="p-float-label field col-span-2">
           <InputText
             className="w-full"
-            id="cod_carrera"
-            /*   value={codCarrera}
-            onChange={(e) => setCodCarrera(e.target.value.toUpperCase())} */
+            id="descDireccion"
+            value={descDireccion}
+            onChange={(e) => setDescDireccion(e.target.value.toUpperCase())}
             autoComplete="off"
           />
-          <label htmlFor="cod_carrera">Descripcion de direccion</label>
+          <label htmlFor="descDireccion">Descripcion de direccion</label>
         </span>
         <div className="col-span-4">
           <DataTable value={sedes?.obtenerCrudSede.response}>
