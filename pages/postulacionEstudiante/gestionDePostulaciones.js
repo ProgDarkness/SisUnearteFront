@@ -4,8 +4,13 @@ import { Button } from 'primereact/button'
 import { useEffect, useState } from 'react'
 import DialogDatosEstudiantes from 'pages/gestiondepostulaciones/dialogDatosEstudiantes'
 import { ConfirmDialog } from 'primereact/confirmdialog'
+import GQLvistaPostulado from 'graphql/vistaPostulado'
+import useSWR from 'swr'
 
 const GestionDePostulaciones = () => {
+  const { data: listadoPostulados, mutate } = useSWR(
+    GQLvistaPostulado.QUERY_LISTA_REPORTE
+  )
   const [datosPostulados, setDatosPostulados] = useState([])
   const [activeDialogVerDatosEstudiantes, setActiveDialogVerDatosEstudiantes] =
     useState(false)
@@ -19,7 +24,7 @@ const GestionDePostulaciones = () => {
       {
         nacionalidad: 'V',
         cedula: '15.681.973',
-        nombre: 'Kendrick',
+        nombre: 'Kendrickv',
         apellido: 'Lamar',
         fecha_de_postulacion: '10/08/2023',
         carrera: 'Artes Plasticas',
@@ -113,7 +118,7 @@ const GestionDePostulaciones = () => {
 
       <div>
         <DataTable
-          value={datosPostulados}
+          value={listadoPostulados?.obtenerListadoPostuladoCarrera.response}
           emptyMessage="No hay carreras registradas."
         >
           <Column
@@ -124,10 +129,11 @@ const GestionDePostulaciones = () => {
           <Column field="cedula" header="Cedula" />
           <Column field="nombre" header="Nombre" />
           <Column field="apellido" header="Apellido" />
-          <Column field="fecha_de_postulacion" header="Fecha de postulacion" />
+          <Column field="fepostulacion" header="Fecha de postulacion" />
           <Column field="carrera" header="Carrera " />
           <Column field="periodo" header="Periodo" />
-          <Column field="tipo_de_periodo" header="Tipo de periodo" />
+          <Column field="sede" header="Sede" />
+          <Column field="estado" header="Estado" />
           <Column field="estatus" header="Estatus" />
           <Column body={actionbodytemplate} />
         </DataTable>

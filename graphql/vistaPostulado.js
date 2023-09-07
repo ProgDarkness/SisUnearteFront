@@ -11,10 +11,13 @@ export default {
           nombre
           apellido
           fepostulacion
-          carrera
+          observacion
+          estatus
           periodo
           tperiodo
-          estatus
+          carrera
+          sede
+          estado
         }
       }
     }
