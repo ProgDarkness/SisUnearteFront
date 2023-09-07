@@ -32,7 +32,7 @@ const DialogRegistrarSede = ({ dialogRegSede, setDialogRegSede }) => {
           GQLconsultasGenerales.GET_MUNICIPIOS_POR_ESTADO,
           {
             InputEstado: {
-              estado: parseInt(estado.id)
+              estado: parseInt(estado)
             }
           }
         ]
@@ -45,7 +45,7 @@ const DialogRegistrarSede = ({ dialogRegSede, setDialogRegSede }) => {
           GQLconsultasGenerales.GET_CIUDADES_POR_ESTADO,
           {
             InputEstado: {
-              estado: parseInt(estado.id)
+              estado: parseInt(estado)
             }
           }
         ]
@@ -58,7 +58,7 @@ const DialogRegistrarSede = ({ dialogRegSede, setDialogRegSede }) => {
           GQLconsultasGenerales.GET_PARROQUIAS_POR_MUNICIPIO,
           {
             InputMunicipio: {
-              municipio: parseInt(municipio.id)
+              municipio: parseInt(municipio)
             }
           }
         ]
@@ -71,7 +71,7 @@ const DialogRegistrarSede = ({ dialogRegSede, setDialogRegSede }) => {
           GQLconsultasGenerales.GET_ZONAS_POR_PARROQUIA,
           {
             InputParroquia: {
-              parroquia: parseInt(parroquia.id)
+              parroquia: parseInt(parroquia)
             }
           }
         ]
