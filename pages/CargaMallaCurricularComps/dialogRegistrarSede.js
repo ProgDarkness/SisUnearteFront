@@ -7,10 +7,12 @@ import GQLregMallaCurricular from 'graphql/regMallaCurricular'
 import GQLconsultasGenerales from 'graphql/consultasGenerales'
 import useSWR from 'swr'
 import { Button } from 'primereact/button'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import request from 'graphql-request'
+import { Toast } from 'primereact/toast'
 
 const DialogRegistrarSede = ({ dialogRegSede, setDialogRegSede }) => {
+  const toast = useRef(null)
   const [estado, setEstado] = useState(null)
   const [municipio, setMunicipio] = useState(null)
   const [parroquia, setParroquia] = useState(null)
@@ -24,7 +26,7 @@ const DialogRegistrarSede = ({ dialogRegSede, setDialogRegSede }) => {
   const [descDireccion, setDescDireccion] = useState('')
   const [ciudad, setCiudad] = useState(null)
 
-  const { data: sedes } = useSWR(GQLregMallaCurricular.GET_SEDES_CRUD)
+  const { data: sedes, mutate } = useSWR(GQLregMallaCurricular.GET_SEDES_CRUD)
   const { data: estados } = useSWR(GQLregMallaCurricular.GET_ESTADOS_CRUD)
 
   useEffect(() => {
@@ -41,22 +43,39 @@ const DialogRegistrarSede = ({ dialogRegSede, setDialogRegSede }) => {
 
   const RegSede = () => {
     const InputRegSede = {
-      co_sede: null,
-      nb_sede: null,
-      id_tp_via: null,
-      nb_via: null,
-      id_tp_zona: null,
-      nb_zona: null,
-      tx_direccion: null,
-      id_zona_postal: null,
-      id_ciudad: null,
-      id_estado: null,
-      id_municipio: null,
-      id_parroquia: null
+      co_sede: codSede,
+      nb_sede: nombSede,
+      id_tp_via: parseInt(tpvia),
+      nb_via: nombVia,
+      id_tp_zona: parseInt(tpzona),
+      nb_zona: nombZona?.nombre,
+      tx_direccion: descDireccion,
+      id_zona_postal: parseInt(codPostal),
+      id_ciudad: parseInt(ciudad),
+      id_estado: parseInt(estado),
+      id_municipio: parseInt(municipio),
+      id_parroquia: parseInt(parroquia)
     }
     registrarSede({ InputRegSede }).then(
       ({ registrarSede: { status, message, type } }) => {
-        console.log(status)
+        toast.current.show({
+          severity: type,
+          summary: '¡ Atención !',
+          detail: message
+        })
+        setEstado(null)
+        setMunicipio(null)
+        setParroquia(null)
+        setTpvia(null)
+        setNombVia('')
+        setTpzona(null)
+        setNombZona(null)
+        setCodPostal('')
+        setCodSede('')
+        setNombSede('')
+        setDescDireccion('')
+        setCiudad(null)
+        mutate()
       }
     )
   }
@@ -152,6 +171,7 @@ const DialogRegistrarSede = ({ dialogRegSede, setDialogRegSede }) => {
       draggable={false}
       style={{ width: '800px' }}
     >
+      <Toast ref={toast} />
       <div className="grid grid-cols-4 gap-4 pt-3">
         <span className="p-float-label field">
           <InputText
@@ -298,8 +318,21 @@ const DialogRegistrarSede = ({ dialogRegSede, setDialogRegSede }) => {
           <Button
             icon="pi pi-plus"
             label="Registrar"
-            /* onClick={registrarAsignarSede}
-            disabled={!sedeCarrera || !carrera} */
+            onClick={RegSede}
+            disabled={
+              !estado ||
+              !nombSede ||
+              !codSede ||
+              !ciudad ||
+              !municipio ||
+              !parroquia ||
+              !tpvia ||
+              !nombVia ||
+              !tpzona ||
+              !nombZona ||
+              !codPostal ||
+              !descDireccion
+            }
           />
         </div>
         <div className="col-span-4">
