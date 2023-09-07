@@ -1,6 +1,19 @@
 import { gql } from 'graphql-request'
 
 export default {
+  GET_ESTADOS_CRUD: gql`
+    query obtenerCrudEstados {
+      obtenerCrudEstados {
+        status
+        message
+        type
+        response {
+          id
+          nombre
+        }
+      }
+    }
+  `,
   GET_SEDES_CRUD: gql`
     query obtenerCrudSede {
       obtenerCrudSede {

@@ -4,11 +4,81 @@ import { Dialog } from 'primereact/dialog'
 import { Dropdown } from 'primereact/dropdown'
 import { InputText } from 'primereact/inputtext'
 import GQLregMallaCurricular from 'graphql/regMallaCurricular'
+import GQLconsultasGenerales from 'graphql/consultasGenerales'
 import useSWR from 'swr'
 import { Button } from 'primereact/button'
+import { useState } from 'react'
 
 const DialogRegistrarSede = ({ dialogRegSede, setDialogRegSede }) => {
+  const [estado, setEstado] = useState(null)
+  const [municipio, setMunicipio] = useState(null)
+  const [parroquia, setParroquia] = useState(null)
+  const [tpvia, setTpvia] = useState(null)
+  const [nombVia, setNombVia] = useState('')
+  const [tpzona, setTpzona] = useState(null)
+  const [nombZona, setNombZona] = useState(null)
+  const [codPostal, setCodPostal] = useState('')
+  const [codSede, setCodSede] = useState('')
+  const [nombSede, setNombSede] = useState('')
+  const [descDireccion, setDescDireccion] = useState('')
+
   const { data: sedes } = useSWR(GQLregMallaCurricular.GET_SEDES_CRUD)
+  const { data: estados } = useSWR(GQLregMallaCurricular.GET_ESTADOS_CRUD)
+
+  const { data: municipiosPorEstado } = useSWR(
+    estado
+      ? [
+          GQLconsultasGenerales.GET_MUNICIPIOS_POR_ESTADO,
+          {
+            InputEstado: {
+              estado: parseInt(estado.id)
+            }
+          }
+        ]
+      : null
+  )
+
+  const { data: ciudadesPorEstado } = useSWR(
+    estado
+      ? [
+          GQLconsultasGenerales.GET_CIUDADES_POR_ESTADO,
+          {
+            InputEstado: {
+              estado: parseInt(estado.id)
+            }
+          }
+        ]
+      : null
+  )
+
+  const { data: parroquiasPorMunicipio } = useSWR(
+    municipio
+      ? [
+          GQLconsultasGenerales.GET_PARROQUIAS_POR_MUNICIPIO,
+          {
+            InputMunicipio: {
+              municipio: parseInt(municipio.id)
+            }
+          }
+        ]
+      : null
+  )
+
+  const { data: zonasPorParroquias } = useSWR(
+    parroquia
+      ? [
+          GQLconsultasGenerales.GET_ZONAS_POR_PARROQUIA,
+          {
+            InputParroquia: {
+              parroquia: parseInt(parroquia.id)
+            }
+          }
+        ]
+      : null
+  )
+
+  const { data: tipoVias } = useSWR(GQLconsultasGenerales.GET_TIPO_VIAS)
+  const { data: tipoZonas } = useSWR(GQLconsultasGenerales.GET_TIPO_ZONAS)
 
   const accionBodyTemplate = (rowData) => {
     return (
