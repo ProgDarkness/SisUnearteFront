@@ -364,6 +364,7 @@ const DialogRegPeriodo = ({
     setFeFinNotas(null)
     setFeFinPostulacion(null)
     setFeIniPostulacion(null)
+    
     setTimeout(() => {
       setReload(true)
     }, 1)

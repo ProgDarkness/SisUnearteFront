@@ -157,19 +157,9 @@ const DialogRegistrarSede = ({ dialogRegSede, setDialogRegSede }) => {
   const { data: tipoZonas } = useSWR(GQLconsultasGenerales.GET_TIPO_ZONAS)
 
   const accionBodyTemplate = (rowData) => {
+    console.log(rowData)
     return (
       <div className="flex justify-center">
-        <Button
-          icon="pi pi-pencil"
-          className="p-button-help mr-1"
-          tooltip="Modificar"
-          /*   onClick={() => {
-            setDatosEditarCarrera(rowData)
-            setDialogEditarCarrera(true)
-          }} */
-          tooltipOptions={{ position: 'top' }}
-        />
-
         <Button
           icon="pi pi-times"
           className="p-button-danger"
@@ -180,6 +170,11 @@ const DialogRegistrarSede = ({ dialogRegSede, setDialogRegSede }) => {
       </div>
     )
   }
+
+  /* 
+¡ Atención !
+Error: update o delete en «t011t_sedes» viola la llave foránea 
+«r007t_sede_carrera_fk» en la tabla «r007t_sede_carrera» */
 
   return (
     <Dialog
