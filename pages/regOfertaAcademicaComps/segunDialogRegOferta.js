@@ -12,7 +12,13 @@ import { Dropdown } from 'primereact/dropdown'
 /* import DialogCargarHorario from './segunDialogCagarHorario' */
 
 const DialogRegOferta = ({ dialogRegOferta, setDialogRegOferta }) => {
+  const [codOferta, setCodOferta] = useState('')
+  const [cantidadCupos, setCantidadCupos] = useState('')
   const [carreraOferta, setCarreraOferta] = useState(null)
+  const [periodoOfer, setPeriodoOfer] = useState(null)
+  const [dataAsigProf, setDataAsigProf] = useState(null)
+  const [dataAggMateria, setDataAggMateria] = useState(null)
+  const [dataEliminarMateriaOfer, setDataEliminarMateriaOfer] = useState(null)
   const [dialogConfirmElminarMateria, setDialogConfirmElminarMateria] =
     useState(false)
   const [dialogAgregarMateria, setDialogAgregarMateria] = useState(false)
@@ -20,7 +26,11 @@ const DialogRegOferta = ({ dialogRegOferta, setDialogRegOferta }) => {
   /* const [activeDialogCargarHorario, setActiveDialogCargarHorario] =
     useState(false) */
 
+  /* 16883642 */
+
   const { data: mallas } = useSWR(GQLregMallaCurricular.GET_MALLAS)
+
+  const { data: periodos } = useSWR(GQLregOfertaAcademica.GET_PERIODOS_OFER)
 
   const { data: detallesMallas } = useSWR(
     carreraOferta?.id
@@ -36,7 +46,7 @@ const DialogRegOferta = ({ dialogRegOferta, setDialogRegOferta }) => {
   }
 
   const rejectEliminarMateria = () => {
-    console.log('NO')
+    setDataEliminarMateriaOfer(null)
   }
 
   const DialogAgregarMateria = () => {
@@ -46,6 +56,7 @@ const DialogRegOferta = ({ dialogRegOferta, setDialogRegOferta }) => {
         onHide={() => {
           setDialogAgregarMateria(false)
           setDialogRegOferta(true)
+          setDataAggMateria(null)
         }}
         header="Agregar Materia"
         resizable={false}
@@ -56,7 +67,7 @@ const DialogRegOferta = ({ dialogRegOferta, setDialogRegOferta }) => {
             <InputText
               className="w-full"
               id="carrera_materia"
-              /* value={datosEditarMateria?.carrera_materia} */
+              value={carreraOferta?.nombre}
             />
             <label htmlFor="carrera_materia">Carrera</label>
           </span>
@@ -64,7 +75,7 @@ const DialogRegOferta = ({ dialogRegOferta, setDialogRegOferta }) => {
             <InputText
               className="w-full"
               id="trayecto_materia"
-              /* value={datosEditarMateria?.carrera_materia} */
+              value={dataAggMateria?.nb_trayecto}
               autoComplete="off"
             />
             <label htmlFor="trayecto_materia">Trayecto</label>
@@ -100,6 +111,7 @@ const DialogRegOferta = ({ dialogRegOferta, setDialogRegOferta }) => {
         onHide={() => {
           setDialogAgregarprofesor(false)
           setDialogRegOferta(true)
+          setDataAsigProf(null)
         }}
         header="Agregar profesor"
         resizable={false}
@@ -110,7 +122,7 @@ const DialogRegOferta = ({ dialogRegOferta, setDialogRegOferta }) => {
             <InputText
               className="w-full"
               id="carrera_profesor"
-              /* value={datosEditarprofesor?.carrera_profesor} */
+              value={carreraOferta?.nombre}
               autoComplete="off"
             />
             <label htmlFor="carrera_profesor">Carrera</label>
@@ -119,7 +131,7 @@ const DialogRegOferta = ({ dialogRegOferta, setDialogRegOferta }) => {
             <InputText
               className="w-full"
               id="trayecto_profesor"
-              /* value={datosEditarprofesor?.carrera_profesor} */
+              value={dataAsigProf?.nb_trayecto}
               autoComplete="off"
             />
             <label htmlFor="trayecto_profesor">Trayecto</label>
@@ -128,7 +140,7 @@ const DialogRegOferta = ({ dialogRegOferta, setDialogRegOferta }) => {
             <InputText
               className="w-full"
               id="nb_materia"
-              /* value={datosEditarprofesor?.carrera_profesor} */
+              value={dataAsigProf?.nb_materia}
               autoComplete="off"
             />
             <label htmlFor="nb_materia">Materia</label>
@@ -157,7 +169,7 @@ const DialogRegOferta = ({ dialogRegOferta, setDialogRegOferta }) => {
     )
   }
 
-  const actionBodyTemplateMateria = () => {
+  const actionBodyTemplateMateria = (rowData) => {
     return (
       <div className="flex justify-center">
         <Button
@@ -166,6 +178,7 @@ const DialogRegOferta = ({ dialogRegOferta, setDialogRegOferta }) => {
           iconPos="left"
           className="p-button-info p-1"
           onClick={() => {
+            setDataAsigProf(rowData)
             setDialogAgregarprofesor(true)
           }}
         />
@@ -174,13 +187,16 @@ const DialogRegOferta = ({ dialogRegOferta, setDialogRegOferta }) => {
           icon="pi pi-times"
           iconPos="left"
           className="p-button-danger p-1 ml-2"
-          onClick={() => setDialogConfirmElminarMateria(true)}
+          onClick={() => {
+            setDataEliminarMateriaOfer(rowData)
+            setDialogConfirmElminarMateria(true)
+          }}
         />
       </div>
     )
   }
 
-  const actionBodyTemplate = () => {
+  const actionBodyTemplate = (rowData) => {
     return (
       <div className="flex flex-col justify-center">
         {/* <Button
@@ -198,6 +214,7 @@ const DialogRegOferta = ({ dialogRegOferta, setDialogRegOferta }) => {
           iconPos="left"
           className="p-button-help text-sm p-1 mt-2"
           onClick={() => {
+            setDataAggMateria(rowData)
             setDialogAgregarMateria(true)
           }}
         />
@@ -237,7 +254,8 @@ const DialogRegOferta = ({ dialogRegOferta, setDialogRegOferta }) => {
             <InputText
               className="w-full"
               id="new_cod_carrera"
-              /* value={datosEstudiante?.cedula} */
+              value={codOferta}
+              onChange={(e) => setCodOferta(e.value)}
               autoComplete="off"
             />
             <label htmlFor="new_cod_carrera">Codigo de la Oferta</label>
@@ -257,17 +275,20 @@ const DialogRegOferta = ({ dialogRegOferta, setDialogRegOferta }) => {
             <InputText
               className="w-full"
               id="new_tec_carrera"
-              /* value={datosEstudiante?.cedula} */
+              value={cantidadCupos}
+              onChange={(e) => setCantidadCupos(e.value)}
               autoComplete="off"
             />
             <label htmlFor="new_tec_carrera">Cant. Cupos</label>
           </span>
           <span className="p-float-label field">
-            <InputText
+            <Dropdown
               className="w-full"
               id="new_tec_carrera"
-              /* value={datosEstudiante?.cedula} */
-              autoComplete="off"
+              options={periodos?.obtenerPeridosOferta.response}
+              value={periodoOfer}
+              onChange={(e) => setPeriodoOfer(e.value)}
+              optionLabel="nombre"
             />
             <label htmlFor="new_tec_carrera">Periodo</label>
           </span>

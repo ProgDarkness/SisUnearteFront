@@ -1,6 +1,19 @@
 import { gql } from 'graphql-request'
 
 export default {
+  GET_PERIODOS_OFER: gql`
+    query obtenerPeridosOferta {
+      obtenerPeridosOferta {
+        status
+        message
+        type
+        response {
+          id
+          nombre
+        }
+      }
+    }
+  `,
   GET_TODOS_PERIODOS: gql`
     query obtenerPeriodos {
       obtenerPeriodos {
