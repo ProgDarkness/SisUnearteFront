@@ -2,7 +2,7 @@ import { DataTable } from 'primereact/datatable'
 import { Column } from 'primereact/column'
 import { Button } from 'primereact/button'
 import { useEffect, useState } from 'react'
-import DialogDatosEstudiantes from 'pages/gestiondepostulaciones/dialogDatosEstudiantes'
+import DialogDatosEstudiantes from 'pages/postulacionEstudiante/dialogDatosEstudiantes'
 import { ConfirmDialog } from 'primereact/confirmdialog'
 import GQLvistaPostulado from 'graphql/vistaPostulado'
 import useSWR from 'swr'
@@ -18,6 +18,8 @@ const GestionDePostulaciones = () => {
     useState(false)
   const [dialogConfirmConfirmarPostulado, setDialogConfirmConfirmarPostulado] =
     useState(false)
+  const [datosVerPostulado, setDatosVerPostulado] = useState(null)
+  console.log(listadoPostulados)
 
   useEffect(() => {
     setDatosPostulados([
@@ -50,6 +52,21 @@ const GestionDePostulaciones = () => {
     console.log('NO')
   }
 
+  const bodyEstatus = (rowData) => {
+    let colorTag = ''
+    if (rowData.estatus === 'Pendiente por ser revisado') {
+      colorTag = '#cdcdcd'
+    } else {
+      colorTag = '#nb45tg'
+    }
+
+    return (
+      <div className="rounded-lg p-1" style={{ backgroundColor: colorTag }}>
+        {rowData.estatus}
+      </div>
+    )
+  }
+
   const actionbodytemplate = (rowData) => {
     return (
       <div className="flex justify-center">
@@ -59,6 +76,7 @@ const GestionDePostulaciones = () => {
           tooltip="Ver"
           tooltipOptions={{ position: 'top' }}
           onClick={() => {
+            setDatosVerPostulado(rowData)
             setActiveDialogVerDatosEstudiantes(true)
           }}
         />
@@ -87,6 +105,7 @@ const GestionDePostulaciones = () => {
       <DialogDatosEstudiantes
         activeDialogVerDatosEstudiantes={activeDialogVerDatosEstudiantes}
         setActiveDialogVerDatosEstudiantes={setActiveDialogVerDatosEstudiantes}
+        datosVerPostulado={datosVerPostulado}
       />
       <div className="text-3xl font-semibold text-white text-center mr-32 mb-6 -mt-3">
         <h1>Gestion De Postulaciones</h1>
@@ -134,7 +153,7 @@ const GestionDePostulaciones = () => {
           <Column field="periodo" header="Periodo" />
           <Column field="sede" header="Sede" />
           <Column field="estado" header="Estado" />
-          <Column field="estatus" header="Estatus" />
+          <Column field="estatus" body={bodyEstatus} header="Estatus" />
           <Column body={actionbodytemplate} />
         </DataTable>
       </div>

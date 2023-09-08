@@ -6,6 +6,7 @@ export default {
       obtenerListadoPostuladoCarrera {
         response {
           id
+          idusuario
           nacionalidad
           cedula
           nombre

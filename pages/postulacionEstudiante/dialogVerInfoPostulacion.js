@@ -6,6 +6,7 @@ import { InputText } from 'primereact/inputtext'
 import GQLregMallaCurricular from 'graphql/regMallaCurricular'
 import { motion } from 'framer-motion'
 import useSWR from 'swr'
+import GQLusuarios from 'graphql/usuarios'
 
 const DialogVerInfoPostulacion = ({
   activeDialogVerMalla,

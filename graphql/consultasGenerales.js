@@ -42,6 +42,46 @@ export default {
       }
     }
   `,
+  GET_ESTADOS: gql`
+    query estados {
+      obtenerEstados {
+        response {
+          id
+          nombre
+        }
+      }
+    }
+  `,
+  GET_CIUDADES: gql`
+    query ciudades {
+      obtenerCiudades {
+        response {
+          id
+          nombre
+        }
+      }
+    }
+  `,
+  GET_MUNICIPIOS: gql`
+    query municipios {
+      obtenerMunicipios {
+        response {
+          id
+          nombre
+        }
+      }
+    }
+  `,
+  GET_PARROQUIAS: gql`
+    query parroquias {
+      obtenerParroquias {
+        response {
+          id
+          nombre
+        }
+      }
+    }
+  `,
   GET_ESTADOS_CIVILES: gql`
     query obtenerEstadoCivil {
       obtenerEstadoCivil {

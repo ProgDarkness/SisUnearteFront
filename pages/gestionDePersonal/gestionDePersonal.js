@@ -1,7 +1,7 @@
 import { Button } from 'primereact/button'
 import { Column } from 'primereact/column'
 import { DataTable } from 'primereact/datatable'
-import { useEffect, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
 import DialogRegPersonal from './dialogRegPersonal'
 import DialogVerDatosPersonal from './dialogVerDatosPersonal'
 import DialogEditarPersonal from './dialogEditarPersonal'
@@ -13,7 +13,6 @@ import request from 'graphql-request'
 
 const GestionDePersonal = () => {
   const toast = useRef(null)
-  const [personal, setPersonal] = useState(null)
   const [activeDialogRegPersonal, setActiveDialogRegPersonal] = useState(false)
   const [activeDialogVerDatosPersonal, setActiveDialogVerDatosPersonal] =
     useState(false)
@@ -27,8 +26,6 @@ const GestionDePersonal = () => {
 
   const { data: todoPersonal, mutate } = useSWR(GQLpersonal.GET_PERSONAL)
 
-  console.log(dataEliminarPersonal)
-
   const eliminarPersonal = (variables) => {
     return request(
       process.env.NEXT_PUBLIC_URL_BACKEND,
@@ -36,19 +33,6 @@ const GestionDePersonal = () => {
       variables
     )
   }
-
-  useEffect(() => {
-    setPersonal([
-      {
-        tp_personal: 'Profesor',
-        tp_nacionalidad: 'V',
-        nu_cedula: '16785893',
-        nombre: 'Jose',
-        apellido: 'Perez',
-        estatus: 'Activo'
-      }
-    ])
-  }, [])
 
   const HeaderPersonal = () => {
     return (
