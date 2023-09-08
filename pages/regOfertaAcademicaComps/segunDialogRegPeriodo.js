@@ -8,7 +8,6 @@ import DialogVerPeriodo from './segunDialogVerPeriodo'
 import { InputMask } from 'primereact/inputmask'
 import { Dropdown } from 'primereact/dropdown'
 import { Toast } from 'primereact/toast'
-import { useSesion } from 'hooks/useSesion'
 import format from 'date-fns/format'
 import request from 'graphql-request'
 import GQLregOfertaAcademica from 'graphql/regOfertaAcademica'
@@ -22,7 +21,6 @@ const DialogRegPeriodo = ({
   activeDialogRegPerido,
   setActiveDialogRegPerido
 }) => {
-  const { idUser } = useSesion()
   const [reload, setReload] = useState(true)
   const [activeDialogVerPeriodo, setActiveDialogVerPeriodo] = useState(false)
   const [editarId, setEditarId] = useState(null)
@@ -369,10 +367,6 @@ const DialogRegPeriodo = ({
       setReload(true)
     }, 1)
   }
-
-  /* 
-¡ Atención !
-Error: inserción o actualización en la tabla «t006t_periodo_lectivo» viola la llave foránea «t006t_periodo_doc_fk» */
 
   const guardarPeriodo = () => {
     const InputPeriodo = {
