@@ -4,7 +4,7 @@ import { ConfirmDialog } from 'primereact/confirmdialog'
 import { DataTable } from 'primereact/datatable'
 import { Dialog } from 'primereact/dialog'
 import { InputText } from 'primereact/inputtext'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import useSWR from 'swr'
 import GQLregMallaCurricular from 'graphql/regMallaCurricular'
 import GQLregOfertaAcademica from 'graphql/regOfertaAcademica'
@@ -12,7 +12,6 @@ import { Dropdown } from 'primereact/dropdown'
 /* import DialogCargarHorario from './segunDialogCagarHorario' */
 
 const DialogRegOferta = ({ dialogRegOferta, setDialogRegOferta }) => {
-  const [infoCarrera, setInfoCarrera] = useState(null)
   const [carreraOferta, setCarreraOferta] = useState(null)
   const [dialogConfirmElminarMateria, setDialogConfirmElminarMateria] =
     useState(false)
@@ -22,6 +21,7 @@ const DialogRegOferta = ({ dialogRegOferta, setDialogRegOferta }) => {
     useState(false) */
 
   const { data: mallas } = useSWR(GQLregMallaCurricular.GET_MALLAS)
+
   const { data: detallesMallas } = useSWR(
     carreraOferta?.id
       ? [
@@ -31,8 +31,6 @@ const DialogRegOferta = ({ dialogRegOferta, setDialogRegOferta }) => {
       : null
   )
 
-  console.log(detallesMallas?.obtenerDetalleMalla.response)
-
   const acceptEliminarMateria = () => {
     console.log('SI')
   }
@@ -40,49 +38,6 @@ const DialogRegOferta = ({ dialogRegOferta, setDialogRegOferta }) => {
   const rejectEliminarMateria = () => {
     console.log('NO')
   }
-
-  useEffect(() => {
-    setInfoCarrera([
-      {
-        trayecto: 'Trayecto 1',
-        lapso: 'lapso 1',
-        materia: 'Dibujo',
-        profesor: 'Juan Manuel'
-      },
-      {
-        trayecto: 'Trayecto 1',
-        lapso: 'lapso 1',
-        materia: 'Fotografia',
-        profesor: 'Juan Manuel'
-      },
-      {
-        trayecto: 'Trayecto 1',
-        lapso: 'lapso 2',
-        materia: 'Arte',
-        profesor: 'Juan Manuel'
-      },
-      {
-        trayecto: 'Trayecto 1',
-        lapso: 'lapso 2',
-        materia: 'Fotografia 2',
-        profesor: 'Juan Manuel'
-      },
-      /* ------------------------------------ */
-      {
-        trayecto: 'Trayecto 2',
-        lapso: 'lapso 1',
-        materia: 'Dibujo',
-        profesor: 'Juan Manuel'
-      },
-      {
-        trayecto: 'Trayecto 2',
-        lapso: 'lapso 2',
-        materia: 'Arte',
-        profesor: 'Juan Manuel'
-      }
-      /* ------------------------------------- */
-    ])
-  }, [])
 
   const DialogAgregarMateria = () => {
     return (
