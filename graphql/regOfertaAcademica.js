@@ -112,5 +112,23 @@ export default {
         type
       }
     }
+  `,
+  DETALLES_MALLAS_CARRERA: gql`
+    query obtenerDetalleMalla($carrera: Int!) {
+      obtenerDetalleMalla(carrera: $carrera) {
+        status
+        message
+        type
+        response {
+          id_carrema
+          idTrayectoCarrera
+          nb_trayecto
+          id_materia
+          nb_materia
+          id_personal
+          personal
+        }
+      }
+    }
   `
 }

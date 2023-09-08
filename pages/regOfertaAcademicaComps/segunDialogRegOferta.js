@@ -5,16 +5,33 @@ import { DataTable } from 'primereact/datatable'
 import { Dialog } from 'primereact/dialog'
 import { InputText } from 'primereact/inputtext'
 import { useEffect, useState } from 'react'
-import DialogCargarHorario from './segunDialogCagarHorario'
+import useSWR from 'swr'
+import GQLregMallaCurricular from 'graphql/regMallaCurricular'
+import GQLregOfertaAcademica from 'graphql/regOfertaAcademica'
+import { Dropdown } from 'primereact/dropdown'
+/* import DialogCargarHorario from './segunDialogCagarHorario' */
 
 const DialogRegOferta = ({ dialogRegOferta, setDialogRegOferta }) => {
   const [infoCarrera, setInfoCarrera] = useState(null)
+  const [carreraOferta, setCarreraOferta] = useState(null)
   const [dialogConfirmElminarMateria, setDialogConfirmElminarMateria] =
     useState(false)
   const [dialogAgregarMateria, setDialogAgregarMateria] = useState(false)
   const [dialogAgregarprofesor, setDialogAgregarprofesor] = useState(false)
-  const [activeDialogCargarHorario, setActiveDialogCargarHorario] =
-    useState(false)
+  /* const [activeDialogCargarHorario, setActiveDialogCargarHorario] =
+    useState(false) */
+
+  const { data: mallas } = useSWR(GQLregMallaCurricular.GET_MALLAS)
+  const { data: detallesMallas } = useSWR(
+    carreraOferta?.id
+      ? [
+          GQLregOfertaAcademica.DETALLES_MALLAS_CARRERA,
+          { carrera: parseInt(carreraOferta?.id) }
+        ]
+      : null
+  )
+
+  console.log(detallesMallas?.obtenerDetalleMalla.response)
 
   const acceptEliminarMateria = () => {
     console.log('SI')
@@ -85,7 +102,6 @@ const DialogRegOferta = ({ dialogRegOferta, setDialogRegOferta }) => {
               className="w-full"
               id="carrera_materia"
               /* value={datosEditarMateria?.carrera_materia} */
-              autoComplete="off"
             />
             <label htmlFor="carrera_materia">Carrera</label>
           </span>
@@ -212,7 +228,7 @@ const DialogRegOferta = ({ dialogRegOferta, setDialogRegOferta }) => {
   const actionBodyTemplate = () => {
     return (
       <div className="flex flex-col justify-center">
-        <Button
+        {/* <Button
           label="Agregar Horario"
           icon="pi pi-plus"
           iconPos="left"
@@ -220,7 +236,7 @@ const DialogRegOferta = ({ dialogRegOferta, setDialogRegOferta }) => {
           onClick={() => {
             setActiveDialogCargarHorario(true)
           }}
-        />
+        /> */}
         <Button
           label="Agregar Materia"
           icon="pi pi-plus"
@@ -249,10 +265,10 @@ const DialogRegOferta = ({ dialogRegOferta, setDialogRegOferta }) => {
         acceptLabel="SI"
         rejectLabel="NO"
       />
-      <DialogCargarHorario
+      {/* <DialogCargarHorario
         activeDialogCargarHorario={activeDialogCargarHorario}
         setActiveDialogCargarHorario={setActiveDialogCargarHorario}
-      />
+      /> */}
 
       <Dialog
         visible={dialogRegOferta}
@@ -272,11 +288,13 @@ const DialogRegOferta = ({ dialogRegOferta, setDialogRegOferta }) => {
             <label htmlFor="new_cod_carrera">Codigo de la Oferta</label>
           </span>
           <span className="p-float-label field">
-            <InputText
+            <Dropdown
               className="w-full"
               id="new_carrera_Oferta"
-              /* value={datosEstudiante?.cedula} */
-              autoComplete="off"
+              value={carreraOferta}
+              options={mallas?.obtenerTodasMallas.response}
+              onChange={(e) => setCarreraOferta(e.value)}
+              optionLabel="nombre"
             />
             <label htmlFor="new_carrera_Oferta">Carrera de la Oferta</label>
           </span>
@@ -308,14 +326,14 @@ const DialogRegOferta = ({ dialogRegOferta, setDialogRegOferta }) => {
         </div>
         <div className="col-span-5">
           <DataTable
-            value={infoCarrera}
+            value={detallesMallas?.obtenerDetalleMalla.response}
             emptyMessage="No se encuentran trayectos registrados."
             rowGroupMode="rowspan"
-            groupRowsBy={['trayecto']}
+            groupRowsBy={['nb_trayecto']}
           >
-            <Column field="trayecto" header="Trayectos" />
-            <Column field="materia" header="Materias" />
-            <Column field="profesor" header="Profesor" />
+            <Column field="nb_trayecto" header="Trayectos" />
+            <Column field="nb_materia" header="Materias" />
+            <Column field="personal" header="Profesor" />
             <Column
               field="materia"
               body={actionBodyTemplateMateria}
