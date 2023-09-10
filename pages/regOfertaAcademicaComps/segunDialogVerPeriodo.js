@@ -140,16 +140,6 @@ const DialogVerPeriodo = ({
         <span className="p-float-label field col-span-2">
           <InputText
             className="w-full"
-            id="fe_retiro"
-            value={verDatosPeriodo?.feretiro}
-            autoComplete="off"
-            disabled
-          />
-          <label htmlFor="fe_retiro">Fecha de retiro</label>
-        </span>
-        <span className="p-float-label field col-span-2">
-          <InputText
-            className="w-full"
             id="fe_modificacion"
             value={verDatosPeriodo?.femodificacion}
             autoComplete="off"
