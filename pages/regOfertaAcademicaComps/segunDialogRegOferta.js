@@ -4,14 +4,16 @@ import { ConfirmDialog } from 'primereact/confirmdialog'
 import { DataTable } from 'primereact/datatable'
 import { Dialog } from 'primereact/dialog'
 import { InputText } from 'primereact/inputtext'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import useSWR from 'swr'
 import GQLregMallaCurricular from 'graphql/regMallaCurricular'
 import GQLregOfertaAcademica from 'graphql/regOfertaAcademica'
 import { Dropdown } from 'primereact/dropdown'
+import { Toast } from 'primereact/toast'
 /* import DialogCargarHorario from './segunDialogCagarHorario' */
 
 const DialogRegOferta = ({ dialogRegOferta, setDialogRegOferta }) => {
+  const toast = useRef(null)
   const [codOferta, setCodOferta] = useState('')
   const [cantidadCupos, setCantidadCupos] = useState('')
   const [carreraOferta, setCarreraOferta] = useState(null)
@@ -31,6 +33,18 @@ const DialogRegOferta = ({ dialogRegOferta, setDialogRegOferta }) => {
   const { data: mallas } = useSWR(GQLregMallaCurricular.GET_MALLAS)
 
   const { data: periodos } = useSWR(GQLregOfertaAcademica.GET_PERIODOS_OFER)
+  const { data: profesores } = useSWR(GQLregOfertaAcademica.GET_PROFESORES)
+  const { data: materias } = useSWR(
+    dataAggMateria?.idtrayectocarrera && carreraOferta?.id
+      ? [
+          GQLregOfertaAcademica.MATERIAS_MALLA_OFERTA,
+          {
+            carrera: parseInt(carreraOferta.id),
+            trayecto: parseInt(dataAggMateria.idtrayectocarrera)
+          }
+        ]
+      : null
+  )
 
   const { data: detallesMallas } = useSWR(
     carreraOferta?.id
@@ -41,15 +55,112 @@ const DialogRegOferta = ({ dialogRegOferta, setDialogRegOferta }) => {
       : null
   )
 
+  function eliminarMateria() {
+    const objetoOferta = detallesMallas?.obtenerDetalleMalla.response
+    let countTrayectoMateria = 0
+
+    for (let i = 0; i < objetoOferta.length; i++) {
+      for (const key in objetoOferta[i]) {
+        if (
+          key === 'idtrayectocarrera' &&
+          objetoOferta[i][key] === dataEliminarMateriaOfer?.idtrayectocarrera
+        ) {
+          countTrayectoMateria += 1
+        }
+      }
+    }
+
+    console.log(countTrayectoMateria)
+
+    if (countTrayectoMateria > 1) {
+      for (let i = 0; i < objetoOferta.length; i++) {
+        for (const key in objetoOferta[i]) {
+          if (
+            key === 'id_materia' &&
+            objetoOferta[i][key] === dataEliminarMateriaOfer?.id_materia
+          ) {
+            detallesMallas.obtenerDetalleMalla.response =
+              detallesMallas?.obtenerDetalleMalla.response.filter(
+                (_, index) => index !== i
+              )
+          }
+        }
+      }
+    } else {
+      toast.current.show({
+        severity: 'warn',
+        summary: '¡ Atención !',
+        detail: 'El trayecto debe tener al menos una materia asignada'
+      })
+    }
+  }
+
   const acceptEliminarMateria = () => {
-    console.log('SI')
+    eliminarMateria()
   }
 
   const rejectEliminarMateria = () => {
     setDataEliminarMateriaOfer(null)
   }
 
+  function aggMateriaOferta(materia) {
+    let validateInsert = false
+
+    for (
+      let i = 0;
+      i < detallesMallas?.obtenerDetalleMalla.response.length;
+      i++
+    ) {
+      for (const key in detallesMallas?.obtenerDetalleMalla.response[i]) {
+        if (
+          key === 'id_materia' &&
+          detallesMallas?.obtenerDetalleMalla.response[i][key] ===
+            materia.id_materia
+        ) {
+          validateInsert = true
+        }
+      }
+    }
+
+    if (validateInsert) {
+      toast.current.show({
+        severity: 'warn',
+        summary: '¡ Atención !',
+        detail: 'La Materia ya se encuentra en la oferta'
+      })
+    } else {
+      detallesMallas?.obtenerDetalleMalla.response.push(materia)
+      let objetoOferta = detallesMallas?.obtenerDetalleMalla.response
+
+      const trayecto0 = objetoOferta.filter(
+        (t) => t.nb_trayecto === 'Trayecto Inicial'
+      )
+      const trayecto1 = objetoOferta.filter(
+        (t) => t.nb_trayecto === 'Trayecto I'
+      )
+      const trayecto2 = objetoOferta.filter(
+        (t) => t.nb_trayecto === 'Trayecto II'
+      )
+      const trayecto3 = objetoOferta.filter(
+        (t) => t.nb_trayecto === 'Trayecto III'
+      )
+      const trayecto4 = objetoOferta.filter(
+        (t) => t.nb_trayecto === 'Trayecto IV'
+      )
+
+      objetoOferta = trayecto0
+        .concat(trayecto1)
+        .concat(trayecto2)
+        .concat(trayecto3)
+        .concat(trayecto4)
+
+      detallesMallas.obtenerDetalleMalla.response = objetoOferta
+    }
+  }
+
   const DialogAgregarMateria = () => {
+    const [materia, setMateria] = useState(null)
+
     return (
       <Dialog
         visible={dialogAgregarMateria}
@@ -81,11 +192,13 @@ const DialogRegOferta = ({ dialogRegOferta, setDialogRegOferta }) => {
             <label htmlFor="trayecto_materia">Trayecto</label>
           </span>
           <span className="p-float-label field">
-            <InputText
+            <Dropdown
               className="w-full"
               id="nb_materia"
-              /* value={datosEditarMateria?.carrera_materia} */
-              autoComplete="off"
+              options={materias?.obtenerMateriasMalla.response}
+              value={materia}
+              onChange={(e) => setMateria(e.value)}
+              optionLabel="nb_materia"
             />
             <label htmlFor="nb_materia">Nombre de la Materia</label>
           </span>
@@ -94,6 +207,7 @@ const DialogRegOferta = ({ dialogRegOferta, setDialogRegOferta }) => {
               label="Agregar"
               icon="pi pi-plus"
               onClick={() => {
+                aggMateriaOferta(materia)
                 setDialogAgregarMateria(false)
                 setDialogRegOferta(true)
               }}
@@ -104,7 +218,27 @@ const DialogRegOferta = ({ dialogRegOferta, setDialogRegOferta }) => {
     )
   }
 
+  function asignarProfesor(personal) {
+    const objetoOferta = detallesMallas?.obtenerDetalleMalla.response
+
+    for (let i = 0; i < objetoOferta.length; i++) {
+      for (const key in objetoOferta[i]) {
+        if (
+          key === 'id_materia' &&
+          objetoOferta[i][key] === dataAsigProf?.id_materia
+        ) {
+          detallesMallas.obtenerDetalleMalla.response[i].id_personal =
+            personal?.id
+          detallesMallas.obtenerDetalleMalla.response[i].personal =
+            personal?.nombre
+        }
+      }
+    }
+  }
+
   const DialogAgregarProfesor = () => {
+    const [personal, setPersonal] = useState(null)
+
     return (
       <Dialog
         visible={dialogAgregarprofesor}
@@ -146,11 +280,13 @@ const DialogRegOferta = ({ dialogRegOferta, setDialogRegOferta }) => {
             <label htmlFor="nb_materia">Materia</label>
           </span>
           <span className="p-float-label field">
-            <InputText
+            <Dropdown
               className="w-full"
               id="nb_profesor"
-              /* value={datosEditarprofesor?.carrera_profesor} */
-              autoComplete="off"
+              value={personal}
+              options={profesores?.obtenerPersonalOferta.response}
+              onChange={(e) => setPersonal(e.value)}
+              optionLabel="nombre"
             />
             <label htmlFor="nb_profesor">Profesor</label>
           </span>
@@ -159,6 +295,7 @@ const DialogRegOferta = ({ dialogRegOferta, setDialogRegOferta }) => {
               label="Agregar"
               icon="pi pi-plus"
               onClick={() => {
+                asignarProfesor(personal)
                 setDialogAgregarprofesor(false)
                 setDialogRegOferta(true)
               }}
@@ -224,6 +361,7 @@ const DialogRegOferta = ({ dialogRegOferta, setDialogRegOferta }) => {
 
   return (
     <>
+      <Toast ref={toast} />
       <DialogAgregarMateria />
       <DialogAgregarProfesor />
       <ConfirmDialog

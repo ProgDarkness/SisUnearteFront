@@ -1,6 +1,19 @@
 import { gql } from 'graphql-request'
 
 export default {
+  GET_PROFESORES: gql`
+    query obtenerPersonalOferta {
+      obtenerPersonalOferta {
+        status
+        message
+        type
+        response {
+          id
+          nombre
+        }
+      }
+    }
+  `,
   GET_PERIODOS_OFER: gql`
     query obtenerPeridosOferta {
       obtenerPeridosOferta {
@@ -134,7 +147,25 @@ export default {
         type
         response {
           id_carrema
-          idTrayectoCarrera
+          idtrayectocarrera
+          nb_trayecto
+          id_materia
+          nb_materia
+          id_personal
+          personal
+        }
+      }
+    }
+  `,
+  MATERIAS_MALLA_OFERTA: gql`
+    query obtenerMateriasMalla($carrera: Int!, $trayecto: Int!) {
+      obtenerMateriasMalla(carrera: $carrera, trayecto: $trayecto) {
+        status
+        message
+        type
+        response {
+          id_carrema
+          idtrayectocarrera
           nb_trayecto
           id_materia
           nb_materia

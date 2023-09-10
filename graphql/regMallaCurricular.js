@@ -147,7 +147,7 @@ export default {
         type
         response {
           id_carrema
-          idTrayectoCarrera
+          idtrayectocarrera
           nb_trayecto
           id_materia
           nb_materia
