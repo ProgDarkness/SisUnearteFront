@@ -159,7 +159,7 @@ export default function Index({ children, verMenu = true }) {
             >
               Registro Oferta Academica
             </h1>
-            <h1
+            {/*  <h1
               className={`text-white font-medium rounded-md mt-2 cursor-pointer hover:bg-[#805e5e] ${
                 mostrarVistas?.inscripcionesRegulares
                   ? 'bg-[#805e5e]'
@@ -181,7 +181,7 @@ export default function Index({ children, verMenu = true }) {
               }}
             >
               Inscripcion Regular
-            </h1>
+            </h1> */}
             <h1
               className={`text-white font-medium rounded-md mt-2 cursor-pointer hover:bg-[#805e5e] ${
                 mostrarVistas?.inscripcionElectiva

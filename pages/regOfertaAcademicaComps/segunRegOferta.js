@@ -25,6 +25,7 @@ const RegistroOferta = ({ cambioVista }) => {
   const { data: ofertas, mutate } = useSWR(
     GQLregOfertaAcademica.OBTENER_OFERTAS
   )
+
   const [datosEliminarOferta, setDatosEliminarOferta] = useState(null)
 
   const deleteOferta = (variables) => {
@@ -118,6 +119,7 @@ const RegistroOferta = ({ cambioVista }) => {
       <DialogRegOferta
         dialogRegOferta={dialogRegOferta}
         setDialogRegOferta={setDialogRegOferta}
+        mutateOfertas={mutate}
       />
       <DialogRegPeriodo
         activeDialogRegPerido={activeDialogRegPerido}

@@ -10,18 +10,26 @@ import GQLregMallaCurricular from 'graphql/regMallaCurricular'
 import GQLregOfertaAcademica from 'graphql/regOfertaAcademica'
 import { Dropdown } from 'primereact/dropdown'
 import { Toast } from 'primereact/toast'
+import request from 'graphql-request'
 /* import DialogCargarHorario from './segunDialogCagarHorario' */
 
-const DialogRegOferta = ({ dialogRegOferta, setDialogRegOferta }) => {
+const DialogRegOferta = ({
+  dialogRegOferta,
+  setDialogRegOferta,
+  mutateOfertas
+}) => {
   const toast = useRef(null)
   const [codOferta, setCodOferta] = useState('')
   const [cantidadCupos, setCantidadCupos] = useState('')
   const [carreraOferta, setCarreraOferta] = useState(null)
+  const [sedeOferta, setSedeOferta] = useState(null)
   const [periodoOfer, setPeriodoOfer] = useState(null)
   const [dataAsigProf, setDataAsigProf] = useState(null)
   const [dataAggMateria, setDataAggMateria] = useState(null)
   const [dataEliminarMateriaOfer, setDataEliminarMateriaOfer] = useState(null)
   const [dialogConfirmElminarMateria, setDialogConfirmElminarMateria] =
+    useState(false)
+  const [dialogConfirmRegistrarOfert, setDialogConfirmRegistrarOfert] =
     useState(false)
   const [dialogAgregarMateria, setDialogAgregarMateria] = useState(false)
   const [dialogAgregarprofesor, setDialogAgregarprofesor] = useState(false)
@@ -31,6 +39,14 @@ const DialogRegOferta = ({ dialogRegOferta, setDialogRegOferta }) => {
   /* 16883642 */
 
   const { data: mallas } = useSWR(GQLregMallaCurricular.GET_MALLAS)
+  const { data: sedes } = useSWR(
+    carreraOferta?.id
+      ? [
+          GQLregMallaCurricular.GET_SEDE_CARRERA_MATERIA,
+          { carrera: parseInt(carreraOferta?.id) }
+        ]
+      : null
+  )
 
   const { data: periodos } = useSWR(GQLregOfertaAcademica.GET_PERIODOS_OFER)
   const { data: profesores } = useSWR(GQLregOfertaAcademica.GET_PROFESORES)
@@ -55,6 +71,87 @@ const DialogRegOferta = ({ dialogRegOferta, setDialogRegOferta }) => {
       : null
   )
 
+  const regOferta = (variables) => {
+    return request(
+      process.env.NEXT_PUBLIC_URL_BACKEND,
+      GQLregOfertaAcademica.SAVE_OFERTA_ACADEMICA,
+      variables
+    )
+  }
+
+  const acceptRegistrarOfert = () => {
+    let validacionPersonal = false
+
+    for (
+      let i = 0;
+      i < detallesMallas?.obtenerDetalleMalla.response.length;
+      i++
+    ) {
+      for (const key in detallesMallas?.obtenerDetalleMalla.response[i]) {
+        if (
+          key === 'id_personal' &&
+          detallesMallas?.obtenerDetalleMalla.response[i][key] === null
+        ) {
+          validacionPersonal = true
+        }
+      }
+    }
+
+    if (validacionPersonal) {
+      toast.current.show({
+        severity: 'warn',
+        summary: '¡ Atención !',
+        detail: 'Cada Materia debe poseer un docente asignado'
+      })
+    } else {
+      if (
+        codOferta === '' ||
+        cantidadCupos === '' ||
+        !carreraOferta ||
+        !periodoOfer ||
+        !sedeOferta
+      ) {
+        toast.current.show({
+          severity: 'error',
+          summary: '¡ Atención !',
+          detail: 'Todos los campos deben ser completados'
+        })
+      } else {
+        const InputOferta = {
+          codOferta,
+          sedeOferta: parseInt(sedeOferta.id),
+          cantidadCupos: parseInt(cantidadCupos),
+          idCarrera: parseInt(carreraOferta.id),
+          periodoOfer: parseInt(periodoOfer.id),
+          objectOferta: detallesMallas?.obtenerDetalleMalla.response
+        }
+
+        regOferta({ InputOferta }).then(
+          ({ crearOferta: { status, message, type } }) => {
+            toast.current.show({
+              severity: type,
+              summary: '¡ Atención !',
+              detail: message
+            })
+            setDataEliminarMateriaOfer(null)
+            setDataAggMateria(null)
+            setDataAsigProf(null)
+            setPeriodoOfer(null)
+            setSedeOferta(null)
+            setCarreraOferta(null)
+            setCantidadCupos('')
+            setCodOferta('')
+            mutateOfertas()
+          }
+        )
+      }
+    }
+  }
+
+  const rejectRegistrarOfert = () => {
+    setDialogConfirmRegistrarOfert(false)
+  }
+
   function eliminarMateria() {
     const objetoOferta = detallesMallas?.obtenerDetalleMalla.response
     let countTrayectoMateria = 0
@@ -69,8 +166,6 @@ const DialogRegOferta = ({ dialogRegOferta, setDialogRegOferta }) => {
         }
       }
     }
-
-    console.log(countTrayectoMateria)
 
     if (countTrayectoMateria > 1) {
       for (let i = 0; i < objetoOferta.length; i++) {
@@ -375,6 +470,17 @@ const DialogRegOferta = ({ dialogRegOferta, setDialogRegOferta }) => {
         acceptLabel="SI"
         rejectLabel="NO"
       />
+      <ConfirmDialog
+        visible={dialogConfirmRegistrarOfert}
+        onHide={() => setDialogConfirmRegistrarOfert(false)}
+        message="¿Esta seguro que desea registrar la oferta?"
+        header="Confirmacion"
+        icon="pi pi-exclamation-triangle"
+        accept={acceptRegistrarOfert}
+        reject={rejectRegistrarOfert}
+        acceptLabel="SI"
+        rejectLabel="NO"
+      />
       {/* <DialogCargarHorario
         activeDialogCargarHorario={activeDialogCargarHorario}
         setActiveDialogCargarHorario={setActiveDialogCargarHorario}
@@ -393,7 +499,7 @@ const DialogRegOferta = ({ dialogRegOferta, setDialogRegOferta }) => {
               className="w-full"
               id="new_cod_carrera"
               value={codOferta}
-              onChange={(e) => setCodOferta(e.value)}
+              onChange={(e) => setCodOferta(e.target.value)}
               autoComplete="off"
             />
             <label htmlFor="new_cod_carrera">Codigo de la Oferta</label>
@@ -410,12 +516,25 @@ const DialogRegOferta = ({ dialogRegOferta, setDialogRegOferta }) => {
             <label htmlFor="new_carrera_Oferta">Carrera de la Oferta</label>
           </span>
           <span className="p-float-label field">
+            <Dropdown
+              className="w-full"
+              id="new_sede_Oferta"
+              value={sedeOferta}
+              options={sedes?.obtenerSedesPorCarrera.response}
+              onChange={(e) => setSedeOferta(e.value)}
+              optionLabel="nombre"
+            />
+            <label htmlFor="new_sede_Oferta">Sede de la Oferta</label>
+          </span>
+          <span className="p-float-label field">
             <InputText
               className="w-full"
               id="new_tec_carrera"
               value={cantidadCupos}
-              onChange={(e) => setCantidadCupos(e.value)}
+              onChange={(e) => setCantidadCupos(e.target.value)}
               autoComplete="off"
+              keyfilter="pint"
+              maxLength={3}
             />
             <label htmlFor="new_tec_carrera">Cant. Cupos</label>
           </span>
@@ -434,7 +553,7 @@ const DialogRegOferta = ({ dialogRegOferta, setDialogRegOferta }) => {
             <Button
               label="Registrar"
               icon="pi pi-plus"
-              /* onClick={() => setDialogRegOferta(false)} */
+              onClick={() => setDialogConfirmRegistrarOfert(true)}
             />
           </div>
         </div>

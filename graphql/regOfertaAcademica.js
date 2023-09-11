@@ -1,6 +1,15 @@
 import { gql } from 'graphql-request'
 
 export default {
+  SAVE_OFERTA_ACADEMICA: gql`
+    mutation crearOferta($InputOferta: InputOferta!) {
+      crearOferta(input: $InputOferta) {
+        status
+        message
+        type
+      }
+    }
+  `,
   GET_PROFESORES: gql`
     query obtenerPersonalOferta {
       obtenerPersonalOferta {
@@ -115,13 +124,13 @@ export default {
         response {
           id_oferta
           co_oferta
+          id_periodo
           tx_mensaje
           id_carrera
           nb_carrera
           nb_tp_carrera
           nb_ciclo
           nu_cupos
-          nu_seccion
           id_sede
           nb_sede
           id_estatus_oferta
