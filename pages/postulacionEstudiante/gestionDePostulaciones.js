@@ -10,12 +10,14 @@ import GQLpostulaciones from 'graphql/postulaciones'
 import useSWR from 'swr'
 import request from 'graphql-request'
 import { Toast } from 'primereact/toast'
+import { useSesion } from 'hooks/useSesion'
 
 const GestionDePostulaciones = () => {
   const { data: listadoPostulados, mutate } = useSWR(
     GQLvistaPostulado.QUERY_LISTA_REPORTE
   )
   const toast = useRef(null)
+  const { idUser } = useSesion()
   const [activeDialogVerDatosEstudiantes, setActiveDialogVerDatosEstudiantes] =
     useState(false)
   const [dialogConfirmElminarPostulado, setDialogConfirmElminarPostulado] =
@@ -26,6 +28,7 @@ const GestionDePostulaciones = () => {
     useState(false)
   const [datosVerPostulado, setDatosVerPostulado] = useState(null)
   const [rowDataRechazar, setRowDataRechazar] = useState(null)
+  const [dataAprobarPostulacion, setDataAprobarPostulacion] = useState(null)
 
   const aprobarPostulacion = (variables) => {
     return request(
@@ -44,14 +47,14 @@ const GestionDePostulaciones = () => {
   }
 
   const acceptConfirmarPostulado = () => {
-    console.log(listadoPostulados)
     const InputAprobarPostulacion = {
-      idpostulacion: parseInt(listadoPostulados?.id_postulacion)
+      usuario: idUser,
+      idpostulacion: parseInt(dataAprobarPostulacion?.id)
     }
     aprobarPostulacion({ InputAprobarPostulacion }).then(
-      ({ aprobarPostulacion: { message } }) => {
+      ({ aprobarPostulacion: { status, message, type } }) => {
         toast.current.show({
-          severity: 'error',
+          severity: type,
           summary: '¡ Atención !',
           detail: message
         })
@@ -59,8 +62,9 @@ const GestionDePostulaciones = () => {
       }
     )
   }
+
   const rejectConfirmarPostulado = () => {
-    console.log('NO')
+    setDialogConfirmConfirmarPostulado(false)
   }
 
   const bodyEstatus = (rowData) => {
@@ -96,6 +100,7 @@ const GestionDePostulaciones = () => {
           className="p-button-success mr-1"
           tooltip="Confirmar"
           onClick={() => {
+            setDataAprobarPostulacion(rowData)
             setDialogConfirmConfirmarPostulado(true)
           }}
           tooltipOptions={{ position: 'top' }}

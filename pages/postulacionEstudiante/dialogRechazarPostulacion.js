@@ -22,6 +22,14 @@ const DialogRechazarPostulacion = ({
 
   const [txtObservacion, setObservacion] = useState(null)
 
+  const rechazarPostulacion = (variables) => {
+    return request(
+      process.env.NEXT_PUBLIC_URL_BACKEND,
+      GQLpostulaciones.RECHAZAR_POSTULACION,
+      variables
+    )
+  }
+
   useEffect(() => {
     if (listadoPostulados) {
       setTpNacionalidad(listadoPostulados?.nacionalidad.toString())
@@ -32,18 +40,10 @@ const DialogRechazarPostulacion = ({
     }
   }, [listadoPostulados])
 
-  const rechazarPostulacion = (variables) => {
-    return request(
-      process.env.NEXT_PUBLIC_URL_BACKEND,
-      GQLpostulaciones.RECHAZAR_PERSONAL,
-      variables
-    )
-  }
-
   const rechazaPostulacion = () => {
     const InputRechazarPostulacion = {
       observacion: txtObservacion,
-      idpostulacion: parseInt(listadoPostulados.id_postulacion)
+      idpostulacion: parseInt(listadoPostulados?.id)
     }
     rechazarPostulacion({ InputRechazarPostulacion }).then(
       ({ rechazarPostulacion: { status, message, type } }) => {
