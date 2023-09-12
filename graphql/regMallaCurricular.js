@@ -76,15 +76,24 @@ export default {
   GET_MALLAS: gql`
     query obtenerTodasMallas {
       obtenerTodasMallas {
+        status
+        message
+        type
         response {
-          id
-          codigo
-          nombre
-          tipo
-          ciclo
-          estatus
-          titulo
-          sede
+          mallas {
+            id
+            codigo
+            nombre
+            tipo
+            ciclo
+            estatus
+            titulo
+            sede
+          }
+          materias {
+            id
+            nombre
+          }
         }
       }
     }

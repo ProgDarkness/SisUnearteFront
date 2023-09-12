@@ -4,6 +4,8 @@ import { Dialog } from 'primereact/dialog'
 import { InputText } from 'primereact/inputtext'
 import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
+import GQLregOfertaAcademica from 'graphql/regOfertaAcademica'
+import useSWR from 'swr'
 
 const DialogVerRegOferta = ({
   activeDialogVerCarrera,
@@ -11,7 +13,16 @@ const DialogVerRegOferta = ({
   datosVerCarrera,
   setDatosVerCarrera
 }) => {
-  const [infoCarrera, setInfoCarrera] = useState(null)
+  console.log(datosVerCarrera)
+
+  const { data: detallesMallas } = useSWR(
+    datosVerCarrera?.id_carrera
+      ? [
+          GQLregOfertaAcademica.DETALLES_MALLAS_CARRERA,
+          { carrera: parseInt(datosVerCarrera?.id_carrera) }
+        ]
+      : null
+  )
 
   const animation = {
     initial: {
@@ -31,49 +42,6 @@ const DialogVerRegOferta = ({
     }
   }
 
-  useEffect(() => {
-    setInfoCarrera([
-      {
-        trayecto: 'Trayecto 1',
-        lapso: 'lapso 1',
-        materia: 'Dibujo',
-        profesor: 'Juan Manuel'
-      },
-      {
-        trayecto: 'Trayecto 1',
-        lapso: 'lapso 1',
-        materia: 'Fotografia',
-        profesor: 'Juan Manuel'
-      },
-      {
-        trayecto: 'Trayecto 1',
-        lapso: 'lapso 2',
-        materia: 'Arte',
-        profesor: 'Juan Manuel'
-      },
-      {
-        trayecto: 'Trayecto 1',
-        lapso: 'lapso 2',
-        materia: 'Fotografia 2',
-        profesor: 'Juan Manuel'
-      },
-      /* ------------------------------------ */
-      {
-        trayecto: 'Trayecto 2',
-        lapso: 'lapso 1',
-        materia: 'Dibujo',
-        profesor: 'Juan Manuel'
-      },
-      {
-        trayecto: 'Trayecto 2',
-        lapso: 'lapso 2',
-        materia: 'Arte',
-        profesor: 'Juan Manuel'
-      }
-      /* ------------------------------------- */
-    ])
-  }, [])
-
   return (
     <Dialog
       visible={activeDialogVerCarrera}
@@ -91,7 +59,7 @@ const DialogVerRegOferta = ({
           <InputText
             className="w-full"
             id="cod_carrera"
-            value={datosVerCarrera?.cod_carrera}
+            value={datosVerCarrera?.nb_estatus_oferta}
             disabled
           />
           <label htmlFor="cod_carrera">Estatus de la Carrera</label>
@@ -114,13 +82,14 @@ const DialogVerRegOferta = ({
       >
         <div className="col-span-4 mt-3">
           <DataTable
-            value={infoCarrera}
+            value={detallesMallas?.obtenerDetalleMalla.response}
             emptyMessage="No se encuentran trayectos registrados."
             rowGroupMode="rowspan"
-            groupRowsBy={['trayecto']}
+            groupRowsBy={['nb_trayecto']}
           >
-            <Column field="trayecto" header="Trayectos" />
-            <Column field="materia" header="Materias" />
+            <Column field="nb_trayecto" header="Trayectos" />
+            <Column field="nb_materia" header="Materias" />
+            <Column field="personal" header="Profesores" />
           </DataTable>
         </div>
       </motion.div>

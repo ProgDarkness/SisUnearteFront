@@ -62,7 +62,7 @@ const DialogRegOferta = ({
       : null
   )
 
-  const { data: detallesMallas } = useSWR(
+  const { data: detallesMallas, mutate } = useSWR(
     carreraOferta?.id
       ? [
           GQLregOfertaAcademica.DETALLES_MALLAS_CARRERA,
@@ -263,6 +263,7 @@ const DialogRegOferta = ({
           setDialogAgregarMateria(false)
           setDialogRegOferta(true)
           setDataAggMateria(null)
+          setMateria(null)
         }}
         header="Agregar Materia"
         resizable={false}
@@ -305,6 +306,7 @@ const DialogRegOferta = ({
                 aggMateriaOferta(materia)
                 setDialogAgregarMateria(false)
                 setDialogRegOferta(true)
+                setMateria(null)
               }}
             />
           </div>
@@ -341,6 +343,7 @@ const DialogRegOferta = ({
           setDialogAgregarprofesor(false)
           setDialogRegOferta(true)
           setDataAsigProf(null)
+          setPersonal(null)
         }}
         header="Agregar profesor"
         resizable={false}
@@ -393,6 +396,7 @@ const DialogRegOferta = ({
                 asignarProfesor(personal)
                 setDialogAgregarprofesor(false)
                 setDialogRegOferta(true)
+                setPersonal(null)
               }}
             />
           </div>
@@ -488,7 +492,18 @@ const DialogRegOferta = ({
 
       <Dialog
         visible={dialogRegOferta}
-        onHide={() => setDialogRegOferta(false)}
+        onHide={() => {
+          setDialogRegOferta(false)
+          setDataEliminarMateriaOfer(null)
+          setDataAggMateria(null)
+          setDataAsigProf(null)
+          setPeriodoOfer(null)
+          setSedeOferta(null)
+          setCarreraOferta(null)
+          setCantidadCupos('')
+          setCodOferta('')
+          mutate()
+        }}
         header="Registro de la Oferta"
         resizable={false}
         draggable={false}
@@ -499,7 +514,7 @@ const DialogRegOferta = ({
               className="w-full"
               id="new_cod_carrera"
               value={codOferta}
-              onChange={(e) => setCodOferta(e.target.value)}
+              onChange={(e) => setCodOferta(e.target.value.toUpperCase())}
               autoComplete="off"
             />
             <label htmlFor="new_cod_carrera">Codigo de la Oferta</label>
@@ -509,7 +524,7 @@ const DialogRegOferta = ({
               className="w-full"
               id="new_carrera_Oferta"
               value={carreraOferta}
-              options={mallas?.obtenerTodasMallas.response}
+              options={mallas?.obtenerTodasMallas.response.mallas}
               onChange={(e) => setCarreraOferta(e.value)}
               optionLabel="nombre"
             />

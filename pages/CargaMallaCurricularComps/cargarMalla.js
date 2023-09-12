@@ -136,7 +136,7 @@ const CargarMalla = ({ cambioVista }) => {
       />
       <div className="col-span-5">
         <DataTable
-          value={mallas?.obtenerTodasMallas.response}
+          value={mallas?.obtenerTodasMallas.response.mallas}
           emptyMessage="No hay carreras registradas."
         >
           <Column field="codigo" header="Codigo" />

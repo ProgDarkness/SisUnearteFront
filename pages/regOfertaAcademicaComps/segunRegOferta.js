@@ -146,7 +146,7 @@ const RegistroOferta = ({ cambioVista }) => {
         activeDialogEditarCarrera={dialogEditarCarrera}
         setActiveDialogEditarCarrera={setDialogEditarCarrera}
         datosEditarCarrera={datosEditarCarrera}
-        setDatosEditarCarrera={setDatosEditarCarrera}
+        mutateOfertas={mutate}
       />
       <div className="grid grid-cols-5 gap-4 m-2 -mt-2">
         <div className="col-span-5 flex justify-between">

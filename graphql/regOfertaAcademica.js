@@ -10,6 +10,15 @@ export default {
       }
     }
   `,
+  EDIT_OFERTA_ACADEMICA: gql`
+    mutation editarOferta($idOferta: Int!, $InputOferta: InputOferta!) {
+      editarOferta(idOferta: $idOferta, input: $InputOferta) {
+        status
+        message
+        type
+      }
+    }
+  `,
   GET_PROFESORES: gql`
     query obtenerPersonalOferta {
       obtenerPersonalOferta {
