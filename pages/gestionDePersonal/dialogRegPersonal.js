@@ -7,7 +7,6 @@ import useSWR from 'swr'
 import { useRef, useState } from 'react'
 import request from 'graphql-request'
 import { Toast } from 'primereact/toast'
-import { calcLength } from 'framer-motion'
 
 const { Dialog } = require('primereact/dialog')
 
@@ -29,6 +28,7 @@ const DialogRegPersonal = ({
   const [tpPersonal, setTpPersonal] = useState(null)
   const [tpSexo, setTpSexo] = useState(null)
   const [tpCivil, setTpCivil] = useState(null)
+  const [tpDepartamento, setTpDepartamento] = useState(null)
 
   const { data: tiposNacionalidad } = useSWR(
     GQLconsultasGenerales.GET_NACIONALIDADES
@@ -41,6 +41,9 @@ const DialogRegPersonal = ({
   )
   const { data: tiposSexo } = useSWR(GQLconsultasGenerales.GET_SEXO)
   const { data: tiposCivil } = useSWR(GQLconsultasGenerales.GET_ESTADOS_CIVILES)
+  const { data: tiposDepartamento } = useSWR(
+    GQLconsultasGenerales.GET_DEPARTAMENTO
+  )
 
   const crearPersonal = (variables) => {
     return request(
@@ -81,7 +84,8 @@ const DialogRegPersonal = ({
       cargahoraria: parseInt(cargaPersonal),
       profesion: parseInt(tpProfesion),
       sexo: parseInt(tpSexo),
-      civil: parseInt(tpCivil)
+      civil: parseInt(tpCivil),
+      departamento: parseInt(tpDepartamento)
     }
     console.log(InputPersonal)
     crearPersonal({ InputPersonal }).then(
@@ -97,6 +101,8 @@ const DialogRegPersonal = ({
         setTpPersonal(null)
         setProfesiones(null)
         setTpSexo('')
+        setTpCivil('')
+        setTpDepartamento('')
         toast.current.show({
           severity: type,
           summary: '¡ Atención !',
@@ -252,6 +258,18 @@ const DialogRegPersonal = ({
             />
             <label htmlFor="cargahoraria">Carga Horaria</label>
           </span>
+          <span className="p-float-label field">
+            <Dropdown
+              className="w-full"
+              id="departamento"
+              value={tpDepartamento}
+              options={tiposDepartamento?.obtenerTipoDepartamento.response}
+              onChange={(e) => setTpDepartamento(e.value)}
+              optionLabel="nombre"
+              optionValue="id"
+            />
+            <label htmlFor="departamento">Departamento</label>
+          </span>
           <div className="flex my-auto col-span-4 justify-center">
             <Button
               label="Registrar"
@@ -269,7 +287,8 @@ const DialogRegPersonal = ({
                 !correoPersonal ||
                 !tpPersonal ||
                 !tpProfesion ||
-                !cargaPersonal
+                !cargaPersonal ||
+                !tpDepartamento
               }
             />
           </div>

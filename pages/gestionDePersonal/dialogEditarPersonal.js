@@ -30,8 +30,6 @@ const DialogEditarPersonal = ({
   const [tpSexo, setTpSexo] = useState(null)
   const [tpCivil, setTpCivil] = useState(null)
 
-  console.log(datosEditarPersonal)
-
   const { data: tiposNacionalidad } = useSWR(
     GQLconsultasGenerales.GET_NACIONALIDADES
   )

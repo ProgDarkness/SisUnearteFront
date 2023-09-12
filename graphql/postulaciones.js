@@ -37,5 +37,27 @@ export default {
         type
       }
     }
+  `,
+  RECHAZAR_POSTULACION: gql`
+    mutation rechazarPostulacion(
+      $InputRechazarPostulacion: InputRechazarPostulacion!
+    ) {
+      rechazarPostulacion(input: $InputRechazarPostulacion) {
+        status
+        message
+        type
+      }
+    }
+  `,
+  APROBAR_POSTULACION: gql`
+    mutation aprobarPostulacion(
+      $InputAprobarPostulacion: InputAprobarPostulacion!
+    ) {
+      aprobarPostulacion(input: $InputAprobarPostulacion) {
+        status
+        message
+        type
+      }
+    }
   `
 }

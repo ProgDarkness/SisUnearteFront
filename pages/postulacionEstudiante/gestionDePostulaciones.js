@@ -1,41 +1,39 @@
 import { DataTable } from 'primereact/datatable'
 import { Column } from 'primereact/column'
 import { Button } from 'primereact/button'
-import { useEffect, useState } from 'react'
+import { useRef, useState } from 'react'
 import DialogDatosEstudiantes from 'pages/postulacionEstudiante/dialogDatosEstudiantes'
+import DialogRechazarPostulacion from './dialogRechazarPostulacion'
 import { ConfirmDialog } from 'primereact/confirmdialog'
 import GQLvistaPostulado from 'graphql/vistaPostulado'
+import GQLpostulaciones from 'graphql/postulaciones'
 import useSWR from 'swr'
+import request from 'graphql-request'
+import { Toast } from 'primereact/toast'
 
 const GestionDePostulaciones = () => {
   const { data: listadoPostulados, mutate } = useSWR(
     GQLvistaPostulado.QUERY_LISTA_REPORTE
   )
-  const [datosPostulados, setDatosPostulados] = useState([])
+  const toast = useRef(null)
   const [activeDialogVerDatosEstudiantes, setActiveDialogVerDatosEstudiantes] =
     useState(false)
   const [dialogConfirmElminarPostulado, setDialogConfirmElminarPostulado] =
     useState(false)
   const [dialogConfirmConfirmarPostulado, setDialogConfirmConfirmarPostulado] =
     useState(false)
+  const [activeDialogRechazarPostulacion, setActiveDialogRechazarPostulacion] =
+    useState(false)
   const [datosVerPostulado, setDatosVerPostulado] = useState(null)
-  console.log(listadoPostulados)
+  const [rowDataRechazar, setRowDataRechazar] = useState(null)
 
-  useEffect(() => {
-    setDatosPostulados([
-      {
-        nacionalidad: 'V',
-        cedula: '15.681.973',
-        nombre: 'Kendrickv',
-        apellido: 'Lamar',
-        fecha_de_postulacion: '10/08/2023',
-        carrera: 'Artes Plasticas',
-        periodo: 'Basico Comun',
-        tipo_de_periodo: 'Pre-Grado',
-        estatus: 'Activo'
-      }
-    ])
-  }, [])
+  const aprobarPostulacion = (variables) => {
+    return request(
+      process.env.NEXT_PUBLIC_URL_BACKEND,
+      GQLpostulaciones.APROBAR_POSTULACION,
+      variables
+    )
+  }
 
   const acceptElminarPostulado = () => {
     console.log('SI')
@@ -46,7 +44,20 @@ const GestionDePostulaciones = () => {
   }
 
   const acceptConfirmarPostulado = () => {
-    console.log('SI')
+    console.log(listadoPostulados)
+    const InputAprobarPostulacion = {
+      idpostulacion: parseInt(listadoPostulados?.id_postulacion)
+    }
+    aprobarPostulacion({ InputAprobarPostulacion }).then(
+      ({ aprobarPostulacion: { message } }) => {
+        toast.current.show({
+          severity: 'error',
+          summary: '¡ Atención !',
+          detail: message
+        })
+        mutate()
+      }
+    )
   }
   const rejectConfirmarPostulado = () => {
     console.log('NO')
@@ -55,7 +66,7 @@ const GestionDePostulaciones = () => {
   const bodyEstatus = (rowData) => {
     let colorTag = ''
     if (rowData.estatus === 'Pendiente por ser revisado') {
-      colorTag = '#cdcdcd'
+      colorTag = '#114555'
     } else {
       colorTag = '#nb45tg'
     }
@@ -92,9 +103,13 @@ const GestionDePostulaciones = () => {
         <Button
           icon="pi pi-times"
           className="p-button-danger"
-          tooltip="Eliminar"
+          tooltip="Rechazar"
           tooltipOptions={{ position: 'top' }}
-          onClick={() => setDialogConfirmElminarPostulado(true)}
+          onClick={() => {
+            setActiveDialogRechazarPostulacion(true)
+            setRowDataRechazar(rowData)
+            /* setDialogConfirmElminarPostulado(true) */
+          }}
         />
       </div>
     )
@@ -102,10 +117,17 @@ const GestionDePostulaciones = () => {
 
   return (
     <div>
+      <Toast ref={toast} />
       <DialogDatosEstudiantes
         activeDialogVerDatosEstudiantes={activeDialogVerDatosEstudiantes}
         setActiveDialogVerDatosEstudiantes={setActiveDialogVerDatosEstudiantes}
         datosVerPostulado={datosVerPostulado}
+      />
+      <DialogRechazarPostulacion
+        activeDialogRechazarPostulacion={activeDialogRechazarPostulacion}
+        setActiveDialogRechazarPostulacion={setActiveDialogRechazarPostulacion}
+        listadoPostulados={rowDataRechazar}
+        mutatePostulado={mutate}
       />
       <div className="text-3xl font-semibold text-white text-center mr-32 mb-6 -mt-3">
         <h1>Gestion De Postulaciones</h1>

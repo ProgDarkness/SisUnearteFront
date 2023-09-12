@@ -303,5 +303,15 @@ export default {
         }
       }
     }
+  `,
+  GET_DEPARTAMENTO: gql`
+    query obtenerTipoDepartamento {
+      obtenerTipoDepartamento {
+        response {
+          id
+          nombre
+        }
+      }
+    }
   `
 }
