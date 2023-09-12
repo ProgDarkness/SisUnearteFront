@@ -16,6 +16,7 @@ import GestionDePostulaciones from '../postulacionEstudiante/gestionDePostulacio
 import InformacionDelEstudiante from '../informacionDelEstudianteComps/informacionDelEstudiante'
 import GestionDePersonal from 'pages/gestionDePersonal/gestionDePersonal'
 import RegistrarMateria from 'pages/CargaDeMaterias/registrarMateria'
+import Inicio from './inicio'
 import PruebasImportExport from './pruebasImportExport'
 
 const VistasContext = createContext({})
@@ -33,7 +34,8 @@ export default function index({ data }) {
     gestionDePostulaciones: false,
     informacionDelEstudiante: false,
     pruebasImportExport: false,
-    gestionDePersonal: false
+    gestionDePersonal: false,
+    inicio: true
   }
   const [mostrarVistas, setMostrarVistas] = useState(templateContext)
 
@@ -77,6 +79,7 @@ export default function index({ data }) {
                   </div>
                 </div>
               )}
+              {mostrarVistas?.inicio && <Inicio />}
               {mostrarVistas?.inscripcionElectiva && <InscripcionElectiva />}
               {mostrarVistas?.postulaciones && <Postulaciones data={data} />}
               {mostrarVistas?.cargaMallaCurricular && <CargaMallaCurricular />}

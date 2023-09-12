@@ -105,27 +105,31 @@ const GestionDePostulaciones = () => {
             setActiveDialogVerDatosEstudiantes(true)
           }}
         />
-        <Button
-          icon="pi pi-check"
-          className="p-button-success mr-1"
-          tooltip="Confirmar"
-          onClick={() => {
-            setDataAprobarPostulacion(rowData)
-            setDialogConfirmConfirmarPostulado(true)
-          }}
-          tooltipOptions={{ position: 'top' }}
-        />
-        <Button
-          icon="pi pi-times"
-          className="p-button-danger"
-          tooltip="Rechazar"
-          tooltipOptions={{ position: 'top' }}
-          onClick={() => {
-            setActiveDialogRechazarPostulacion(true)
-            setRowDataRechazar(rowData)
-            /* setDialogConfirmElminarPostulado(true) */
-          }}
-        />
+        {rowData.estatus === 'Pendiente por ser revisado' && (
+          <>
+            <Button
+              icon="pi pi-check"
+              className="p-button-success mr-1"
+              tooltip="Confirmar"
+              onClick={() => {
+                setDataAprobarPostulacion(rowData)
+                setDialogConfirmConfirmarPostulado(true)
+              }}
+              tooltipOptions={{ position: 'top' }}
+            />
+            <Button
+              icon="pi pi-times"
+              className="p-button-danger"
+              tooltip="Rechazar"
+              tooltipOptions={{ position: 'top' }}
+              onClick={() => {
+                setActiveDialogRechazarPostulacion(true)
+                setRowDataRechazar(rowData)
+                /* setDialogConfirmElminarPostulado(true) */
+              }}
+            />
+          </>
+        )}
       </div>
     )
   }

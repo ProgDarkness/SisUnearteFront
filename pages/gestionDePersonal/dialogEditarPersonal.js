@@ -130,6 +130,7 @@ const DialogEditarPersonal = ({
       header="Editar Personal"
       visible={activeDialogEditarPersonal}
       onHide={() => setActiveDialogEditarPersonal(false)}
+      style={{ width: '60%' }}
     >
       <div className="grid grid-cols-4 gap-4 pt-2">
         <Toast ref={toast} />
@@ -245,7 +246,7 @@ const DialogEditarPersonal = ({
           />
           <label htmlFor="tipo">Tipo de Personal</label>
         </span>
-        <span className="p-float-label field">
+        <span className="p-float-label field col-span-2">
           <Dropdown
             className="w-full"
             id="profesion"

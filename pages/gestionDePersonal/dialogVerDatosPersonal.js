@@ -176,7 +176,7 @@ const DialogVerDatosPersonal = ({
           />
           <label htmlFor="tipo">Tipo de Personal</label>
         </span>
-        <span className="p-float-label field">
+        <span className="p-float-label field col-span-2">
           <Dropdown
             className="w-full"
             id="profesion"
@@ -200,6 +200,13 @@ const DialogVerDatosPersonal = ({
           <label htmlFor="cargahoraria">Carga Horaria</label>
         </span>
       </div>
+      {/* eslint-disable-next-line react/no-unknown-property */}
+      <style jsx global>{`
+        .p-disabled,
+        .p-component:disabled {
+          opacity: 0.9;
+        }
+      `}</style>
     </Dialog>
   )
 }

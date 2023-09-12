@@ -81,7 +81,7 @@ const DialogRegPersonal = ({
         process.env.NEXT_PUBLIC_SECRET_KEY
       ).toString(),
       username: nombrePersonal,
-      rol: tpRol,
+      rol: parseInt(tpRol),
       nacionalidad: parseInt(tpNacionalidad),
       cedula: parseInt(cedulaPersonal),
       nombre: nombrePersonal,
@@ -112,6 +112,7 @@ const DialogRegPersonal = ({
         setTpSexo('')
         setTpCivil('')
         setTpDepartamento('')
+        setTpRol(null)
         toast.current.show({
           severity: type,
           summary: '¡ Atención !',
@@ -129,6 +130,7 @@ const DialogRegPersonal = ({
         header="Registrar Personal"
         visible={activeDialogRegPersonal}
         onHide={() => setActiveDialogRegPersonal(false)}
+        style={{ width: '60%' }}
       >
         <div className="grid grid-cols-4 gap-4 pt-2">
           <span className="p-float-label field">
@@ -245,7 +247,7 @@ const DialogRegPersonal = ({
             />
             <label htmlFor="tipo">Tipo de Personal</label>
           </span>
-          <span className="p-float-label field">
+          <span className="p-float-label field col-span-2">
             <Dropdown
               className="w-full"
               id="profesion"

@@ -75,5 +75,15 @@ export default {
         }
       }
     }
+  `,
+  GET_PERMISO_POSTULACION: gql`
+    query obtenerPermisoPostulacion($idUser: Int!) {
+      obtenerPermisoPostulacion(idUser: $idUser) {
+        status
+        message
+        type
+        response
+      }
+    }
   `
 }

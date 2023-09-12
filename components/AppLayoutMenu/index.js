@@ -1,15 +1,43 @@
 import AppLayout from 'components/AppLayout'
 import { VistasContext } from 'pages/inicio'
 import { useContext } from 'react'
+import GQLpostulaciones from 'graphql/postulaciones'
+import useSWR from 'swr'
+import { useSesion } from 'hooks/useSesion'
 
 export default function Index({ children, verMenu = true }) {
+  const { idUser } = useSesion()
   const { mostrarVistas, setMostrarVistas } = useContext(VistasContext)
+
+  const { data: permisoPostulacion } = useSWR(
+    idUser ? [GQLpostulaciones.GET_PERMISO_POSTULACION, { idUser }] : null
+  )
 
   return (
     <AppLayout>
       <div className="flex flex-row items-stretch w-full h-full">
         <div className="basis-[10rem] -mt-24 bg-[#805e5e] mr-3 p-2">
           <div className="bg-[#ae8e8e9e] h-full w-full rounded-md text-center p-2 overflow-y-auto">
+            <h1
+              className={`text-white font-medium text-sm rounded-md mt-2 cursor-pointer hover:bg-[#805e5e] ${
+                mostrarVistas?.inicio ? 'bg-[#805e5e]' : 'bg-[#ae8e8e]'
+              }`}
+              onClick={() => {
+                const newVistas = {
+                  [`inicio`]: !mostrarVistas?.inicio
+                }
+                setMostrarVistas((prevState) => ({
+                  ...prevState,
+                  ...newVistas,
+                  ...Object.keys(prevState).reduce((acc, key) => {
+                    if (key !== 'inicio') acc[key] = false
+                    return acc
+                  }, {})
+                }))
+              }}
+            >
+              Inicio
+            </h1>
             <h1
               className={`text-white font-medium text-sm rounded-md mt-2 cursor-pointer hover:bg-[#805e5e] ${
                 mostrarVistas?.registroPrevio ? 'bg-[#805e5e]' : 'bg-[#ae8e8e]'
@@ -52,26 +80,28 @@ export default function Index({ children, verMenu = true }) {
             >
               Gestion de Personal
             </h1>
-            <h1
-              className={`text-white font-medium rounded-md mt-2 cursor-pointer hover:bg-[#805e5e] ${
-                mostrarVistas?.postulaciones ? 'bg-[#805e5e]' : 'bg-[#ae8e8e]'
-              }`}
-              onClick={() => {
-                const newVistas = {
-                  [`postulaciones`]: !mostrarVistas?.postulaciones
-                }
-                setMostrarVistas((prevState) => ({
-                  ...prevState,
-                  ...newVistas,
-                  ...Object.keys(prevState).reduce((acc, key) => {
-                    if (key !== 'postulaciones') acc[key] = false
-                    return acc
-                  }, {})
-                }))
-              }}
-            >
-              Postulacion
-            </h1>
+            {permisoPostulacion?.obtenerPermisoPostulacion.response && (
+              <h1
+                className={`text-white font-medium rounded-md mt-2 cursor-pointer hover:bg-[#805e5e] ${
+                  mostrarVistas?.postulaciones ? 'bg-[#805e5e]' : 'bg-[#ae8e8e]'
+                }`}
+                onClick={() => {
+                  const newVistas = {
+                    [`postulaciones`]: !mostrarVistas?.postulaciones
+                  }
+                  setMostrarVistas((prevState) => ({
+                    ...prevState,
+                    ...newVistas,
+                    ...Object.keys(prevState).reduce((acc, key) => {
+                      if (key !== 'postulaciones') acc[key] = false
+                      return acc
+                    }, {})
+                  }))
+                }}
+              >
+                Postulacion
+              </h1>
+            )}
             <h1
               className={`text-white font-medium rounded-md mt-2 cursor-pointer hover:bg-[#805e5e] ${
                 mostrarVistas?.gestionDePostulaciones
