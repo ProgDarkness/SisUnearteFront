@@ -9,8 +9,10 @@ import { useSesion } from 'hooks/useSesion'
 import { ConfirmDialog } from 'primereact/confirmdialog'
 import useSWR from 'swr'
 import request from 'graphql-request'
+import { useRouter } from 'next/router'
 
 const Postulaciones = ({ data }) => {
+  const router = useRouter()
   const [activeDialogVerMalla, setActiveDialogVerMalla] = useState(false)
   const [datosVerMalla, setDatosVerMalla] = useState(null)
   const [datosPostularse, setDatosPostularse] = useState(null)
@@ -39,7 +41,7 @@ const Postulaciones = ({ data }) => {
       }),
       idOferta: datosPostularse?.id_oferta
     }
-    
+
     crearPostulacion({ InputPostulacion }).then(
       ({ crearPostulacion: { status, message, type } }) => {
         toast.current.show({
@@ -48,6 +50,7 @@ const Postulaciones = ({ data }) => {
           detail: message,
           life: 3000
         })
+        router.reload()
       }
     )
   }
