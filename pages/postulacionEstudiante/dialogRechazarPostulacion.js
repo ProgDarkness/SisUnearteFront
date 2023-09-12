@@ -11,7 +11,8 @@ const DialogRechazarPostulacion = ({
   activeDialogRechazarPostulacion,
   setActiveDialogRechazarPostulacion,
   listadoPostulados,
-  mutatePostulado
+  mutatePostulado,
+  setReload
 }) => {
   const toast = useRef(null)
   const [tpNacionalidad, setTpNacionalidad] = useState(null)
@@ -47,6 +48,7 @@ const DialogRechazarPostulacion = ({
     }
     rechazarPostulacion({ InputRechazarPostulacion }).then(
       ({ rechazarPostulacion: { status, message, type } }) => {
+        setReload(false)
         setObservacion('')
         toast.current.show({
           severity: type,
@@ -55,6 +57,9 @@ const DialogRechazarPostulacion = ({
         })
         mutatePostulado()
         setActiveDialogRechazarPostulacion(false)
+        setTimeout(() => {
+          setReload(true)
+        }, 50)
       }
     )
   }
@@ -65,19 +70,19 @@ const DialogRechazarPostulacion = ({
       onHide={() => {
         setActiveDialogRechazarPostulacion(false)
       }}
-      style={{ height: '70%' }}
+      style={{ height: '45%' }}
       header="Datos del Postulado"
       resizable={false}
       draggable={false}
       className="m-2 -mt-2"
     >
       <div className="w-full text-center">
-        <h1 className="text-3xl font-semibold text-white">
+        <h1 className="text-3xl font-semibold text-white mb-4">
           Rechazar Postulación
         </h1>
       </div>
 
-      <div className="grid grid-cols-4 gap-4 pt-2">
+      <div className="grid grid-cols-5 gap-4 pt-2">
         <Toast ref={toast} />
         <span className="p-float-label field">
           <InputText
@@ -134,10 +139,7 @@ const DialogRechazarPostulacion = ({
           />
           <label htmlFor="carreraPostulado">Carrera</label>
         </span>
-      </div>
-
-      <div className="grid grid-cols-1 gap-2 mt-1">
-        <span className="p-float-label field">
+        <span className="p-float-label field col-span-5">
           <InputTextarea
             className="w-full"
             id="txtObservacion"
@@ -149,7 +151,7 @@ const DialogRechazarPostulacion = ({
           />
           <label htmlFor="txtObservacion">Observación</label>
         </span>
-        <div className="flex my-auto col-span-4 justify-center">
+        <div className="flex my-auto col-span-5 justify-center">
           <Button
             label="Guardar"
             icon="pi pi-plus"
@@ -159,25 +161,13 @@ const DialogRechazarPostulacion = ({
         </div>
       </div>
 
+      <div className="grid grid-cols-1 gap-2 mt-1"></div>
+
       {/*  eslint-disable-next-line react/no-unknown-property */}
       <style jsx global>{`
-        .p-button.p-button-text:enabled:active,
-        .p-button.p-button-text:not(button):not(a):not(.p-disabled):active,
-        .p-button.p-button-outlined:enabled:active,
-        .p-button.p-button-outlined:not(button):not(a):not(.p-disabled):active {
-          background: rgb(204 57 23/75%);
-          color: white;
-        }
-        .p-button.p-button-text:enabled:hover,
-        .p-button.p-button-text:not(button):not(a):not(.p-disabled):hover {
-          background: #88250e;
-          color: #fff;
-          border-color: transparent;
-        }
-        .p-button.p-button-text {
-          background-color: #3452b4;
-          color: #ffffff;
-          border-color: transparent;
+        .p-disabled,
+        .p-component:disabled {
+          opacity: 1;
         }
       `}</style>
     </Dialog>

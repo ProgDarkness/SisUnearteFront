@@ -59,5 +59,21 @@ export default {
         type
       }
     }
+  `,
+  GET_OFERTAS_ACADEMICAS: gql`
+    query obtenerOfertaPostu {
+      obtenerOfertaPostu {
+        status
+        message
+        type
+        response {
+          id_oferta
+          id_carrera
+          nb_carrera
+          id_sede
+          nb_sede
+        }
+      }
+    }
   `
 }

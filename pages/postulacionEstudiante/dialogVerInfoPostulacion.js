@@ -3,10 +3,9 @@ import { Column } from 'primereact/column'
 import { DataTable } from 'primereact/datatable'
 import { Dialog } from 'primereact/dialog'
 import { InputText } from 'primereact/inputtext'
-import GQLregMallaCurricular from 'graphql/regMallaCurricular'
+import GQLregOfertaAcademica from 'graphql/regOfertaAcademica'
 import { motion } from 'framer-motion'
 import useSWR from 'swr'
-import GQLusuarios from 'graphql/usuarios'
 
 const DialogVerInfoPostulacion = ({
   activeDialogVerMalla,
@@ -17,17 +16,11 @@ const DialogVerInfoPostulacion = ({
   const { data: infoMalla } = useSWR(
     datosVerMalla?.id_carrera
       ? [
-          GQLregMallaCurricular.VER_DETALLE_CARRERA,
-          {
-            InputCarrera: {
-              carrera: parseInt(datosVerMalla?.id_carrera)
-            }
-          }
+          GQLregOfertaAcademica.DETALLES_MALLAS_CARRERA,
+          { carrera: parseInt(datosVerMalla?.id_carrera) }
         ]
       : null
   )
-
-  console.log(datosVerMalla)
 
   const animation = {
     initial: {
@@ -54,7 +47,7 @@ const DialogVerInfoPostulacion = ({
         setActiveDialogVerMalla(false)
         setDatosVerMalla(null)
       }}
-      style={{ height: '90%' }}
+      style={{ width: '60%' }}
       header="Ver Malla Curricular"
       resizable={false}
       draggable={false}
@@ -78,13 +71,14 @@ const DialogVerInfoPostulacion = ({
       >
         <div className="col-span-2 mt-3">
           <DataTable
-            value={infoMalla?.obtenerDetalleCarrera.response}
+            value={infoMalla?.obtenerDetalleMalla.response}
             emptyMessage="No se encuentran trayectos registrados."
             rowGroupMode="rowspan"
-            groupRowsBy={['nb_trayecto', 'nb_materia']}
+            groupRowsBy={['nb_trayecto']}
           >
             <Column field="nb_trayecto" header="Trayectos" />
             <Column field="nb_materia" header="Materias" />
+            <Column field="personal" header="Profesores" />
           </DataTable>
         </div>
       </motion.div>

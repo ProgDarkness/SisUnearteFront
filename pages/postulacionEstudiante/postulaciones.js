@@ -4,7 +4,6 @@ import { DataTable } from 'primereact/datatable'
 import { Column } from 'primereact/column'
 import { Toast } from 'primereact/toast'
 import DialogVerInfoPostulacion from 'pages/postulacionEstudiante/dialogVerInfoPostulacion'
-import GQLregMallaCurricular from 'graphql/regMallaCurricular'
 import GQLpostulaciones from 'graphql/postulaciones'
 import { useSesion } from 'hooks/useSesion'
 import { ConfirmDialog } from 'primereact/confirmdialog'
@@ -18,9 +17,7 @@ const Postulaciones = ({ data }) => {
   const [confirmPostulacion, setConfirmPostulacion] = useState(false)
   const { rolUser, idUser } = useSesion()
   const toast = useRef(null)
-  const { data: carreraSedes } = useSWR(
-    GQLregMallaCurricular.GET_SEDES_CARRERAS
-  )
+  const { data: carreraSedes } = useSWR(GQLpostulaciones.GET_OFERTAS_ACADEMICAS)
 
   const crearPostulacion = (variables) => {
     return request(
@@ -39,8 +36,10 @@ const Postulaciones = ({ data }) => {
         day: '2-digit',
         month: '2-digit',
         year: 'numeric'
-      })
+      }),
+      idOferta: datosPostularse?.id_oferta
     }
+    
     crearPostulacion({ InputPostulacion }).then(
       ({ crearPostulacion: { status, message, type } }) => {
         toast.current.show({
@@ -114,7 +113,7 @@ const Postulaciones = ({ data }) => {
       <div className="mt-3">
         <div className="col-span-5">
           <DataTable
-            value={carreraSedes?.obtenerSedeCarreras}
+            value={carreraSedes?.obtenerOfertaPostu.response}
             emptyMessage="No hay carreras registradas."
             filterDisplay="row"
             id="filter"

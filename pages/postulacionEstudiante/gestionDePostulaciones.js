@@ -16,6 +16,7 @@ const GestionDePostulaciones = () => {
   const { data: listadoPostulados, mutate } = useSWR(
     GQLvistaPostulado.QUERY_LISTA_REPORTE
   )
+  const [reload, setReload] = useState(true)
   const toast = useRef(null)
   const { idUser } = useSesion()
   const [activeDialogVerDatosEstudiantes, setActiveDialogVerDatosEstudiantes] =
@@ -53,12 +54,16 @@ const GestionDePostulaciones = () => {
     }
     aprobarPostulacion({ InputAprobarPostulacion }).then(
       ({ aprobarPostulacion: { status, message, type } }) => {
+        setReload(false)
         toast.current.show({
           severity: type,
           summary: '¡ Atención !',
           detail: message
         })
         mutate()
+        setTimeout(() => {
+          setReload(true)
+        }, 50)
       }
     )
   }
@@ -70,13 +75,18 @@ const GestionDePostulaciones = () => {
   const bodyEstatus = (rowData) => {
     let colorTag = ''
     if (rowData.estatus === 'Pendiente por ser revisado') {
-      colorTag = '#114555'
-    } else {
-      colorTag = '#nb45tg'
+      colorTag = '#229ec3'
+    } else if (rowData.estatus === 'Rechazado') {
+      colorTag = '#c32222'
+    } else if (rowData.estatus === 'Aprobado') {
+      colorTag = '#10b142'
     }
 
     return (
-      <div className="rounded-lg p-1" style={{ backgroundColor: colorTag }}>
+      <div
+        className="rounded-lg p-2 text-center"
+        style={{ backgroundColor: colorTag }}
+      >
         {rowData.estatus}
       </div>
     )
@@ -133,6 +143,7 @@ const GestionDePostulaciones = () => {
         setActiveDialogRechazarPostulacion={setActiveDialogRechazarPostulacion}
         listadoPostulados={rowDataRechazar}
         mutatePostulado={mutate}
+        setReload={setReload}
       />
       <div className="text-3xl font-semibold text-white text-center mr-32 mb-6 -mt-3">
         <h1>Gestion De Postulaciones</h1>
@@ -163,26 +174,28 @@ const GestionDePostulaciones = () => {
       />
 
       <div>
-        <DataTable
-          value={listadoPostulados?.obtenerListadoPostuladoCarrera.response}
-          emptyMessage="No hay carreras registradas."
-        >
-          <Column
-            field="nacionalidad"
-            header="Nacionalidad"
-            style={{ textAlign: 'center' }}
-          />
-          <Column field="cedula" header="Cedula" />
-          <Column field="nombre" header="Nombre" />
-          <Column field="apellido" header="Apellido" />
-          <Column field="fepostulacion" header="Fecha de postulacion" />
-          <Column field="carrera" header="Carrera " />
-          <Column field="periodo" header="Periodo" />
-          <Column field="sede" header="Sede" />
-          <Column field="estado" header="Estado" />
-          <Column field="estatus" body={bodyEstatus} header="Estatus" />
-          <Column body={actionbodytemplate} />
-        </DataTable>
+        {reload && (
+          <DataTable
+            value={listadoPostulados?.obtenerListadoPostuladoCarrera.response}
+            emptyMessage="No hay carreras registradas."
+          >
+            <Column
+              field="nacionalidad"
+              header="Nacionalidad"
+              style={{ textAlign: 'center' }}
+            />
+            <Column field="cedula" header="Cedula" />
+            <Column field="nombre" header="Nombre" />
+            <Column field="apellido" header="Apellido" />
+            <Column field="fepostulacion" header="Fecha de postulacion" />
+            <Column field="carrera" header="Carrera " />
+            <Column field="periodo" header="Periodo" />
+            <Column field="sede" header="Sede" />
+            <Column field="estado" header="Estado" />
+            <Column field="estatus" body={bodyEstatus} header="Estatus" />
+            <Column body={actionbodytemplate} />
+          </DataTable>
+        )}
       </div>
     </div>
   )

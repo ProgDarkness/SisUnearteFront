@@ -1,8 +1,6 @@
 import { InputText } from 'primereact/inputtext'
 import { Dropdown } from 'primereact/dropdown'
 import { useEffect, useState } from 'react'
-import { InputMask } from 'primereact/inputmask'
-import DialogVerMalla from 'pages/CargaMallaCurricularComps/dialogVerMalla'
 import { Dialog } from 'primereact/dialog'
 import GQLconsultasGenerales from 'graphql/consultasGenerales'
 import GQLusuarios from 'graphql/usuarios'
@@ -22,8 +20,6 @@ const DialogDatosEstudiantes = ({
   const [sexo, setSexo] = useState(null)
   const [fechanaci, setFechaNaci] = useState(null)
   const [discapacidad, setDiscapacidad] = useState(null)
-  const [activeDialogVerMalla, setActiveDialogVerMalla] = useState(false)
-  const [datosVerMalla, setDatosVerMalla] = useState(null)
   const [paisNacimiento, setPaisNacimiento] = useState(null)
   const [ciudadNacimiento, setCiudadNacimiento] = useState('')
   const [estadoNacimiento, setEstadoNacimiento] = useState(null)
@@ -61,7 +57,7 @@ const DialogDatosEstudiantes = ({
     GQLconsultasGenerales.GET_TIPO_VIVIENDA
   )
 
-  const { data: infoUsuario, mutate } = useSWR(
+  const { data: infoUsuario } = useSWR(
     datosVerPostulado?.idusuario
       ? [
           GQLusuarios.GET_INFO_USER_REG,
@@ -117,7 +113,7 @@ const DialogDatosEstudiantes = ({
       onHide={() => {
         setActiveDialogVerDatosEstudiantes(false)
       }}
-      style={{ height: '70%' }}
+      style={{ height: '57%' }}
       header="Datos del Postulado"
       resizable={false}
       draggable={false}
@@ -129,7 +125,7 @@ const DialogDatosEstudiantes = ({
         </h1>
       </div>
 
-      <div className="grid grid-cols-5 gap-4 mt-3">
+      <div className="grid grid-cols-5 gap-4 mt-6">
         <span className="p-float-label field">
           <Dropdown
             className="w-full"
@@ -182,7 +178,7 @@ const DialogDatosEstudiantes = ({
           <InputText
             className="w-full"
             id="segundo_Apellido"
-            value={segundo_Apellido}
+            value={apellido}
             onChange={(e) => setApellido(e.target.value)}
             autoComplete="off"
             disabled
@@ -193,7 +189,7 @@ const DialogDatosEstudiantes = ({
           <InputText
             className="w-full"
             id="nombre"
-            value={nombre}
+            value={segundo_Apellido}
             onChange={(e) => setSegundo_Apellido(e.target.value)}
             autoComplete="off"
             disabled
@@ -448,13 +444,6 @@ const DialogDatosEstudiantes = ({
           <label htmlFor="zonaPostal">Zona Postal</label>
         </span>
       </div>
-
-      <DialogVerMalla
-        setActiveDialogVerMalla={setActiveDialogVerMalla}
-        activeDialogVerMalla={activeDialogVerMalla}
-        datosVerMalla={datosVerMalla}
-        setDatosVerMalla={setDatosVerMalla}
-      />
       {/*  eslint-disable-next-line react/no-unknown-property */}
       <style jsx global>{`
         .p-button.p-button-text:enabled:active,
@@ -474,6 +463,10 @@ const DialogDatosEstudiantes = ({
           background-color: #3452b4;
           color: #ffffff;
           border-color: transparent;
+        }
+        .p-disabled,
+        .p-component:disabled {
+          opacity: 1;
         }
       `}</style>
     </Dialog>
