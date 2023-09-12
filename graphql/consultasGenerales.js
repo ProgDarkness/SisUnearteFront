@@ -313,5 +313,15 @@ export default {
         }
       }
     }
+  `,
+  GET_ROLES: gql`
+    query obtenerRoles {
+      obtenerRoles {
+        response {
+          id
+          nombre
+        }
+      }
+    }
   `
 }

@@ -7,6 +7,7 @@ import useSWR from 'swr'
 import { useRef, useState } from 'react'
 import request from 'graphql-request'
 import { Toast } from 'primereact/toast'
+import CryptoJS from 'crypto-js'
 
 const { Dialog } = require('primereact/dialog')
 
@@ -29,6 +30,7 @@ const DialogRegPersonal = ({
   const [tpSexo, setTpSexo] = useState(null)
   const [tpCivil, setTpCivil] = useState(null)
   const [tpDepartamento, setTpDepartamento] = useState(null)
+  const [tpRol, setTpRol] = useState(null)
 
   const { data: tiposNacionalidad } = useSWR(
     GQLconsultasGenerales.GET_NACIONALIDADES
@@ -44,6 +46,7 @@ const DialogRegPersonal = ({
   const { data: tiposDepartamento } = useSWR(
     GQLconsultasGenerales.GET_DEPARTAMENTO
   )
+  const { data: tiposRol } = useSWR(GQLconsultasGenerales.GET_ROLES)
 
   const crearPersonal = (variables) => {
     return request(
@@ -73,6 +76,12 @@ const DialogRegPersonal = ({
 
   const registrarPersonal = () => {
     const InputPersonal = {
+      clave: CryptoJS.AES.encrypt(
+        cedulaPersonal,
+        process.env.NEXT_PUBLIC_SECRET_KEY
+      ).toString(),
+      username: nombrePersonal,
+      rol: tpRol,
       nacionalidad: parseInt(tpNacionalidad),
       cedula: parseInt(cedulaPersonal),
       nombre: nombrePersonal,
@@ -269,6 +278,18 @@ const DialogRegPersonal = ({
               optionValue="id"
             />
             <label htmlFor="departamento">Departamento</label>
+          </span>
+          <span className="p-float-label field">
+            <Dropdown
+              className="w-full"
+              id="tpRol"
+              value={tpRol}
+              options={tiposRol?.obtenerRoles.response}
+              onChange={(e) => setTpRol(e.value)}
+              optionLabel="nombre"
+              optionValue="id"
+            />
+            <label htmlFor="tpRol">Rol</label>
           </span>
           <div className="flex my-auto col-span-4 justify-center">
             <Button
