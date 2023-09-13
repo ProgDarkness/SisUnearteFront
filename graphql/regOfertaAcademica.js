@@ -125,8 +125,8 @@ export default {
     }
   `,
   OBTENER_OFERTAS: gql`
-    query obtenerOfertaAcademica {
-      obtenerOfertaAcademica {
+    query obtenerOfertaAcademica($idStatus: Int!) {
+      obtenerOfertaAcademica(idStatus: $idStatus) {
         status
         message
         type
@@ -190,6 +190,15 @@ export default {
           id_personal
           personal
         }
+      }
+    }
+  `,
+  CAMBIAR_STATUS_OFERTA: gql`
+    mutation cambiarStatusOferta($idOferta: Int!) {
+      cambiarStatusOferta(idOferta: $idOferta) {
+        status
+        message
+        type
       }
     }
   `

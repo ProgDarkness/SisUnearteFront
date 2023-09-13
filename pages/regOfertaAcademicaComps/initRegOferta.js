@@ -1,39 +1,57 @@
 import { Button } from 'primereact/button'
 import { Column } from 'primereact/column'
 import { DataTable } from 'primereact/datatable'
-import { useEffect, useState } from 'react'
+import { useRef, useState } from 'react'
 import { ConfirmDialog } from 'primereact/confirmdialog'
+import GQLregOfertaAcademica from 'graphql/regOfertaAcademica'
 import DialogVerOferta from './initDialogVerOferta'
 import DialogEditarOferta from './initDialogEditarOferta'
+import useSWR from 'swr'
+import request from 'graphql-request'
+import { Toast } from 'primereact/toast'
 
 const RegOfertaAcademica = ({ cambioVista }) => {
-  const [ofertas, setOfertas] = useState(null)
+  const toast = useRef(null)
   const [activeDialogVerOferta, setActiveDialogVerOferta] = useState(false)
   const [datosVerOferta, setDatosVerOferta] = useState(null)
   const [dialogEditarOferta, setDialogEditarOferta] = useState(false)
   const [datosEditarOferta, setDatosEditarOferta] = useState(null)
-  const [dialogConfirmElminarOferta, setDialogConfirmElminarOferta] =
+  const [datosCerrarOferta, setDatosCerrarOferta] = useState(null)
+  const [dialogConfirmCerrarOferta, setDialogConfirmCerrarOferta] =
     useState(false)
 
-  useEffect(() => {
-    setOfertas([
-      {
-        carrera: 'Artes Plasticas',
-        status_carrera: 'Habilitada'
-      },
-      {
-        carrera: 'Dibujo Artistico',
-        status_carrera: 'Deshabilitada'
-      }
-    ])
-  }, [])
+  const { data: ofertas, mutate } = useSWR([
+    GQLregOfertaAcademica.OBTENER_OFERTAS,
+    { idStatus: 1 }
+  ])
 
-  const acceptElminarOferta = () => {
-    console.log('SI')
+  const statusOferta = (variables) => {
+    return request(
+      process.env.NEXT_PUBLIC_URL_BACKEND,
+      GQLregOfertaAcademica.CAMBIAR_STATUS_OFERTA,
+      variables
+    )
   }
 
-  const rejectElminarOferta = () => {
-    console.log('NO')
+  const cambiarStatusOferta = () => {
+    statusOferta({ idOferta: parseInt(datosCerrarOferta?.id_oferta) }).then(
+      ({ cambiarStatusOferta: { status, message, type } }) => {
+        toast.current.show({
+          severity: type,
+          summary: '¡ Atención !',
+          detail: message
+        })
+        mutate()
+      }
+    )
+  }
+
+  const acceptCerrarOferta = () => {
+    cambiarStatusOferta()
+  }
+
+  const rejectCerrarOferta = () => {
+    setDialogConfirmCerrarOferta(false)
   }
 
   const accionBodyTemplate = (rowData) => {
@@ -62,9 +80,12 @@ const RegOfertaAcademica = ({ cambioVista }) => {
         <Button
           icon="pi pi-times"
           className="p-button-danger"
-          tooltip="Eliminar"
+          tooltip="Cerrar"
           tooltipOptions={{ position: 'top' }}
-          onClick={() => setDialogConfirmElminarOferta(true)}
+          onClick={() => {
+            setDatosCerrarOferta(rowData)
+            setDialogConfirmCerrarOferta(true)
+          }}
         />
       </div>
     )
@@ -72,7 +93,7 @@ const RegOfertaAcademica = ({ cambioVista }) => {
 
   const bodyStatus = (rowData) => {
     let colorTag = '#cdcdcd'
-    if (rowData.status_carrera === 'Habilitada') {
+    if (rowData.status_carrera !== 'Abierto') {
       colorTag = '#84bf93'
     } else {
       colorTag = '#d56c6c'
@@ -81,7 +102,7 @@ const RegOfertaAcademica = ({ cambioVista }) => {
     return (
       <div className="w-min rounded" style={{ backgroundColor: colorTag }}>
         <h1 className="text-white text-sm font-semibold m-1">
-          {rowData.status_carrera.toUpperCase()}
+          {rowData.nb_estatus_oferta.toUpperCase()}
         </h1>
       </div>
     )
@@ -89,6 +110,7 @@ const RegOfertaAcademica = ({ cambioVista }) => {
 
   return (
     <div className="grid grid-cols-5 gap-4 m-2 -mt-2">
+      <Toast ref={toast} />
       <div className="col-span-5 flex justify-between">
         <div />
         <h1 className="text-3xl font-semibold text-white">
@@ -112,13 +134,13 @@ const RegOfertaAcademica = ({ cambioVista }) => {
         />
       </div>
       <ConfirmDialog
-        visible={dialogConfirmElminarOferta}
-        onHide={() => setDialogConfirmElminarOferta(false)}
-        message="¿Esta seguro que desea eliminar la oferta academica?"
+        visible={dialogConfirmCerrarOferta}
+        onHide={() => setDialogConfirmCerrarOferta(false)}
+        message="¿Esta seguro que desea cerrar la oferta?"
         header="Confirmacion"
         icon="pi pi-exclamation-triangle"
-        accept={acceptElminarOferta}
-        reject={rejectElminarOferta}
+        accept={acceptCerrarOferta}
+        reject={rejectCerrarOferta}
         acceptLabel="SI"
         rejectLabel="NO"
       />
@@ -136,10 +158,13 @@ const RegOfertaAcademica = ({ cambioVista }) => {
       />
       <div className="col-span-5">
         <DataTable
-          value={ofertas}
+          value={ofertas?.obtenerOfertaAcademica.response}
           emptyMessage="No hay Ofertas Academicas Registradas."
         >
-          <Column field="carrera" header="Carrera" />
+          <Column field="co_oferta" header="Codigo" />
+          <Column field="nb_carrera" header="Carrera" />
+          <Column field="nu_cupos" header="Cant. Cupos" />
+          <Column field="nb_sede" header="Sede" />
           <Column body={bodyStatus} header="Estatus" />
           <Column body={accionBodyTemplate} />
         </DataTable>

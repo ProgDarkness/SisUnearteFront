@@ -18,15 +18,27 @@ const RegistroOferta = ({ cambioVista }) => {
   const [datosVerCarrera, setDatosVerCarrera] = useState(null)
   const [dialogEditarCarrera, setDialogEditarCarrera] = useState(false)
   const [datosEditarCarrera, setDatosEditarCarrera] = useState(null)
+  const [datosAprobarOferta, setDatosAprobarOferta] = useState(null)
   const [dialogRegOferta, setDialogRegOferta] = useState(false)
   const [dialogConfirmElminarOferta, setDialogConfirmElminarOferta] =
     useState(false)
+  const [dialogConfirmAprobarOferta, setDialogConfirmAprobarOferta] =
+    useState(false)
   const [activeDialogRegPerido, setActiveDialogRegPerido] = useState(false)
-  const { data: ofertas, mutate } = useSWR(
-    GQLregOfertaAcademica.OBTENER_OFERTAS
-  )
+  const { data: ofertas, mutate } = useSWR([
+    GQLregOfertaAcademica.OBTENER_OFERTAS,
+    { idStatus: 2 }
+  ])
 
   const [datosEliminarOferta, setDatosEliminarOferta] = useState(null)
+
+  const statusOferta = (variables) => {
+    return request(
+      process.env.NEXT_PUBLIC_URL_BACKEND,
+      GQLregOfertaAcademica.CAMBIAR_STATUS_OFERTA,
+      variables
+    )
+  }
 
   const deleteOferta = (variables) => {
     return request(
@@ -47,6 +59,27 @@ const RegistroOferta = ({ cambioVista }) => {
         mutate()
       }
     )
+  }
+
+  const cambiarStatusOferta = () => {
+    statusOferta({ idOferta: parseInt(datosAprobarOferta?.id_oferta) }).then(
+      ({ cambiarStatusOferta: { status, message, type } }) => {
+        toast.current.show({
+          severity: type,
+          summary: '¡ Atención !',
+          detail: message
+        })
+        mutate()
+      }
+    )
+  }
+
+  const acceptAprobarOferta = () => {
+    cambiarStatusOferta()
+  }
+
+  const rejectAprobarOferta = () => {
+    setDialogConfirmAprobarOferta(false)
   }
 
   const acceptEliminarOferta = () => {
@@ -109,6 +142,16 @@ const RegistroOferta = ({ cambioVista }) => {
             setDatosEliminarOferta(rowData)
           }}
         />
+        <Button
+          icon="pi pi-check"
+          className="p-button-success ml-1"
+          tooltip="Abrir"
+          tooltipOptions={{ position: 'top' }}
+          onClick={() => {
+            setDialogConfirmAprobarOferta(true)
+            setDatosAprobarOferta(rowData)
+          }}
+        />
       </div>
     )
   }
@@ -133,6 +176,17 @@ const RegistroOferta = ({ cambioVista }) => {
         icon="pi pi-exclamation-triangle"
         accept={acceptEliminarOferta}
         reject={rejectEliminarOferta}
+        acceptLabel="SI"
+        rejectLabel="NO"
+      />
+      <ConfirmDialog
+        visible={dialogConfirmAprobarOferta}
+        onHide={() => setDialogConfirmAprobarOferta(false)}
+        message="¿Esta seguro que desea aprobar la oferta?"
+        header="Confirmacion"
+        icon="pi pi-exclamation-triangle"
+        accept={acceptAprobarOferta}
+        reject={rejectAprobarOferta}
         acceptLabel="SI"
         rejectLabel="NO"
       />
