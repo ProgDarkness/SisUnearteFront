@@ -29,10 +29,10 @@ const Inicio = () => {
   )
 
   const { data: infoPostuUsu } = useSWR(
-    idUser
-      ? [GQLpostulaciones.GET_POSTULACION_USUARIO, { id_usuario: idUser }]
-      : null
+    idUser ? [GQLpostulaciones.GET_POSTULACION_USUARIO, { idUser }] : null
   )
+
+  console.log(infoPostuUsu)
 
   useEffect(() => {
     if (infoUser?.getInfoUsuario.response) {
@@ -216,11 +216,17 @@ const Inicio = () => {
             <DataTable
               value={infoPostuUsu?.obtenerPostulacionUsuario.response}
               emptyMessage="No se encuentran trayectos registrados."
+              filterDisplay="row"
             >
-              <Column field="periodo" header="Periodo" />
-              <Column field="carrera" header="Carrera" />
-              <Column field="sede" header="Sede" />
-              <Column field="estatus" header="Estatus" />
+              <Column
+                field="periodo"
+                filterPlaceholder="Buscar"
+                filter
+                header="Periodo"
+              />
+              <Column field="carrera" filter header="Carrera" />
+              <Column field="sede" filter header="Sede" />
+              <Column field="estatus" filter header="Estatus" />
               <Column body={accionBodyTemplate} />
             </DataTable>
           </div>

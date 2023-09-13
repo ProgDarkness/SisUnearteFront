@@ -92,7 +92,14 @@ export default {
         status
         message
         type
-        response
+        response {
+          id
+          usuario
+          carrera
+          periodo
+          estatus
+          sede
+        }
       }
     }
   `
