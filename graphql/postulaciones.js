@@ -85,5 +85,15 @@ export default {
         response
       }
     }
+  `,
+  GET_POSTULACION_USUARIO: gql`
+    query obtenerPostulacionUsuario($idUser: Int!) {
+      obtenerPostulacionUsuario(idUser: $idUser) {
+        status
+        message
+        type
+        response
+      }
+    }
   `
 }
