@@ -144,14 +144,50 @@ const GestionDePersonal = () => {
         <DataTable
           value={todoPersonal?.obtenerPersonal.response}
           emptyMessage="No se encuentran trayectos registrados."
+          filterDisplay="row"
         >
-          <Column field="cedula" header="Cédula" />
-          <Column field="nombre" header="Nombre" />
-          <Column field="apellido" header="Apellido" />
-          <Column field="sexo" header="Sexo" />
-          <Column field="civil" header="Civil" />
-          <Column field="profesion" header="Profesión" />
-          <Column field="cargahoraria" header="Carga Horaria" />
+          <Column
+            field="cedula"
+            filterPlaceholder="Buscar"
+            filter
+            header="Cédula"
+          />
+          <Column
+            field="nombre"
+            filterPlaceholder="Buscar"
+            filter
+            header="Nombre"
+          />
+          <Column
+            field="apellido"
+            filterPlaceholder="Buscar"
+            filter
+            header="Apellido"
+          />
+          <Column
+            field="sexo"
+            filterPlaceholder="Buscar"
+            filter
+            header="Sexo"
+          />
+          <Column
+            field="civil"
+            filterPlaceholder="Buscar"
+            filter
+            header="Civil"
+          />
+          <Column
+            field="profesion"
+            filterPlaceholder="Buscar"
+            filter
+            header="Profesión"
+          />
+          <Column
+            field="cargahoraria"
+            filterPlaceholder="Buscar"
+            filter
+            header="Carga Horaria"
+          />
           <Column body={accionBodyTemplate} />
         </DataTable>
       </div>

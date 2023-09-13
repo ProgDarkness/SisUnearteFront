@@ -182,19 +182,45 @@ const GestionDePostulaciones = () => {
           <DataTable
             value={listadoPostulados?.obtenerListadoPostuladoCarrera.response}
             emptyMessage="No hay carreras registradas."
+            filterDisplay="row"
           >
             <Column
               field="nacionalidad"
               header="Nacionalidad"
               style={{ textAlign: 'center' }}
             />
-            <Column field="cedula" header="Cedula" />
-            <Column field="nombre" header="Nombre" />
-            <Column field="apellido" header="Apellido" />
+            <Column
+              field="cedula"
+              filterPlaceholder="Buscar"
+              filter
+              header="Cedula"
+            />
+            <Column
+              field="nombre"
+              filterPlaceholder="Buscar"
+              filter
+              header="Nombre"
+            />
+            <Column
+              field="apellido"
+              filterPlaceholder="Buscar"
+              filter
+              header="Apellido"
+            />
             <Column field="fepostulacion" header="Fecha de postulacion" />
-            <Column field="carrera" header="Carrera " />
+            <Column
+              field="carrera"
+              filterPlaceholder="Buscar"
+              filter
+              header="Carrera "
+            />
             <Column field="periodo" header="Periodo" />
-            <Column field="sede" header="Sede" />
+            <Column
+              field="sede"
+              filterPlaceholder="Buscar"
+              filter
+              header="Sede"
+            />
             <Column field="estado" header="Estado" />
             <Column field="estatus" body={bodyEstatus} header="Estatus" />
             <Column body={actionbodytemplate} />

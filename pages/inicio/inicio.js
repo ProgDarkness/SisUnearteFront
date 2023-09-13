@@ -3,11 +3,11 @@ import { Dropdown } from 'primereact/dropdown'
 import { Column } from 'primereact/column'
 import { Button } from 'primereact/button'
 import { DataTable } from 'primereact/datatable'
-import { InputMask } from 'primereact/inputmask'
 import { Divider } from 'primereact/divider'
 import { useEffect, useState } from 'react'
 import GQLpostulaciones from 'graphql/postulaciones'
 import GQLUsuarios from 'graphql/usuarios'
+import GQLconsultasGenerales from 'graphql/consultasGenerales'
 import useSWR from 'swr'
 import { useSesion } from 'hooks/useSesion'
 
@@ -17,12 +17,7 @@ const Inicio = () => {
   const [cedula, setCedula] = useState('')
   const [primer_nombre, setPrimer_Nombre] = useState('')
   const [primer_apellido, setPrimer_Apellido] = useState('')
-  const [segundo_nombre, setSegundo_Nombre] = useState('')
-  const [segundo_apellido, setSegundo_Apellido] = useState('')
   const [correoElectronico, setCorreoElectronico] = useState('')
-  const [fechanaci, setFechaNaci] = useState(null)
-  const [sexo, setSexo] = useState(null)
-  const [estadoCivil, setEstadoCivil] = useState(null)
 
   const { data: infoUser } = useSWR(
     idUser ? [GQLUsuarios.GET_INFO_USER_REG, { id_usuario: idUser }] : null
@@ -32,29 +27,20 @@ const Inicio = () => {
     idUser ? [GQLpostulaciones.GET_POSTULACION_USUARIO, { idUser }] : null
   )
 
-  console.log(infoPostuUsu)
+  const { data: tiposNacionalidad } = useSWR(
+    GQLconsultasGenerales.GET_NACIONALIDADES
+  )
+
+  console.log(infoUser)
 
   useEffect(() => {
     if (infoUser?.getInfoUsuario.response) {
       setNacionalidad(infoUser?.getInfoUsuario.response.nacionalidad)
       setCedula(infoUser?.getInfoUsuario.response.ced_usuario)
       setPrimer_Nombre(infoUser?.getInfoUsuario.response.nb_usuario)
-      setSegundo_Nombre(infoUser?.getInfoUsuario.response.nb2_usuario)
       setPrimer_Apellido(infoUser?.getInfoUsuario.response.ape_usuario)
-      setSegundo_Apellido(infoUser?.getInfoUsuario.response.ape2_usuario)
       setCorreoElectronico(infoUser?.getInfoUsuario.response.correoElectronico)
-      setSexo(infoUser?.getInfoUsuario.response.sexo)
       setCorreoElectronico(infoUser?.getInfoUsuario.response.correo_usuario)
-      setFechaNaci(
-        new Date(
-          parseInt(infoUser?.getInfoUsuario.response.fe_nac_usuario)
-        ).toLocaleDateString('es-ES', {
-          day: '2-digit',
-          month: '2-digit',
-          year: 'numeric'
-        })
-      )
-      setEstadoCivil(infoUser?.getInfoUsuario.response.estadoCivil)
     }
   }, [infoUser])
 
@@ -79,7 +65,7 @@ const Inicio = () => {
     <div className="m-2 -mt-2">
       <div className="w-full text-center">
         <h1 className="text-3xl font-semibold text-white text-center mr-32 mb-6 -mt-3">
-          Postulaciones Activas
+          Datos Personales
         </h1>
 
         <div className="grid grid-cols-5 gap-4 mt-4 p-4">
@@ -87,7 +73,7 @@ const Inicio = () => {
             <Dropdown
               className="w-full"
               id="nacionalidad"
-              /* options={data?.nacionalidades.obtenerNacionalidades.response} */
+              options={tiposNacionalidad?.obtenerNacionalidades.response}
               value={nacionalidad}
               onChange={(e) => {
                 setNacionalidad(e.value)
@@ -115,7 +101,7 @@ const Inicio = () => {
               className="w-full"
               id="primer_Nombre"
               value={primer_nombre}
-              onChange={(e) => setSegundo_Nombre(e.target.value.toUpperCase())}
+              onChange={(e) => setPrimer_Nombre(e.target.value.toUpperCase())}
               autoComplete="off"
               disabled
             />
@@ -135,30 +121,6 @@ const Inicio = () => {
           <span className="p-float-label field">
             <InputText
               className="w-full"
-              id="segundo_Nombre"
-              value={segundo_nombre}
-              onChange={(e) => setSegundo_Nombre(e.target.value.toUpperCase())}
-              autoComplete="off"
-              disabled
-            />
-            <label htmlFor="segundo_Nombre">Segundo Nombre</label>
-          </span>
-          <span className="p-float-label field">
-            <InputText
-              className="w-full"
-              id="segundo_Apellido"
-              value={segundo_apellido}
-              onChange={(e) =>
-                setSegundo_Apellido(e.target.value.toUpperCase())
-              }
-              autoComplete="off"
-              disabled
-            />
-            <label htmlFor="segundo_Apellido">Segundo Apellido</label>
-          </span>
-          <span className="p-float-label field">
-            <InputText
-              className="w-full"
               id="correoElectronico"
               value={correoElectronico}
               onChange={(e) => setCorreoElectronico(e.target.value)}
@@ -167,51 +129,14 @@ const Inicio = () => {
             />
             <label htmlFor="correoElectronico">Correo Electronico</label>
           </span>
-          <span className="p-float-label field">
-            <InputMask
-              mask="99/99/9999"
-              className="w-full"
-              id="fechanaci"
-              value={fechanaci}
-              onChange={(e) => {
-                setFechaNaci(e.value)
-              }}
-              autoComplete="off"
-              disabled
-            />
-            <label htmlFor="fechanaci">Fecha de nacimiento</label>
-          </span>
-          <span className="p-float-label field">
-            <Dropdown
-              className="w-full"
-              id="sexo"
-              /* options={data?.sexos.obtenerSexos.response} */
-              value={sexo}
-              onChange={(e) => {
-                setSexo(e.value)
-              }}
-              optionLabel="nombre"
-              disabled
-            />
-            <label htmlFor="sexo">Sexo</label>
-          </span>
-          <span className="p-float-label field">
-            <Dropdown
-              className="w-full"
-              id="estadoCivil"
-              /* options={data?.estados_civiles.obtenerEstadoCivil.response} */
-              value={estadoCivil}
-              onChange={(e) => {
-                setEstadoCivil(e.value)
-              }}
-              optionLabel="nombre"
-              disabled
-            />
-            <label htmlFor="estadoCivil">Estado Civil</label>
-          </span>
         </div>
         <div className="grid grid-cols-5 gap-4">
           <Divider className="col-span-5" />
+          <div className="w-full text-center col-span-5">
+            <h1 className="text-3xl font-semibold text-white text-center mr-10 mb-0 -mt-0">
+              Postulaciones Activas
+            </h1>
+          </div>
           <div className="col-span-5">
             <DataTable
               value={infoPostuUsu?.obtenerPostulacionUsuario.response}
@@ -224,9 +149,24 @@ const Inicio = () => {
                 filter
                 header="Periodo"
               />
-              <Column field="carrera" filter header="Carrera" />
-              <Column field="sede" filter header="Sede" />
-              <Column field="estatus" filter header="Estatus" />
+              <Column
+                field="carrera"
+                filterPlaceholder="Buscar"
+                filter
+                header="Carrera"
+              />
+              <Column
+                field="sede"
+                filterPlaceholder="Buscar"
+                filter
+                header="Sede"
+              />
+              <Column
+                field="estatus"
+                filterPlaceholder="Buscar"
+                filter
+                header="Estatus"
+              />
               <Column body={accionBodyTemplate} />
             </DataTable>
           </div>
