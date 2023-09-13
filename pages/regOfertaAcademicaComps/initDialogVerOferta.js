@@ -6,6 +6,8 @@ import { InputText } from 'primereact/inputtext'
 import { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Button } from 'primereact/button'
+import GQLregOfertaAcademica from 'graphql/regOfertaAcademica'
+import useSWR from 'swr'
 
 const DialogVerOferta = ({
   activeDialogVerOferta,
@@ -13,9 +15,16 @@ const DialogVerOferta = ({
   datosVerOferta,
   setDatosVerOferta
 }) => {
-  const [infoOferta, setInfoOferta] = useState(null)
-  const [infoHorario, setInfoHorario] = useState(null)
   const [animacionVerHorario, setAnimacionVerHorario] = useState(false)
+
+  const { data: infoOferta } = useSWR(
+    datosVerOferta?.id_carrera
+      ? [
+          GQLregOfertaAcademica.DETALLES_MALLAS_CARRERA,
+          { carrera: parseInt(datosVerOferta?.id_carrera) }
+        ]
+      : null
+  )
 
   const animation = {
     initial: {
@@ -35,84 +44,7 @@ const DialogVerOferta = ({
     }
   }
 
-  useEffect(() => {
-    setInfoOferta([
-      {
-        trayecto: 'Trayecto 1',
-        lapso: 'Lapso 1',
-        materia: 'Dibujo',
-        profesor: 'Juan Manuel'
-      },
-      {
-        trayecto: 'Trayecto 1',
-        lapso: 'Lapso 1',
-        materia: 'Fotografia',
-        profesor: 'Juan Manuel'
-      },
-      {
-        trayecto: 'Trayecto 1',
-        lapso: 'Lapso 2',
-        materia: 'Arte',
-        profesor: 'Juan Manuel'
-      },
-      {
-        trayecto: 'Trayecto 1',
-        lapso: 'Lapso 2',
-        materia: 'Fotografia 2',
-        profesor: 'Juan Manuel'
-      },
-      /* ------------------------------------ */
-      {
-        trayecto: 'Trayecto 2',
-        lapso: 'Lapso 1',
-        materia: 'Dibujo',
-        profesor: 'Juan Manuel'
-      },
-      {
-        trayecto: 'Trayecto 2',
-        lapso: 'Lapso 2',
-        materia: 'Arte',
-        profesor: 'Juan Manuel'
-      }
-      /* ------------------------------------- */
-    ])
-    setInfoHorario([
-      {
-        horas: '8:00-8:45',
-        lunes: '',
-        martes: 'Dibujo / Juan Manuel / Aula 3',
-        miercoles: '',
-        jueves: 'Fotografia / Juan Manuel / Aula 3',
-        viernes: '',
-        sabado: '',
-        domingo: ''
-      },
-      {
-        horas: '8:45-9:45',
-        lunes: '',
-        martes: 'Dibujo / Juan Manuel / Aula 3',
-        miercoles: '',
-        jueves: 'Fotografia / Juan Manuel / Aula 3',
-        viernes: '',
-        sabado: '',
-        domingo: ''
-      }
-    ])
-  }, [])
-
-  const actionBodyTemplate = () => {
-    return (
-      <div className="flex justify-center">
-        <Button
-          label="Ver Horario"
-          className="p-button-info"
-          onClick={() => setAnimacionVerHorario(!animacionVerHorario)}
-        />
-      </div>
-    )
-  }
-
-  const bodyDiaSemana = (rowData, dia) => {
+  /* const bodyDiaSemana = (rowData, dia) => {
     const [materia, nombre, aula] = rowData[`${dia}`].split(' / ')
 
     return (
@@ -122,7 +54,7 @@ const DialogVerOferta = ({
         <p>{aula}</p>
       </div>
     )
-  }
+  } */
 
   return (
     <Dialog
@@ -141,19 +73,10 @@ const DialogVerOferta = ({
           <InputText
             className="w-full"
             id="carrera"
-            value={datosVerOferta?.carrera}
+            value={datosVerOferta?.nb_carrera}
             disabled
           />
           <label htmlFor="carrera">Carrera</label>
-        </span>
-        <span className="p-float-label field">
-          <InputText
-            className="w-full"
-            id="status_carrera"
-            value={datosVerOferta?.status_carrera}
-            disabled
-          />
-          <label htmlFor="status_carrera">Estatus de la Carrera</label>
         </span>
         <div className="flex justify-center align-middle">
           {animacionVerHorario && (
@@ -166,7 +89,7 @@ const DialogVerOferta = ({
           )}
         </div>
       </div>
-      <AnimatePresence initial={animacionVerHorario}>
+      {/*  <AnimatePresence initial={animacionVerHorario}>
         {animacionVerHorario && (
           <motion.div
             initial="initial"
@@ -176,7 +99,7 @@ const DialogVerOferta = ({
           >
             <div className="col-span-4 mt-3">
               <DataTable
-                value={infoHorario}
+                value={infoOferta}
                 emptyMessage="No existe Horario Registrado."
                 showGridlines
               >
@@ -220,7 +143,7 @@ const DialogVerOferta = ({
             </div>
           </motion.div>
         )}
-      </AnimatePresence>
+      </AnimatePresence> */}
       <AnimatePresence initial={!animacionVerHorario}>
         {!animacionVerHorario && (
           <motion.div
@@ -231,19 +154,14 @@ const DialogVerOferta = ({
           >
             <div className="col-span-2 mt-3">
               <DataTable
-                value={infoOferta}
+                value={infoOferta?.obtenerDetalleMalla.response}
                 emptyMessage="No se encuentran trayectos registrados."
                 rowGroupMode="rowspan"
-                groupRowsBy={['trayecto']}
+                groupRowsBy={['nb_trayecto']}
               >
-                <Column
-                  field="trayecto"
-                  body={actionBodyTemplate}
-                  style={{ width: '8.16rem' }}
-                />
-                <Column field="trayecto" header="Trayectos" />
-                <Column field="materia" header="Materias" />
-                <Column field="profesor" header="Profesores" />
+                <Column field="nb_trayecto" header="Trayectos" />
+                <Column field="nb_materia" header="Materias" />
+                <Column field="personal" header="Profesores" />
               </DataTable>
             </div>
           </motion.div>

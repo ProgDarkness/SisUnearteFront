@@ -13,8 +13,6 @@ const DialogVerRegOferta = ({
   datosVerCarrera,
   setDatosVerCarrera
 }) => {
-  console.log(datosVerCarrera)
-
   const { data: detallesMallas } = useSWR(
     datosVerCarrera?.id_carrera
       ? [

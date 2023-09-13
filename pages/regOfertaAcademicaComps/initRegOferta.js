@@ -5,7 +5,6 @@ import { useRef, useState } from 'react'
 import { ConfirmDialog } from 'primereact/confirmdialog'
 import GQLregOfertaAcademica from 'graphql/regOfertaAcademica'
 import DialogVerOferta from './initDialogVerOferta'
-import DialogEditarOferta from './initDialogEditarOferta'
 import useSWR from 'swr'
 import request from 'graphql-request'
 import { Toast } from 'primereact/toast'
@@ -14,8 +13,6 @@ const RegOfertaAcademica = ({ cambioVista }) => {
   const toast = useRef(null)
   const [activeDialogVerOferta, setActiveDialogVerOferta] = useState(false)
   const [datosVerOferta, setDatosVerOferta] = useState(null)
-  const [dialogEditarOferta, setDialogEditarOferta] = useState(false)
-  const [datosEditarOferta, setDatosEditarOferta] = useState(null)
   const [datosCerrarOferta, setDatosCerrarOferta] = useState(null)
   const [dialogConfirmCerrarOferta, setDialogConfirmCerrarOferta] =
     useState(false)
@@ -66,16 +63,6 @@ const RegOfertaAcademica = ({ cambioVista }) => {
             setDatosVerOferta(rowData)
             setActiveDialogVerOferta(true)
           }}
-        />
-        <Button
-          icon="pi pi-pencil"
-          className="p-button-help mr-1"
-          tooltip="Modificar"
-          onClick={() => {
-            setDatosEditarOferta(rowData)
-            setDialogEditarOferta(true)
-          }}
-          tooltipOptions={{ position: 'top' }}
         />
         <Button
           icon="pi pi-times"
@@ -149,12 +136,6 @@ const RegOfertaAcademica = ({ cambioVista }) => {
         activeDialogVerOferta={activeDialogVerOferta}
         datosVerOferta={datosVerOferta}
         setDatosVerOferta={setDatosVerOferta}
-      />
-      <DialogEditarOferta
-        datosEditarOferta={datosEditarOferta}
-        setDatosEditarOferta={setDatosEditarOferta}
-        dialogEditarOferta={dialogEditarOferta}
-        setDialogEditarOferta={setDialogEditarOferta}
       />
       <div className="col-span-5">
         <DataTable
