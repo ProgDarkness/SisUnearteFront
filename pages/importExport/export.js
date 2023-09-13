@@ -62,7 +62,7 @@ const Export = ({ cambioVista }) => {
         tperiodo: cf.tperiodo,
         estatus: cf.estatus
       })
-      /*if (cf.parentesco.includes('TITULAR')) {
+      /* if (cf.parentesco.includes('TITULAR')) {
         worksheet
           .getRow(i + 2)
           .eachCell({ includeEmpty: false }, function (cell) {
@@ -74,7 +74,7 @@ const Export = ({ cambioVista }) => {
             worksheet.getCell(cell.address).font = { bold: true }
             worksheet.getCell(cell.address).border = { top: { style: 'thin' } }
           })
-      }*/
+      } */
       // worksheet.getRow(i + 2).getCell('cedula').alignment = { vertical: 'middle', horizontal: 'right' }
 
       // worksheet.getRow(i + 2).getCell('genero').alignment = { vertical: 'middle', horizontal: 'center' }
