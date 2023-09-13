@@ -56,7 +56,8 @@ const DialogRegPeriodo = ({
   const [dataEliminarPeriodo, setDataEliminarPeriodo] = useState(null)
   const { data: meses } = useSWR(GQLconsultasGenerales.GET_MESES)
   const { data: periodosInfo, mutate } = useSWR(
-    GQLregOfertaAcademica.GET_TODOS_PERIODOS
+    GQLregOfertaAcademica.GET_TODOS_PERIODOS,
+    { refreshInterval: 1000 }
   )
 
   const funCargEditar = (rowData) => {
@@ -362,7 +363,7 @@ const DialogRegPeriodo = ({
     setFeFinNotas(null)
     setFeFinPostulacion(null)
     setFeIniPostulacion(null)
-    
+
     setTimeout(() => {
       setReload(true)
     }, 1)

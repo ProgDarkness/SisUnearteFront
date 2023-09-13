@@ -17,7 +17,9 @@ const CargarMalla = ({ cambioVista }) => {
     useState(false)
   const [datosDesaprovarMalla, setDatosDesaprovarMalla] = useState(null)
 
-  const { data: mallas, mutate } = useSWR(GQLregMallaCurricular.GET_MALLAS)
+  const { data: mallas, mutate } = useSWR(GQLregMallaCurricular.GET_MALLAS, {
+    refreshInterval: 1000
+  })
 
   const actualizarEstatusCarrera = (variables) => {
     return request(

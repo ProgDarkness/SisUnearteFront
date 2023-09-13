@@ -15,9 +15,9 @@ import { useSesion } from 'hooks/useSesion'
 const DialogCrudUser = ({ active, setActive }) => {
   const router = useRouter()
   const { token, rolUser } = useSesion()
-  const { data, mutate } = useSWR(
-    token ? [GQLPlantilla.GET_USUARIOS, {}, token] : null
-  )
+  const { data, mutate } = useSWR([GQLPlantilla.GET_USUARIOS, {}, token], {
+    refreshInterval: 1000
+  })
 
   const toast = useRef(null)
   const [deleteUsuarioDialog, setDeleteUsuarioDialog] = useState(false)

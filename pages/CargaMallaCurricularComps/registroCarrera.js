@@ -39,7 +39,12 @@ const RegistroCarrera = ({ cambioVista }) => {
   const { data: tiposCarreras } = useSWR(GQLconsultasGenerales.GET_TIPO_CARRERA)
   const { data: tiposCiclos } = useSWR(GQLconsultasGenerales.GET_TIPO_CICLOS)
   const { data: tiposTitulo } = useSWR(GQLconsultasGenerales.GET_TIPO_TITULO)
-  const { data: carreras, mutate } = useSWR(GQLregMallaCurricular.GET_CARRERAS)
+  const { data: carreras, mutate } = useSWR(
+    GQLregMallaCurricular.GET_CARRERAS,
+    {
+      refreshInterval: 1000
+    }
+  )
 
   const crearCarrera = (variables) => {
     return request(

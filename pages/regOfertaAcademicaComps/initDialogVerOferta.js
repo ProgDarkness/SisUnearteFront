@@ -18,12 +18,11 @@ const DialogVerOferta = ({
   const [animacionVerHorario, setAnimacionVerHorario] = useState(false)
 
   const { data: infoOferta } = useSWR(
-    datosVerOferta?.id_carrera
-      ? [
-          GQLregOfertaAcademica.DETALLES_MALLAS_CARRERA,
-          { carrera: parseInt(datosVerOferta?.id_carrera) }
-        ]
-      : null
+    [
+      GQLregOfertaAcademica.DETALLES_MALLAS_CARRERA,
+      { carrera: parseInt(datosVerOferta?.id_carrera) }
+    ],
+    { refreshInterval: 1000 }
   )
 
   const animation = {

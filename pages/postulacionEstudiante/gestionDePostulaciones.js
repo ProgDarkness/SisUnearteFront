@@ -14,7 +14,8 @@ import { useSesion } from 'hooks/useSesion'
 
 const GestionDePostulaciones = () => {
   const { data: listadoPostulados, mutate } = useSWR(
-    GQLvistaPostulado.QUERY_LISTA_REPORTE
+    GQLvistaPostulado.QUERY_LISTA_REPORTE,
+    { refreshInterval: 1000 }
   )
   const [reload, setReload] = useState(true)
   const toast = useRef(null)

@@ -24,7 +24,8 @@ const Inicio = () => {
   )
 
   const { data: infoPostuUsu } = useSWR(
-    idUser ? [GQLpostulaciones.GET_POSTULACION_USUARIO, { idUser }] : null
+    [GQLpostulaciones.GET_POSTULACION_USUARIO, { idUser }],
+    { refreshInterval: 1000 }
   )
 
   const { data: tiposNacionalidad } = useSWR(

@@ -13,16 +13,15 @@ const DialogVerCarrera = ({
   setDatosVerCarrera
 }) => {
   const { data: infoCarrera } = useSWR(
-    datosVerCarrera?.id
-      ? [
-          GQLregMallaCurricular.VER_DETALLE_CARRERA,
-          {
-            InputCarrera: {
-              carrera: parseInt(datosVerCarrera?.id)
-            }
-          }
-        ]
-      : null
+    [
+      GQLregMallaCurricular.VER_DETALLE_CARRERA,
+      {
+        InputCarrera: {
+          carrera: parseInt(datosVerCarrera?.id)
+        }
+      }
+    ],
+    { refreshInterval: 1000 }
   )
 
   const animation = {

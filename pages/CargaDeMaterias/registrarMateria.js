@@ -27,7 +27,10 @@ const RegistrarMateria = () => {
   const [dataEliminarMateria, setDataEliminarMateria] = useState(null)
 
   const { data: tpmateria } = useSWR(GQLconsultasGenerales.GET_TIPO_MATERIA)
-  const { data: materias, mutate } = useSWR(GQLregMallaCurricular.GET_MATERIAS)
+  const { data: materias, mutate } = useSWR(
+    GQLregMallaCurricular.GET_MATERIAS,
+    { refreshInterval: 1000 }
+  )
 
   const crearMateria = (variables) => {
     return request(

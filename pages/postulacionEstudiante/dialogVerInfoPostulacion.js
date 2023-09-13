@@ -14,12 +14,11 @@ const DialogVerInfoPostulacion = ({
   setDatosVerMalla
 }) => {
   const { data: infoMalla } = useSWR(
-    datosVerMalla?.id_carrera
-      ? [
-          GQLregOfertaAcademica.DETALLES_MALLAS_CARRERA,
-          { carrera: parseInt(datosVerMalla?.id_carrera) }
-        ]
-      : null
+    [
+      GQLregOfertaAcademica.DETALLES_MALLAS_CARRERA,
+      { carrera: parseInt(datosVerMalla?.id_carrera) }
+    ],
+    { refreshInterval: 1000 }
   )
 
   const animation = {

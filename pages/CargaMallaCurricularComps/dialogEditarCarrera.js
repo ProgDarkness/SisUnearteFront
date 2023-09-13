@@ -33,16 +33,15 @@ const DialogEditarCarrera = ({
   }, [activeDialogEditarCarrera])
 
   const { data: infoCarrera, mutate } = useSWR(
-    datosEditarCarrera?.id
-      ? [
-          GQLregMallaCurricular.VER_DETALLE_CARRERA,
-          {
-            InputCarrera: {
-              carrera: parseInt(datosEditarCarrera?.id)
-            }
-          }
-        ]
-      : null
+    [
+      GQLregMallaCurricular.VER_DETALLE_CARRERA,
+      {
+        InputCarrera: {
+          carrera: parseInt(datosEditarCarrera?.id)
+        }
+      }
+    ],
+    { refreshInterval: 1000 }
   )
 
   const { data: materias, mutate: mutateMaterias } = useSWR(

@@ -63,12 +63,11 @@ const DialogRegOferta = ({
   )
 
   const { data: detallesMallas, mutate } = useSWR(
-    carreraOferta?.id
-      ? [
-          GQLregOfertaAcademica.DETALLES_MALLAS_CARRERA,
-          { carrera: parseInt(carreraOferta?.id) }
-        ]
-      : null
+    [
+      GQLregOfertaAcademica.DETALLES_MALLAS_CARRERA,
+      { carrera: parseInt(carreraOferta?.id) }
+    ],
+    { refreshInterval: 1000 }
   )
 
   const regOferta = (variables) => {

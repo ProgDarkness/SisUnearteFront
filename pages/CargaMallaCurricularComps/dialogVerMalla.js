@@ -14,16 +14,15 @@ const DialogVerMalla = ({
   setDatosVerMalla
 }) => {
   const { data: infoMalla } = useSWR(
-    datosVerMalla?.id
-      ? [
-          GQLregMallaCurricular.VER_DETALLE_CARRERA,
-          {
-            InputCarrera: {
-              carrera: parseInt(datosVerMalla?.id)
-            }
-          }
-        ]
-      : null
+    [
+      GQLregMallaCurricular.VER_DETALLE_CARRERA,
+      {
+        InputCarrera: {
+          carrera: parseInt(datosVerMalla?.id)
+        }
+      }
+    ],
+    { refreshInterval: 1000 }
   )
 
   const animation = {

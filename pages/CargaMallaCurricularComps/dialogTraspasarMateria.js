@@ -20,7 +20,10 @@ const DialogTrasMateria = ({ dialogTrasMateria, setDialogTrasMateria }) => {
     useState(false)
   const [dataEliminarTraspaso, setDataEliminarTraspaso] = useState(null)
 
-  const { data: materias, mutate } = useSWR(GQLregMallaCurricular.GET_MATERIAS)
+  const { data: materias, mutate } = useSWR(
+    GQLregMallaCurricular.GET_MATERIAS,
+    { refreshInterval: 1000 }
+  )
   const { data: materiasDrop } = useSWR(GQLconsultasGenerales.GET_MATERIAS_ONE)
   const { data: carreras } = useSWR(GQLconsultasGenerales.GET_CARRERAS)
 

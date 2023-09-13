@@ -19,7 +19,10 @@ const Postulaciones = ({ data }) => {
   const [confirmPostulacion, setConfirmPostulacion] = useState(false)
   const { rolUser, idUser } = useSesion()
   const toast = useRef(null)
-  const { data: carreraSedes } = useSWR(GQLpostulaciones.GET_OFERTAS_ACADEMICAS)
+  const { data: carreraSedes } = useSWR(
+    GQLpostulaciones.GET_OFERTAS_ACADEMICAS,
+    { refreshInterval: 1000 }
+  )
 
   const crearPostulacion = (variables) => {
     return request(
