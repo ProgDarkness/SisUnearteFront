@@ -63,13 +63,14 @@ const Inicio = () => {
   }
 
   return (
-    <div className="m-2 -mt-2">
-      <div className="w-full text-center">
-        <h1 className="text-3xl font-semibold text-white text-center mr-32 mb-6 -mt-3">
+    <div class="flex flex-col">
+      <div class="overflow-x-auto relative shadow-md sm:rounded-lg background pt-5">
+      <h1 className="text-3xl font-semibold text-white text-center mr-32 mb-6 -mt-3">
           Datos Personales
         </h1>
 
         <div className="grid grid-cols-5 gap-4 mt-4 p-4">
+		
           <span className="p-float-label field">
             <Dropdown
               className="w-full"
@@ -130,10 +131,14 @@ const Inicio = () => {
             />
             <label htmlFor="correoElectronico">Correo Electronico</label>
           </span>
+		  
         </div>
-        <div className="grid grid-cols-5 gap-4">
-          <Divider className="col-span-5" />
-          <div className="w-full text-center col-span-5">
+      </div>
+      <Divider className="col-span-5" />
+      <div>
+      <div class="flex flex-row">
+      <div class="tab-content justify-center rounded-lg shadow-md p-2 w-3/5">
+      <div className="w-full text-center col-span-5">
             <h1 className="text-3xl font-semibold text-white text-center mr-10 mb-0 -mt-0">
               Postulaciones Activas
             </h1>
@@ -171,16 +176,14 @@ const Inicio = () => {
               <Column body={accionBodyTemplate} />
             </DataTable>
           </div>
-        </div>
       </div>
-      {/* eslint-disable-next-line react/no-unknown-property */}
-      <style jsx global>{`
-        .p-disabled,
-        .p-component:disabled {
-          opacity: 0.9;
-        }
-      `}</style>
-    </div>
+
+      <div class="tab-content justify-center rounded-lg shadow-md py-1 px-3 bg-gray-200 w-2/5">
+      <p>2</p>
+      </div>
+      </div>
+      </div>
+</div>
   )
 }
 
