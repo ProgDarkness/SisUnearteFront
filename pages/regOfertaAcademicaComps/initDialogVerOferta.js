@@ -15,7 +15,7 @@ const DialogVerOferta = ({
   datosVerOferta,
   setDatosVerOferta
 }) => {
-  const [animacionVerHorario, setAnimacionVerHorario] = useState(false)
+  const [animationVerHorario, setAnimationVerHorario] = useState(false)
 
   const { data: infoOferta } = useSWR(
     [
@@ -78,18 +78,18 @@ const DialogVerOferta = ({
           <label htmlFor="carrera">Carrera</label>
         </span>
         <div className="flex justify-center align-middle">
-          {animacionVerHorario && (
+          {animationVerHorario && (
             <Button
               label="Volver"
-              onClick={() => setAnimacionVerHorario(!animacionVerHorario)}
+              onClick={() => setAnimationVerHorario(!animationVerHorario)}
               icon="pi pi-check"
               iconPos="left"
             />
           )}
         </div>
       </div>
-      {/*  <AnimatePresence initial={animacionVerHorario}>
-        {animacionVerHorario && (
+      {/*  <AnimatePresence initial={animationVerHorario}>
+        {animationVerHorario && (
           <motion.div
             initial="initial"
             animate="animate"
@@ -115,7 +115,7 @@ const DialogVerOferta = ({
                 />
                 <Column
                   field="miercoles"
-                  header="Miercoles"
+                  header="Miércoles"
                   body={(rowData) => bodyDiaSemana(rowData, 'miercoles')}
                 />
                 <Column
@@ -130,7 +130,7 @@ const DialogVerOferta = ({
                 />
                 <Column
                   field="sabado"
-                  header="Sabado"
+                  header="Sábado"
                   body={(rowData) => bodyDiaSemana(rowData, 'sabado')}
                 />
                 <Column
@@ -143,8 +143,8 @@ const DialogVerOferta = ({
           </motion.div>
         )}
       </AnimatePresence> */}
-      <AnimatePresence initial={!animacionVerHorario}>
-        {!animacionVerHorario && (
+      <AnimatePresence initial={!animationVerHorario}>
+        {!animationVerHorario && (
           <motion.div
             initial="initial"
             animate="animate"

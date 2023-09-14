@@ -51,7 +51,7 @@ const RegOfertaAcademica = ({ cambioVista }) => {
     setDialogConfirmCerrarOferta(false)
   }
 
-  const accionBodyTemplate = (rowData) => {
+  const actionBodyTemplate = (rowData) => {
     return (
       <div className="flex justify-center">
         <Button
@@ -124,7 +124,7 @@ const RegOfertaAcademica = ({ cambioVista }) => {
         visible={dialogConfirmCerrarOferta}
         onHide={() => setDialogConfirmCerrarOferta(false)}
         message="¿Esta seguro que desea cerrar la oferta?"
-        header="Confirmacion"
+        header="Confirmación"
         icon="pi pi-exclamation-triangle"
         accept={acceptCerrarOferta}
         reject={rejectCerrarOferta}
@@ -140,14 +140,14 @@ const RegOfertaAcademica = ({ cambioVista }) => {
       <div className="col-span-5">
         <DataTable
           value={ofertas?.obtenerOfertaAcademica.response}
-          emptyMessage="No hay Ofertas Academicas Registradas."
+          emptyMessage="No hay Ofertas Académicas Registradas."
         >
-          <Column field="co_oferta" header="Codigo" />
+          <Column field="co_oferta" header="Código" />
           <Column field="nb_carrera" header="Carrera" />
           <Column field="nu_cupos" header="Cant. Cupos" />
           <Column field="nb_sede" header="Sede" />
           <Column body={bodyStatus} header="Estatus" />
-          <Column body={accionBodyTemplate} />
+          <Column body={actionBodyTemplate} />
         </DataTable>
       </div>
     </div>

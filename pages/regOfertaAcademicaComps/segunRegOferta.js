@@ -109,7 +109,7 @@ const RegistroOferta = ({ cambioVista }) => {
     )
   }
 
-  const accionBodyTemplate = (rowData) => {
+  const actionBodyTemplate = (rowData) => {
     return (
       <div className="flex justify-center">
         <Button
@@ -172,7 +172,7 @@ const RegistroOferta = ({ cambioVista }) => {
         visible={dialogConfirmElminarOferta}
         onHide={() => setDialogConfirmElminarOferta(false)}
         message="¿Esta seguro que desea eliminar la Oferta?"
-        header="Confirmacion"
+        header="Confirmación"
         icon="pi pi-exclamation-triangle"
         accept={acceptEliminarOferta}
         reject={rejectEliminarOferta}
@@ -183,7 +183,7 @@ const RegistroOferta = ({ cambioVista }) => {
         visible={dialogConfirmAprobarOferta}
         onHide={() => setDialogConfirmAprobarOferta(false)}
         message="¿Esta seguro que desea aprobar la oferta?"
-        header="Confirmacion"
+        header="Confirmación"
         icon="pi pi-exclamation-triangle"
         accept={acceptAprobarOferta}
         reject={rejectAprobarOferta}
@@ -231,13 +231,13 @@ const RegistroOferta = ({ cambioVista }) => {
             value={ofertas?.obtenerOfertaAcademica?.response}
             emptyMessage="No se encuentran trayectos registrados."
           >
-            <Column field="co_oferta" header="Codigo de Oferta" />
+            <Column field="co_oferta" header="Código de Oferta" />
             <Column field="nb_carrera" header="Nombre de Carrera" />
             <Column field="nb_tp_carrera" header="Tipo de Carrera" />
             <Column field="nb_ciclo" header="Tipo de Ciclo" />
             <Column field="nb_sede" header="Sede" />
             <Column field="nb_estatus_oferta" header="Estatus" />
-            <Column body={accionBodyTemplate} />
+            <Column body={actionBodyTemplate} />
           </DataTable>
         </div>
       </div>

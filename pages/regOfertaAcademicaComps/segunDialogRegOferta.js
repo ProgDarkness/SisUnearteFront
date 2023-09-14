@@ -466,7 +466,7 @@ const DialogRegOferta = ({
         visible={dialogConfirmElminarMateria}
         onHide={() => setDialogConfirmElminarMateria(false)}
         message="¿Esta seguro que desea eliminar la materia?"
-        header="Confirmacion"
+        header="Confirmación"
         icon="pi pi-exclamation-triangle"
         accept={acceptEliminarMateria}
         reject={rejectEliminarMateria}
@@ -477,7 +477,7 @@ const DialogRegOferta = ({
         visible={dialogConfirmRegistrarOfert}
         onHide={() => setDialogConfirmRegistrarOfert(false)}
         message="¿Esta seguro que desea registrar la oferta?"
-        header="Confirmacion"
+        header="Confirmación"
         icon="pi pi-exclamation-triangle"
         accept={acceptRegistrarOfert}
         reject={rejectRegistrarOfert}
@@ -516,7 +516,7 @@ const DialogRegOferta = ({
               onChange={(e) => setCodOferta(e.target.value.toUpperCase())}
               autoComplete="off"
             />
-            <label htmlFor="new_cod_carrera">Codigo de la Oferta</label>
+            <label htmlFor="new_cod_carrera">Código de la Oferta</label>
           </span>
           <span className="p-float-label field">
             <Dropdown

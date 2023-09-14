@@ -23,7 +23,7 @@ const DialogVerPeriodo = ({
             autoComplete="off"
             disabled
           />
-          <label htmlFor="cod_periodo">Codigo Periodo</label>
+          <label htmlFor="cod_periodo">Código Periodo</label>
         </span>
         <span className="p-float-label field">
           <InputText
@@ -73,7 +73,7 @@ const DialogVerPeriodo = ({
             autoComplete="off"
             disabled
           />
-          <label htmlFor="mes_fin">Mes de Finalizacion</label>
+          <label htmlFor="mes_fin">Mes de Finalización</label>
         </span>
         <span className="p-float-label field">
           <InputText
@@ -103,7 +103,7 @@ const DialogVerPeriodo = ({
             autoComplete="off"
             disabled
           />
-          <label htmlFor="fe_fin">Fecha de Finalizacion</label>
+          <label htmlFor="fe_fin">Fecha de Finalización</label>
         </span>
         <span className="p-float-label field col-span-2">
           <InputText
@@ -156,7 +156,7 @@ const DialogVerPeriodo = ({
             disabled
           />
           <label htmlFor="fe_ini_pre_inscri">
-            Fecha de Inicio de Preinscripciones
+            Fecha de Inicio de Prescripciones
           </label>
         </span>
         <span className="p-float-label field col-span-2">
@@ -167,7 +167,7 @@ const DialogVerPeriodo = ({
             autoComplete="off"
             disabled
           />
-          <label htmlFor="fe_ini_inscri">Fecha de Inicio de Inscripcion</label>
+          <label htmlFor="fe_ini_inscri">Fecha de Inicio de Inscripción</label>
         </span>
         <span className="p-float-label field col-span-2">
           <InputText
@@ -178,7 +178,7 @@ const DialogVerPeriodo = ({
             disabled
           />
           <label htmlFor="fe_fin_inscri">
-            Fecha de Finalizacion de Inscripcion
+            Fecha de Finalización de Inscripción
           </label>
         </span>
         <span className="p-float-label field col-span-2">
@@ -219,7 +219,7 @@ const DialogVerPeriodo = ({
             autoComplete="off"
             disabled
           />
-          <label htmlFor="fe_fin_retiro">Fecha de Finalizacion de Retiro</label>
+          <label htmlFor="fe_fin_retiro">Fecha de Finalización de Retiro</label>
         </span>
         <span className="p-float-label field">
           <InputText

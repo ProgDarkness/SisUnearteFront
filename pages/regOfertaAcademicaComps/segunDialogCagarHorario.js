@@ -182,7 +182,7 @@ const DialogCargarHorario = ({
         resizable={false}
         draggable={false}
         onHide={() => setActiveDialogCargarHorario(false)}
-        header="Carga de Horario por Seccion"
+        header="Carga de Horario por Sección"
         style={{ height: '90%', width: '100%' }}
       >
         <div className="mt-3 w-[20%] mb-3">
@@ -195,7 +195,7 @@ const DialogCargarHorario = ({
               optionLabel="nb_seccion"
               onChange={(e) => setSeccion(e.value)}
             />
-            <label htmlFor="seccion">Seccion</label>
+            <label htmlFor="seccion">Sección</label>
           </span>
         </div>
         <DataTable
@@ -216,7 +216,7 @@ const DialogCargarHorario = ({
           />
           <Column
             field="miercoles"
-            header="Miercoles"
+            header="Miércoles"
             body={(rowData) => bodyDiaSemana(rowData, 'miercoles')}
           />
           <Column
@@ -231,7 +231,7 @@ const DialogCargarHorario = ({
           />
           <Column
             field="sabado"
-            header="Sabado"
+            header="Sábado"
             body={(rowData) => bodyDiaSemana(rowData, 'sabado')}
           />
           <Column
