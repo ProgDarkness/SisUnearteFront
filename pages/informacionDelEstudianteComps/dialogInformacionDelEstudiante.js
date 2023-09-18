@@ -375,7 +375,7 @@ const DialogInformacionDelEstudiante = ({
           value={datosEstudiantes}
           emptyMessage="No hay estudiantes registrados."
         >
-          <Column field="codigoCarrera" header="Cod.Carrera" />
+          <Column field="codigoCarrera" header="Cod. Carrera" />
           <Column field="nombreCarrera" header="Nombre de la carrera" />
           <Column field="trayecto" header="Trayecto" />
           <Column field="notas1" header="Notas" />

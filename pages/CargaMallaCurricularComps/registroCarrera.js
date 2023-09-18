@@ -235,7 +235,7 @@ const RegistroCarrera = ({ cambioVista }) => {
         visible={dialogConfirmElminarCarrera}
         onHide={() => setDialogConfirmElminarCarrera(false)}
         message="¿Esta seguro que desea eliminar la carrera?"
-        header="Confirmacion"
+        header="Confirmación"
         icon="pi pi-exclamation-triangle"
         accept={acceptElminarCarrera}
         reject={rejectElminarCarrera}
@@ -246,7 +246,7 @@ const RegistroCarrera = ({ cambioVista }) => {
         visible={dialogConfirmAprobarCarrera}
         onHide={() => setDialogConfirmAprobarCarrera(false)}
         message="¿Esta seguro que desea aprobar la carrera?"
-        header="Confirmacion"
+        header="Confirmación"
         icon="pi pi-exclamation-triangle"
         accept={acceptAprobarCarrera}
         reject={rejectAprobarCarrera}
@@ -379,7 +379,7 @@ const RegistroCarrera = ({ cambioVista }) => {
           value={carreras?.obtenerTodasCarreras.response}
           emptyMessage="No se encuentran trayectos registrados."
         >
-          <Column field="codigo" header="Codigo" />
+          <Column field="codigo" header="Código" />
           <Column field="nombre" header="Nombre" />
           <Column field="tipo" header="Tipo" />
           <Column field="ciclo" header="Tipo de Ciclo" />

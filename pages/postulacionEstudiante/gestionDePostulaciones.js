@@ -151,14 +151,14 @@ const GestionDePostulaciones = () => {
         setReload={setReload}
       />
       <div className="text-3xl font-semibold text-white text-center mr-32 mb-6 -mt-3">
-        <h1>Gestion De Postulaciones</h1>
+        <h1>Gestión De Postulaciones</h1>
       </div>
 
       <ConfirmDialog
         visible={dialogConfirmConfirmarPostulado}
         onHide={() => setDialogConfirmConfirmarPostulado(false)}
         message="¿Esta seguro que desea aceptar la postulacion?"
-        header="Confirmacion"
+        header="Confirmación"
         icon="pi pi-exclamation-triangle"
         accept={acceptConfirmarPostulado}
         reject={rejectConfirmarPostulado}
@@ -169,8 +169,8 @@ const GestionDePostulaciones = () => {
       <ConfirmDialog
         visible={dialogConfirmElminarPostulado}
         onHide={() => setDialogConfirmElminarPostulado(false)}
-        message="¿Esta seguro que desea rechazar la postulacion?"
-        header="Confirmacion"
+        message="¿Esta seguro que desea rechazar la postulación?"
+        header="Confirmación"
         icon="pi pi-exclamation-triangle"
         accept={acceptElminarPostulado}
         reject={rejectElminarPostulado}
@@ -194,7 +194,7 @@ const GestionDePostulaciones = () => {
               field="cedula"
               filterPlaceholder="Buscar"
               filter
-              header="Cedula"
+              header="Cédula"
             />
             <Column
               field="nombre"
@@ -208,7 +208,7 @@ const GestionDePostulaciones = () => {
               filter
               header="Apellido"
             />
-            <Column field="fepostulacion" header="Fecha de postulacion" />
+            <Column field="fepostulacion" header="Fecha de postulación" />
             <Column
               field="carrera"
               filterPlaceholder="Buscar"

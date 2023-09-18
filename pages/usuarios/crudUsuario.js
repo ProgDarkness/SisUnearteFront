@@ -152,7 +152,7 @@ const DialogCrudUser = ({ active, setActive }) => {
   const header1 = () => {
     return (
       <div className="flex justify-center">
-        <h1 className="text-3xl text-[#ffffff]">Gestion de Usuarios</h1>
+        <h1 className="text-3xl text-[#ffffff]">Gestión de Usuarios</h1>
       </div>
     )
   }
@@ -217,7 +217,7 @@ const DialogCrudUser = ({ active, setActive }) => {
                   <Column field="id_usuario" header="ID" sortable />
                   <Column
                     field="ced_usuario"
-                    header="Cedula"
+                    header="Cédula"
                     filterPlaceholder="Buscar"
                     filter
                     style={{ width: '12%' }}
@@ -232,11 +232,11 @@ const DialogCrudUser = ({ active, setActive }) => {
                   />
                   <Column
                     body={(rowData) => bodyFecha(rowData)}
-                    header="Fecha De Creacion"
+                    header="Fecha De Creación"
                   />
                   <Column
                     body={(rowData) => bodyFechaActualizacion(rowData)}
-                    header="Fecha De Actualizacion"
+                    header="Fecha De Actualización"
                   />
                   <Column body={actionBodyTemplate} header="Acciones" />
                 </DataTable>

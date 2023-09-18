@@ -173,11 +173,6 @@ const DialogRegistrarSede = ({ dialogRegSede, setDialogRegSede }) => {
     )
   }
 
-  /* 
-¡ Atención !
-Error: update o delete en «t011t_sedes» viola la llave foránea 
-«r007t_sede_carrera_fk» en la tabla «r007t_sede_carrera» */
-
   return (
     <Dialog
       visible={dialogRegSede}
@@ -320,7 +315,7 @@ Error: update o delete en «t011t_sedes» viola la llave foránea
             autoComplete="off"
             disabled
           />
-          <label htmlFor="codPostal">Codigo Postal</label>
+          <label htmlFor="codPostal">Código Postal</label>
         </span>
         <span className="p-float-label field col-span-2">
           <InputText
@@ -330,7 +325,7 @@ Error: update o delete en «t011t_sedes» viola la llave foránea
             onChange={(e) => setDescDireccion(e.target.value.toUpperCase())}
             autoComplete="off"
           />
-          <label htmlFor="descDireccion">Descripcion de direccion</label>
+          <label htmlFor="descDireccion">Descripción de dirección</label>
         </span>
         <div className="my-auto">
           <Button
@@ -355,7 +350,7 @@ Error: update o delete en «t011t_sedes» viola la llave foránea
         </div>
         <div className="col-span-4">
           <DataTable value={sedes?.obtenerCrudSede.response}>
-            <Column field="co_sede" header="Codigo" />
+            <Column field="co_sede" header="Código" />
             <Column field="nb_sede" header="Sede" />
             <Column field="estatus" header="Estatus" />
             <Column body={accionBodyTemplate} />

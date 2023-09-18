@@ -129,7 +129,7 @@ const GestionDePersonal = () => {
         visible={dialogConfirmElminarPersonal}
         onHide={() => setDialogConfirmElminarPersonal(false)}
         message="¿Esta seguro que desea eliminar el Personal?"
-        header="Confirmacion"
+        header="Confirmación"
         icon="pi pi-exclamation-triangle"
         accept={acceptEliminarPersonal}
         reject={rejectEliminarPersonal}
@@ -138,7 +138,7 @@ const GestionDePersonal = () => {
       />
       <div className="flex justify-center">
         <h1 className="text-3xl font-semibold text-white">
-          Gestion de Personal
+          Gestión de Personal
         </h1>
       </div>
       <div className="col-span-5">

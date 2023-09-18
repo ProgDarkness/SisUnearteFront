@@ -73,7 +73,7 @@ const InscripcionElectiva = () => {
     <div className="grid grid-cols-5 gap-4 m-2 -mt-2">
       <div className="col-span-5 text-center">
         <h1 className="text-3xl font-semibold text-white">
-          Inscripcion de Materia Electiva
+          Inscripción de Materia Electiva
         </h1>
       </div>
       <span className="p-float-label field">
@@ -204,7 +204,7 @@ const InscripcionElectiva = () => {
               value={datosEstudiante?.electiva?.telefono}
               autoComplete="off"
             />
-            <label htmlFor="trayecto">Telefono</label>
+            <label htmlFor="trayecto">Teléfono</label>
           </span>
         </div>
       )}

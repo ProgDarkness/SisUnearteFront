@@ -122,8 +122,8 @@ const CargarMalla = ({ cambioVista }) => {
       <ConfirmDialog
         visible={dialogConfirmElminarMalla}
         onHide={() => setDialogConfirmElminarMalla(false)}
-        message="¿Esta seguro que desea desaprovar la malla curricular?"
-        header="Confirmacion"
+        message="¿Esta seguro que desea desaprobar la malla curricular?"
+        header="Confirmación"
         icon="pi pi-exclamation-triangle"
         accept={acceptElminarMalla}
         reject={rejectElminarMalla}
@@ -141,7 +141,7 @@ const CargarMalla = ({ cambioVista }) => {
           value={mallas?.obtenerTodasMallas.response.mallas}
           emptyMessage="No hay carreras registradas."
         >
-          <Column field="codigo" header="Codigo" />
+          <Column field="codigo" header="Código" />
           <Column field="nombre" header="Nombre" />
           <Column field="tipo" header="Tipo" />
           <Column field="ciclo" header="Tipo de Ciclo" />

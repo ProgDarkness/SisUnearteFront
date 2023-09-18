@@ -195,7 +195,7 @@ const DialogTrasMateria = ({ dialogTrasMateria, setDialogTrasMateria }) => {
         visible={dialogConfirmElminarTraspaso}
         onHide={() => setDialogConfirmElminarTraspaso(false)}
         message="¿Esta seguro que desea eliminar el traspaso?"
-        header="Confirmacion"
+        header="Confirmación"
         icon="pi pi-exclamation-triangle"
         accept={acceptEliminarMateria}
         reject={rejectEliminarMateria}
@@ -230,12 +230,12 @@ const DialogTrasMateria = ({ dialogTrasMateria, setDialogTrasMateria }) => {
             groupRowsBy={['carrera']}
           >
             <Column field="carrera" header="Carrera" />
-            <Column field="codigo" header="Codigo" />
+            <Column field="codigo" header="Código" />
             <Column field="nombre" header="Materia" />
-            <Column field="tipo" header="Tecnica" />
+            <Column field="tipo" header="Técnica" />
             <Column
               field="credito"
-              header="Unidades de Credito"
+              header="Unidades de Crédito"
               style={{ width: '10%' }}
             />
             <Column

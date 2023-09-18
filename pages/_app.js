@@ -129,7 +129,7 @@ function MyApp({ Component, pageProps }) {
         <meta name="viewport" content="initial-scale=1.0, width=device-width" />
         <meta
           name="description"
-          content="Interfaz de valanceo de Data de los Sistemas SIGESP-ODOO"
+          content="SIstema de UNEARTE"
         />
         <meta name="theme-color" content="#000000" />
       </Head>

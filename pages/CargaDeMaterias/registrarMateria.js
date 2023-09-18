@@ -137,7 +137,7 @@ const RegistrarMateria = () => {
         visible={dialogConfirmElminarMateria}
         onHide={() => setDialogConfirmElminarMateria(false)}
         message="¿Esta seguro que desea eliminar la materia?"
-        header="Confirmacion"
+        header="Confirmación"
         icon="pi pi-exclamation-triangle"
         accept={acceptEliminarMateria}
         reject={rejectEliminarMateria}

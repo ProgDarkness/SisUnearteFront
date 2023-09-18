@@ -836,7 +836,7 @@ const RegistroPrevio = ({ data }) => {
           acceptLabel="Si"
           rejectLabel="No"
           onHide={() => setConfirmRegistrar(false)}
-          message="Estas seguro que deseas confirmar la informacion ingresada?"
+          message="Estas seguro que deseas confirmar la información ingresada?"
           header="Confirmar"
           icon="pi pi-exclamation-triangle"
           accept={accept}

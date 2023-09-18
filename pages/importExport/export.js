@@ -22,10 +22,10 @@ const Export = ({ cambioVista }) => {
         key: 'nacionalidad',
         width: 30
       },
-      { header: 'CEDULA', key: 'cedula', width: 30 },
+      { header: 'CÉDULA', key: 'cedula', width: 30 },
       { header: 'NOMBRES', key: 'nombre', width: 30 },
       { header: 'APELLIDOS', key: 'apellido', width: 30 },
-      { header: 'FECHA DE POSTULACION', key: 'fepostulacion', width: 30 },
+      { header: 'FECHA DE POSTULACIÓN', key: 'fepostulacion', width: 30 },
       { header: 'CARRERA', key: 'carrera', width: 10 },
       { header: 'PERIODO', key: 'periodo', width: 20 },
       { header: 'TIPO PERIODO', key: 'tperiodo', width: 30 },

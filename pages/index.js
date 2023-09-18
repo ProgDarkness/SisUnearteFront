@@ -88,7 +88,7 @@ export default function Index() {
       toast.current.show({
         severity: 'warn',
         summary: 'Atención!',
-        detail: 'Debe llenar los campos Usuario y Constraseña',
+        detail: 'Debe llenar los campos Usuario y Contraseña',
         life: 3000
       })
     }
@@ -118,7 +118,7 @@ export default function Index() {
               <div className="grid grid-cols-1 content-center h-full">
                 <div className="text-center">
                   <h1 className="text-4xl font-extrabold text-white">
-                    Inicio de Sesion
+                    Inicio de Sesión
                   </h1>
                 </div>
                 <div className="grid grid-cols-1 gap-4 w-full">

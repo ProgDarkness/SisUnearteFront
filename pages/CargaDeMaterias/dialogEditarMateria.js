@@ -85,7 +85,7 @@ const DialogEditarMateria = ({
             onChange={(e) => setCodMateria(e.target.value.toUpperCase())}
             autoComplete="off"
           />
-          <label htmlFor="new_cod_carrera">Codigo</label>
+          <label htmlFor="new_cod_carrera">Código</label>
         </span>
         <span className="p-float-label field">
           <InputText
@@ -108,7 +108,7 @@ const DialogEditarMateria = ({
             onChange={(e) => setIdTpMateria(e.value)}
             autoComplete="off"
           />
-          <label htmlFor="new_tec_materia">Tecnica</label>
+          <label htmlFor="new_tec_materia">Técnica</label>
         </span>
         <span className="p-float-label field">
           <InputText

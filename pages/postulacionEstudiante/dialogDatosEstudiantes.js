@@ -241,7 +241,7 @@ const DialogDatosEstudiantes = ({
             onChange={(e) => setFechaNaci(e.target.value)}
             disabled
           />
-          <label htmlFor="fechanaci">Fecha de nacimiento</label>
+          <label htmlFor="fechanaci">Fecha de Nacimiento</label>
         </span>
         <span className="p-float-label field">
           <Dropdown

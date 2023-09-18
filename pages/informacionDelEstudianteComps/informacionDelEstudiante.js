@@ -63,10 +63,10 @@ const InformacionDelEstudiante = () => {
           emptyMessage="No hay estudiantes registrados."
         >
           <Column field="nacionalidad" header="Nacionalidad" />
-          <Column field="cedula" header="Cedula" />
+          <Column field="cedula" header="Cédula" />
           <Column field="nombre" header="Nombre" />
           <Column field="apellido" header="Apellido" />
-          <Column field="carrera" header="Carrera Cursante " />
+          <Column field="carrera" header="Carrera En Curso" />
           <Column field="trayecto" header="Trayecto En Curso " />
           <Column body={actionbodytemplate} />
         </DataTable>
