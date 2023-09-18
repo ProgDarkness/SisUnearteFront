@@ -5,7 +5,7 @@ import { Card } from 'primereact/card'
 import { useState, createContext } from 'react'
 import Image from 'next/image'
 import imageInicio from '../../public/images/inicio.png'
-import InscripcionElectiva from './inscripcionElectiva'
+import InscripcionElectiva from '../gestionDeElectiva/inscripcionElectiva'
 import Postulaciones from '../postulacionEstudiante/postulaciones'
 import CargaMallaCurricular from '../CargaMallaCurricularComps/cargarMallaCurricular'
 import request from 'graphql-request'
@@ -15,9 +15,10 @@ import RegOfertaAcademica from '../regOfertaAcademicaComps/registroOfertaAcademi
 import GestionDePostulaciones from '../postulacionEstudiante/gestionDePostulaciones'
 import InformacionDelEstudiante from '../informacionDelEstudianteComps/informacionDelEstudiante'
 import GestionDePersonal from 'pages/gestionDePersonal/gestionDePersonal'
+import GestionElectiva from 'pages/gestionDeElectiva/gestionElectiva'
 import RegistrarMateria from 'pages/CargaDeMaterias/registrarMateria'
 import Inicio from './inicio'
-import PruebasImportExport from './pruebasImportExport'
+import PruebasImportExport from '../importExport/pruebasImportExport'
 
 const VistasContext = createContext({})
 
@@ -35,7 +36,8 @@ export default function index({ data }) {
     informacionDelEstudiante: false,
     pruebasImportExport: false,
     gestionDePersonal: false,
-    inicio: true
+    inicio: true,
+    gestionElectiva: false
   }
   const [mostrarVistas, setMostrarVistas] = useState(templateContext)
 
@@ -89,6 +91,7 @@ export default function index({ data }) {
               {mostrarVistas?.gestionDePostulaciones && (
                 <GestionDePostulaciones />
               )}
+              {mostrarVistas?.gestionElectiva && <GestionElectiva />}
               {mostrarVistas?.informacionDelEstudiante && (
                 <InformacionDelEstudiante />
               )}

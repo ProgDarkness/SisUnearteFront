@@ -1,5 +1,5 @@
-import Import from '../importExport/import'
-import Export from '../importExport/export'
+import Import from './import'
+import Export from './export'
 import { useState } from 'react'
 
 const PruebasImportExport = () => {

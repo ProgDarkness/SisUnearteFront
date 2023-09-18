@@ -145,6 +145,11 @@ const RegistrarMateria = () => {
         rejectLabel="NO"
       />
       <div className="grid grid-cols-5 gap-4 m-2">
+        <div className="col-span-5 flex justify-between">
+          <div />
+          <h1 className="text-3xl font-semibold text-white">Registrar Materia</h1>
+          <div />
+        </div>
         {reload && (
           <span className="p-float-label field">
             <InputText
@@ -154,7 +159,7 @@ const RegistrarMateria = () => {
               onChange={(e) => setCodMateria(e.target.value.toUpperCase())}
               autoComplete="off"
             />
-            <label htmlFor="new_cod_carrera">Codigo de la Materia</label>
+            <label htmlFor="new_cod_carrera">Código de la Materia</label>
           </span>
         )}
         {reload && (
@@ -181,7 +186,7 @@ const RegistrarMateria = () => {
               onChange={(e) => setIdTpMateria(e.value)}
               autoComplete="off"
             />
-            <label htmlFor="new_tec_carrera">Tecnica de la Materia</label>
+            <label htmlFor="new_tec_carrera">Técnica de la Materia</label>
           </span>
         )}
         {reload && (
@@ -232,9 +237,9 @@ const RegistrarMateria = () => {
           value={materias?.obtenerTodasMaterias.response}
           emptyMessage="No se encuentran materias registradas."
         >
-          <Column field="codigo" header="Codigo" />
+          <Column field="codigo" header="Código" />
           <Column field="nombre" header="Materia" />
-          <Column field="tipo" header="Tecnica" />
+          <Column field="tipo" header="Técnica" />
           <Column field="credito" header="Unidades de Credito" />
           <Column field="hora" header="Horas Semanales" />
           <Column body={accionBodyTemplateMaterias} />

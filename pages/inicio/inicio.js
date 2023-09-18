@@ -51,7 +51,7 @@ const Inicio = () => {
         <Button
           icon="pi pi-pencil"
           className="p-button-help mr-1"
-          tooltip="Incribir"
+          tooltip="Inscribir"
           onClick={() => {
             /* setDatosEditarPersonal(rowData)
             setActiveDialogEditarPersonal(true) */
@@ -63,14 +63,13 @@ const Inicio = () => {
   }
 
   return (
-    <div class="flex flex-col">
-      <div class="overflow-x-auto relative shadow-md sm:rounded-lg background pt-5">
-      <h1 className="text-3xl font-semibold text-white text-center mr-32 mb-6 -mt-3">
+    <div className="flex flex-col">
+      <div className="overflow-x-auto relative shadow-md sm:rounded-lg background pt-5">
+        <h1 className="text-3xl font-semibold text-white text-center mr-32 mb-6 -mt-3">
           Datos Personales
         </h1>
 
         <div className="grid grid-cols-5 gap-4 mt-4 p-4">
-		
           <span className="p-float-label field">
             <Dropdown
               className="w-full"
@@ -80,7 +79,7 @@ const Inicio = () => {
               onChange={(e) => {
                 setNacionalidad(e.value)
               }}
-              optionLabel="codigo"
+              optionLabel="código"
               disabled
             />
             <label htmlFor="nacionalidad">Nacionalidad</label>
@@ -131,59 +130,58 @@ const Inicio = () => {
             />
             <label htmlFor="correoElectronico">Correo Electronico</label>
           </span>
-		  
         </div>
       </div>
       <Divider className="col-span-5" />
       <div>
-      <div class="flex flex-row">
-      <div class="tab-content justify-center rounded-lg shadow-md p-2 w-3/5">
-      <div className="w-full text-center col-span-5">
-            <h1 className="text-3xl font-semibold text-white text-center mr-10 mb-0 -mt-0">
-              Postulaciones Activas
-            </h1>
+        <div className="flex flex-row">
+          <div className="tab-content justify-center rounded-lg shadow-md p-2 w-3/5">
+            <div className="w-full text-center col-span-5">
+              <h1 className="text-3xl font-semibold text-white text-center mr-10 mb-0 -mt-0">
+                Postulaciones Activas
+              </h1>
+            </div>
+            <div className="col-span-5">
+              <DataTable
+                value={infoPostuUsu?.obtenerPostulacionUsuario.response}
+                emptyMessage="No se encuentran trayectos registrados."
+                filterDisplay="row"
+              >
+                <Column
+                  field="periodo"
+                  filterPlaceholder="Buscar"
+                  filter
+                  header="Periodo"
+                />
+                <Column
+                  field="carrera"
+                  filterPlaceholder="Buscar"
+                  filter
+                  header="Carrera"
+                />
+                <Column
+                  field="sede"
+                  filterPlaceholder="Buscar"
+                  filter
+                  header="Sede"
+                />
+                <Column
+                  field="estatus"
+                  filterPlaceholder="Buscar"
+                  filter
+                  header="Estatus"
+                />
+                <Column body={accionBodyTemplate} />
+              </DataTable>
+            </div>
           </div>
-          <div className="col-span-5">
-            <DataTable
-              value={infoPostuUsu?.obtenerPostulacionUsuario.response}
-              emptyMessage="No se encuentran trayectos registrados."
-              filterDisplay="row"
-            >
-              <Column
-                field="periodo"
-                filterPlaceholder="Buscar"
-                filter
-                header="Periodo"
-              />
-              <Column
-                field="carrera"
-                filterPlaceholder="Buscar"
-                filter
-                header="Carrera"
-              />
-              <Column
-                field="sede"
-                filterPlaceholder="Buscar"
-                filter
-                header="Sede"
-              />
-              <Column
-                field="estatus"
-                filterPlaceholder="Buscar"
-                filter
-                header="Estatus"
-              />
-              <Column body={accionBodyTemplate} />
-            </DataTable>
-          </div>
-      </div>
 
-      <div class="tab-content justify-center rounded-lg shadow-md py-1 px-3 bg-gray-200 w-2/5">
-      <p>2</p>
+          <div className="tab-content justify-center rounded-lg shadow-md py-1 px-3 bg-gray-200 w-2/5">
+            <p>2</p>
+          </div>
+        </div>
       </div>
-      </div>
-      </div>
-</div>
+    </div>
   )
 }
 
