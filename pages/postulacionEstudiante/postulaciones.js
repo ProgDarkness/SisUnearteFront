@@ -9,10 +9,8 @@ import { useSesion } from 'hooks/useSesion'
 import { ConfirmDialog } from 'primereact/confirmdialog'
 import useSWR from 'swr'
 import request from 'graphql-request'
-import { useRouter } from 'next/router'
 
-const Postulaciones = ({ data }) => {
-  const router = useRouter()
+const Postulaciones = ({ cambioVista }) => {
   const [activeDialogVerMalla, setActiveDialogVerMalla] = useState(false)
   const [datosVerMalla, setDatosVerMalla] = useState(null)
   const [datosPostularse, setDatosPostularse] = useState(null)
@@ -53,7 +51,19 @@ const Postulaciones = ({ data }) => {
           detail: message,
           life: 3000
         })
-        router.reload()
+        setTimeout(() => {
+          const newVistas = {
+            [`inicio`]: true
+          }
+          cambioVista((prevState) => ({
+            ...prevState,
+            ...newVistas,
+            ...Object.keys(prevState).reduce((acc, key) => {
+              if (key !== 'inicio') acc[key] = false
+              return acc
+            }, {})
+          }))
+        }, 1000)
       }
     )
   }

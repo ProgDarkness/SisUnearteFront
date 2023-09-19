@@ -145,8 +145,9 @@ const GestionDePersonal = () => {
         <HeaderPersonal />
         <DataTable
           value={todoPersonal?.obtenerPersonal.response}
-          emptyMessage="No se encuentran trayectos registrados."
+          emptyMessage="No se encuentra personal registrado."
           filterDisplay="row"
+          id="filter"
         >
           <Column
             field="cedula"
@@ -160,39 +161,18 @@ const GestionDePersonal = () => {
             filter
             header="Nombre"
           />
-          <Column
-            field="apellido"
-            filterPlaceholder="Buscar"
-            filter
-            header="Apellido"
-          />
-          <Column
-            field="sexo"
-            filterPlaceholder="Buscar"
-            filter
-            header="Sexo"
-          />
-          <Column
-            field="civil"
-            filterPlaceholder="Buscar"
-            filter
-            header="Civil"
-          />
-          <Column
-            field="profesion"
-            filterPlaceholder="Buscar"
-            filter
-            header="Profesión"
-          />
-          <Column
-            field="cargahoraria"
-            filterPlaceholder="Buscar"
-            filter
-            header="Carga Horaria"
-          />
+          <Column field="apellido" header="Apellido" />
+          <Column field="profesion" header="Profesión" />
           <Column body={accionBodyTemplate} />
         </DataTable>
       </div>
+      {/*  eslint-disable-next-line react/no-unknown-property */}
+      <style jsx global>{`
+        #filter .p-column-filter-menu-button,
+        .p-column-filter-clear-button {
+          display: none;
+        }
+      `}</style>
     </div>
   )
 }

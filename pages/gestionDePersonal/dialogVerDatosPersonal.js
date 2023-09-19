@@ -11,7 +11,6 @@ const DialogVerDatosPersonal = ({
   setActiveDialogVerDatosPersonal,
   datosVerPersonal
 }) => {
-  console.log(datosVerPersonal)
 
   const [tpNacionalidad, setTpNacionalidad] = useState(null)
   const [cedulaPersonal, setCedulaPersonal] = useState('')

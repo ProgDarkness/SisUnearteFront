@@ -13,15 +13,18 @@ import { useRouter } from 'next/router'
 import { useSesion } from 'hooks/useSesion'
 
 const DialogCrudUser = ({ active, setActive }) => {
-  const router = useRouter()
-  const { token, rolUser } = useSesion()
-  const { data, mutate } = useSWR([GQLPlantilla.GET_USUARIOS, {}, token], {
-    refreshInterval: 1000
-  })
-
   const toast = useRef(null)
   const [deleteUsuarioDialog, setDeleteUsuarioDialog] = useState(false)
   const [usuario, setUsuario] = useState(null)
+  const router = useRouter()
+  const { token, rolUser } = useSesion()
+
+  const { data, mutate } = useSWR(
+    [rolUser === 2 ? GQLPlantilla.GET_USUARIOS : null, {}, token],
+    {
+      refreshInterval: 1000
+    }
+  )
 
   const bodyFecha = (rowData) => {
     const fecha = new Date(parseInt(rowData?.created_at))

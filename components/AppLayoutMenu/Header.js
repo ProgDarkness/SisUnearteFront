@@ -51,7 +51,9 @@ export default function Header({ verMenu }) {
 
   return (
     <header id="header-principal" className={styles.header}>
-      <DialogCrudUser active={dialogUserCrud} setActive={setDialogUserCrud} />
+      {rolUser === 2 && (
+        <DialogCrudUser active={dialogUserCrud} setActive={setDialogUserCrud} />
+      )}
       <div className="w-full text-right">
         <span className="text-white mr-3 font-bold text-xs md:text-base">{`${
           dias[hoy.getDay()]

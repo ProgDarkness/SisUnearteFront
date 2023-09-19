@@ -14,7 +14,9 @@ const DialogVerRegOferta = ({
 }) => {
   const { data: detallesMallas } = useSWR(
     [
-      GQLregOfertaAcademica.DETALLES_MALLAS_CARRERA,
+      datosVerCarrera?.id_carrera
+        ? GQLregOfertaAcademica.DETALLES_MALLAS_CARRERA
+        : null,
       { carrera: parseInt(datosVerCarrera?.id_carrera) }
     ],
     { refreshInterval: 1000 }

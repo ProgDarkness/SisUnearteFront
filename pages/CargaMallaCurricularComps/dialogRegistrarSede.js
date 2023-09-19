@@ -159,7 +159,6 @@ const DialogRegistrarSede = ({ dialogRegSede, setDialogRegSede }) => {
   const { data: tipoZonas } = useSWR(GQLconsultasGenerales.GET_TIPO_ZONAS)
 
   const accionBodyTemplate = (rowData) => {
-    console.log(rowData)
     return (
       <div className="flex justify-center">
         <Button

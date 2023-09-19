@@ -24,15 +24,13 @@ const Inicio = () => {
   )
 
   const { data: infoPostuUsu } = useSWR(
-    [GQLpostulaciones.GET_POSTULACION_USUARIO, { idUser }],
+    [idUser ? GQLpostulaciones.GET_POSTULACION_USUARIO : null, { idUser }],
     { refreshInterval: 1000 }
   )
 
   const { data: tiposNacionalidad } = useSWR(
     GQLconsultasGenerales.GET_NACIONALIDADES
   )
-
-  console.log(infoUser)
 
   useEffect(() => {
     if (infoUser?.getInfoUsuario.response) {
@@ -145,32 +143,11 @@ const Inicio = () => {
               <DataTable
                 value={infoPostuUsu?.obtenerPostulacionUsuario.response}
                 emptyMessage="No se encuentran trayectos registrados."
-                filterDisplay="row"
               >
-                <Column
-                  field="periodo"
-                  filterPlaceholder="Buscar"
-                  filter
-                  header="Periodo"
-                />
-                <Column
-                  field="carrera"
-                  filterPlaceholder="Buscar"
-                  filter
-                  header="Carrera"
-                />
-                <Column
-                  field="sede"
-                  filterPlaceholder="Buscar"
-                  filter
-                  header="Sede"
-                />
-                <Column
-                  field="estatus"
-                  filterPlaceholder="Buscar"
-                  filter
-                  header="Estatus"
-                />
+                <Column field="periodo" header="Periodo" />
+                <Column field="carrera" header="Carrera" />
+                <Column field="sede" header="Sede" />
+                <Column field="estatus" header="Estatus" />
                 <Column body={accionBodyTemplate} />
               </DataTable>
             </div>
@@ -179,6 +156,13 @@ const Inicio = () => {
           <div className="tab-content justify-center rounded-lg shadow-md py-1 px-3 bg-gray-200 w-2/5">
             <p>2</p>
           </div>
+          {/* eslint-disable-next-line react/no-unknown-property */}
+          <style jsx global>{`
+            .p-disabled,
+            .p-component:disabled {
+              opacity: 1;
+            }
+          `}</style>
         </div>
       </div>
     </div>

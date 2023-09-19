@@ -83,7 +83,9 @@ export default function index({ data }) {
               )}
               {mostrarVistas?.inicio && <Inicio />}
               {mostrarVistas?.inscripcionElectiva && <InscripcionElectiva />}
-              {mostrarVistas?.postulaciones && <Postulaciones data={data} />}
+              {mostrarVistas?.postulaciones && (
+                <Postulaciones cambioVista={setMostrarVistas} />
+              )}
               {mostrarVistas?.cargaMallaCurricular && <CargaMallaCurricular />}
               {mostrarVistas?.cargaDeMaterias && <RegistrarMateria />}
               {mostrarVistas?.registroPrevio && <RegistroPrevio data={data} />}
@@ -101,8 +103,7 @@ export default function index({ data }) {
             {/* eslint-disable-next-line react/no-unknown-property */}
             <style jsx global>{`
               ::-webkit-scrollbar {
-                width: 0;
-                height: 0;
+                display: none;
               }
               .p-button:enabled:hover,
               .p-button:not(button):not(a):not(.p-disabled):hover {

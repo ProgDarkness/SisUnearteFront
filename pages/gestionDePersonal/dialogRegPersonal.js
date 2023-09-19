@@ -96,7 +96,6 @@ const DialogRegPersonal = ({
       civil: parseInt(tpCivil),
       departamento: parseInt(tpDepartamento)
     }
-    console.log(InputPersonal)
     crearPersonal({ InputPersonal }).then(
       ({ crearPersonal: { status, message, type } }) => {
         setTpNacionalidad('')

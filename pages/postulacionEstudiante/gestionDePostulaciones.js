@@ -135,6 +135,22 @@ const GestionDePostulaciones = () => {
     )
   }
 
+  const bodyCedula = (rowData) => {
+    return (
+      <div>
+        {rowData.nacionalidad}-{rowData.cedula}
+      </div>
+    )
+  }
+
+  const bodyNombre = (rowData) => {
+    return (
+      <div>
+        {rowData.nombre} {rowData.apellido}
+      </div>
+    )
+  }
+
   return (
     <div>
       <Toast ref={toast} />
@@ -184,50 +200,72 @@ const GestionDePostulaciones = () => {
             value={listadoPostulados?.obtenerListadoPostuladoCarrera.response}
             emptyMessage="No hay carreras registradas."
             filterDisplay="row"
+            id="filter"
           >
-            <Column
-              field="nacionalidad"
-              header="Nacionalidad"
-              style={{ textAlign: 'center' }}
-            />
-            <Column
-              field="cedula"
-              filterPlaceholder="Buscar"
-              filter
-              header="Cédula"
-            />
-            <Column
-              field="nombre"
-              filterPlaceholder="Buscar"
-              filter
-              header="Nombre"
-            />
-            <Column
-              field="apellido"
-              filterPlaceholder="Buscar"
-              filter
-              header="Apellido"
-            />
-            <Column field="fepostulacion" header="Fecha de postulación" />
             <Column
               field="carrera"
               filterPlaceholder="Buscar"
               filter
-              header="Carrera "
+              header="Carrera"
+              alignHeader="center"
+              align="center"
             />
-            <Column field="periodo" header="Periodo" />
             <Column
               field="sede"
               filterPlaceholder="Buscar"
               filter
               header="Sede"
+              alignHeader="center"
+              align="center"
             />
-            <Column field="estado" header="Estado" />
-            <Column field="estatus" body={bodyEstatus} header="Estatus" />
+            <Column
+              field="cedula"
+              filterPlaceholder="Buscar"
+              filter
+              body={bodyCedula}
+              header="Cédula"
+              alignHeader="center"
+              align="center"
+            />
+            <Column
+              field="nombre"
+              filterPlaceholder="Buscar"
+              filter
+              body={bodyNombre}
+              header="Nombre"
+              alignHeader="center"
+              align="center"
+            />
+            <Column
+              field="fepostulacion"
+              header="Fecha de postulación"
+              alignHeader="center"
+              align="center"
+            />
+            <Column
+              field="periodo"
+              header="Periodo"
+              alignHeader="center"
+              align="center"
+            />
+            <Column
+              field="estatus"
+              body={bodyEstatus}
+              header="Estatus"
+              alignHeader="center"
+              align="center"
+            />
             <Column body={actionbodytemplate} />
           </DataTable>
         )}
       </div>
+      {/*  eslint-disable-next-line react/no-unknown-property */}
+      <style jsx global>{`
+        #filter .p-column-filter-menu-button,
+        .p-column-filter-clear-button {
+          display: none;
+        }
+      `}</style>
     </div>
   )
 }
