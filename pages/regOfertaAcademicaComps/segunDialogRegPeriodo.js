@@ -533,7 +533,7 @@ const DialogRegPeriodo = ({
                 id="cod_periodo"
                 value={codPeriodo}
                 autoComplete="off"
-                onChange={(e) => setCodPeriodo(e.target.value)}
+                onChange={(e) => setCodPeriodo(e.target.value.toUpperCase())}
               />
             )}
             <label htmlFor="cod_periodo">Codigo Periodo</label>
@@ -545,7 +545,7 @@ const DialogRegPeriodo = ({
                 id="nb_periodo"
                 value={nombPeriodo}
                 autoComplete="off"
-                onChange={(e) => setNombPeriodo(e.target.value)}
+                onChange={(e) => setNombPeriodo(e.target.value.toUpperCase())}
               />
             )}
             <label htmlFor="nb_periodo">Descripcion Periodo</label>
