@@ -3,6 +3,7 @@ import { useRef, useState } from 'react'
 import { DataTable } from 'primereact/datatable'
 import { Column } from 'primereact/column'
 import { Toast } from 'primereact/toast'
+import { Divider } from 'primereact/divider'
 import DialogVerInfoPostulacion from 'pages/postulacionEstudiante/dialogVerInfoPostulacion'
 import GQLpostulaciones from 'graphql/postulaciones'
 import { useSesion } from 'hooks/useSesion'
@@ -19,6 +20,10 @@ const Postulaciones = ({ cambioVista }) => {
   const toast = useRef(null)
   const { data: carreraSedes } = useSWR(
     GQLpostulaciones.GET_OFERTAS_ACADEMICAS,
+    { refreshInterval: 1000 }
+  )
+  const { data: infoPostuUsu } = useSWR(
+    [idUser ? GQLpostulaciones.GET_POSTULACION_USUARIO : null, { idUser }],
     { refreshInterval: 1000 }
   )
 
@@ -99,10 +104,7 @@ const Postulaciones = ({ cambioVista }) => {
     )
   }
   return (
-    <div>
-      <div className="text-3xl font-semibold text-white text-center mr-32 mb-6 -mt-3">
-        <h1>Postulacion</h1>
-      </div>
+    <div className="flex flex-col">
       <Toast ref={toast} />
       <ConfirmDialog
         draggable={false}
@@ -125,38 +127,63 @@ const Postulaciones = ({ cambioVista }) => {
         datosVerMalla={datosVerMalla}
         setDatosVerMalla={setDatosVerMalla}
       />
-
-      <div className="mt-3">
+      <div className="overflow-x-auto relative shadow-md sm:rounded-lg background pt-5">
+        <div className="w-full text-center col-span-5">
+          <h1 className="text-3xl font-semibold text-white text-center mr-10 mb-0 -mt-0">
+            Postulaciones Activas
+          </h1>
+        </div>
         <div className="col-span-5">
           <DataTable
-            value={carreraSedes?.obtenerOfertaPostu.response}
-            emptyMessage="No hay carreras registradas."
-            filterDisplay="row"
-            id="filter"
+            value={infoPostuUsu?.obtenerPostulacionUsuario.response}
+            emptyMessage="No se encuentran trayectos registrados."
           >
-            <Column
-              filter
-              filterPlaceholder="Buscar"
-              field="nb_sede"
-              header="Sede"
-            />
-            <Column
-              filter
-              filterPlaceholder="Buscar"
-              field="nb_carrera"
-              header="Carrera"
-            />
-            <Column body={accionBodyTemplate} />
+            <Column field="periodo" header="Periodo" />
+            <Column field="carrera" header="Carrera" />
+            <Column field="sede" header="Sede" />
+            <Column field="estatus" header="Estatus" />
           </DataTable>
         </div>
       </div>
-      {/* eslint-disable-next-line react/no-unknown-property */}
-      <style jsx global>{`
-        #filter .p-column-filter-menu-button,
-        .p-column-filter-clear-button {
-          display: none;
-        }
-      `}</style>
+      <Divider className="col-span-5" />
+      <div>
+        <div className="mt-3">
+          <div className="w-full text-center col-span-5">
+            <h1 className="text-3xl font-semibold text-white text-center mr-10 mb-0 -mt-0">
+              Postularse
+            </h1>
+          </div>
+          <div className="col-span-5">
+            <DataTable
+              value={carreraSedes?.obtenerOfertaPostu.response}
+              emptyMessage="No hay carreras registradas."
+              filterDisplay="row"
+              id="filter"
+            >
+              <Column
+                filter
+                filterPlaceholder="Buscar"
+                field="nb_sede"
+                header="Sede"
+              />
+              <Column
+                filter
+                filterPlaceholder="Buscar"
+                field="nb_carrera"
+                header="Carrera"
+              />
+              <Column body={accionBodyTemplate} />
+            </DataTable>
+          </div>
+        </div>
+        {/* eslint-disable-next-line react/no-unknown-property */}
+        <style jsx global>{`
+          #filter .p-column-filter-menu-button,
+          .p-column-filter-clear-button {
+            display: none;
+          }
+        `}</style>
+      </div>
     </div>
   )
 }
