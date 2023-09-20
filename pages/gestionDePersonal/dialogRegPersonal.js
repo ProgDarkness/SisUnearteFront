@@ -80,7 +80,7 @@ const DialogRegPersonal = ({
         cedulaPersonal,
         process.env.NEXT_PUBLIC_SECRET_KEY
       ).toString(),
-      username: nombrePersonal,
+      username: nombrePersonal.toLowerCase(),
       rol: parseInt(tpRol),
       nacionalidad: parseInt(tpNacionalidad),
       cedula: parseInt(cedulaPersonal),

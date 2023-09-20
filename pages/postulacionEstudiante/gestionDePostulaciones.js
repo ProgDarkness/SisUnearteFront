@@ -51,6 +51,9 @@ const GestionDePostulaciones = () => {
   const acceptConfirmarPostulado = () => {
     const InputAprobarPostulacion = {
       usuario: idUser,
+      idpostulado: parseInt(dataAprobarPostulacion?.idusuario),
+      idcarrera: parseInt(dataAprobarPostulacion?.idcarrera),
+      idperiodo: parseInt(dataAprobarPostulacion?.idperiodo),
       idpostulacion: parseInt(dataAprobarPostulacion?.id)
     }
     aprobarPostulacion({ InputAprobarPostulacion }).then(

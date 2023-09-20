@@ -14,8 +14,10 @@ export default {
           fepostulacion
           observacion
           estatus
+          idperiodo
           periodo
           tperiodo
+          idcarrera
           carrera
           sede
           estado
