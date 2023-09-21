@@ -1,6 +1,37 @@
 import { gql } from 'graphql-request'
 
 export default {
+  GET_ASIG_ELECTIVAS: gql`
+    query {
+      getElectivasAsignadas {
+        status
+        message
+        type
+        response {
+          id_carrelec
+          id_carrera
+          nb_carrera
+          id_electiva
+          nb_electiva
+          id_trayecto
+          nb_trayecto
+        }
+      }
+    }
+  `,
+  GET_ELECTIVAS_DROPDOWN: gql`
+    query {
+      getTodasElectivasDropDown {
+        status
+        message
+        type
+        response {
+          id
+          nombre
+        }
+      }
+    }
+  `,
   GET_ELECTIVA: gql`
     query {
       getTodasElectivas {
@@ -38,6 +69,24 @@ export default {
   UPDATE_ELECTIVA: gql`
     mutation updateElectiva($inputSaveElectiva: inputSaveElectiva!) {
       updateElectiva(inputSaveElectiva: $inputSaveElectiva) {
+        status
+        message
+        type
+      }
+    }
+  `,
+  ASIGNAR_ELECTIVA: gql`
+    mutation asignarElectiva($inputAsigElectiva: inputAsigElectiva!) {
+      asignarElectiva(inputAsigElectiva: $inputAsigElectiva) {
+        status
+        message
+        type
+      }
+    }
+  `,
+  DELETE_ASIG_ELECTIVA: gql`
+    mutation deleteAsignarElectiva($idAsigElectiva: Int!) {
+      deleteAsignarElectiva(idAsigElectiva: $idAsigElectiva) {
         status
         message
         type

@@ -53,6 +53,7 @@ const GestionElectiva = () => {
       variables
     )
   }
+  
   const eliminarElectiva = (variables) => {
     return request(
       process.env.NEXT_PUBLIC_URL_BACKEND,
