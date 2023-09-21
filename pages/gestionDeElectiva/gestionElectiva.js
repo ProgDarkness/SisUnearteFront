@@ -2,8 +2,13 @@ import { Button } from 'primereact/button'
 import { Column } from 'primereact/column'
 import { DataTable } from 'primereact/datatable'
 import { InputText } from 'primereact/inputtext'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import DialogAsigElectiva from './dialogAsignarElectiva'
+import request from 'graphql-request'
+import GQLelectivas from 'graphql/electivas'
+import { Toast } from 'primereact/toast'
+import useSWR from 'swr'
+import { ConfirmDialog } from 'primereact/confirmdialog'
 
 const GestionElectiva = () => {
   const [codElectiva, setCodElectiva] = useState('')
@@ -12,6 +17,14 @@ const GestionElectiva = () => {
   const [horasSemanales, setHorasSemanales] = useState('')
   const [activeDialogAsigElectiva, setActiveDialogAsigElectiva] =
     useState(false)
+  const toast = useRef(null)
+  const [datosEliminarElectiva, setDatosEliminarElectiva] = useState(null)
+  const [dialogConfirmElminarElectiva, setDialogConfirmElminarElectiva] =
+    useState(false)
+
+  const { data: electivas, mutate } = useSWR(GQLelectivas.GET_ELECTIVA, {
+    refreshInterval: 1000
+  })
 
   const HeaderCarrera = () => {
     return (
@@ -25,9 +38,63 @@ const GestionElectiva = () => {
       </div>
     )
   }
+  const acceptElminarElectiva = () => {
+    delElectiva()
+  }
+
+  const rejectElminarElectiva = () => {
+    setDialogConfirmElminarElectiva(false)
+  }
+
+  const guardarElectiva = (variables) => {
+    return request(
+      process.env.NEXT_PUBLIC_URL_BACKEND,
+      GQLelectivas.SAVE_ELECTIVA,
+      variables
+    )
+  }
+  const eliminarElectiva = (variables) => {
+    return request(
+      process.env.NEXT_PUBLIC_URL_BACKEND,
+      GQLelectivas.DELETE_ELECTIVA,
+      variables
+    )
+  }
+  const delElectiva = () => {
+    eliminarElectiva({ idElectiva: datosEliminarElectiva?.id_electiva }).then(
+      ({ deleteElectiva: { status, message, type } }) => {
+        toast.current.show({
+          severity: type,
+          summary: '¡ Atención !',
+          detail: message
+        })
+        setDatosEliminarElectiva(null)
+        mutate()
+      }
+    )
+  }
 
   const regElectiva = () => {
-    console.log('reg electiva')
+    const inputSaveElectiva = {
+      co_electiva: codElectiva,
+      nb_electiva: nombElectiva,
+      nu_credito: parseInt(unCredito),
+      hr_semanal: parseInt(horasSemanales)
+    }
+    guardarElectiva({ inputSaveElectiva }).then(
+      ({ saveElectiva: { status, type, message } }) => {
+        toast.current.show({
+          severity: type,
+          summary: '¡ Atención !',
+          detail: message
+        })
+        setCodElectiva('')
+        setNombElectiva('')
+        setUnCredito('')
+        setHorasSemanales('')
+        mutate()
+      }
+    )
   }
 
   const actionBodyTemplate = (rowData) => {
@@ -49,8 +116,8 @@ const GestionElectiva = () => {
           tooltip="Eliminar"
           tooltipOptions={{ position: 'top' }}
           onClick={() => {
-            /* setDialogConfirmElminarOferta(true)
-            setDatosEliminarOferta(rowData) */
+            setDialogConfirmElminarElectiva(true)
+            setDatosEliminarElectiva(rowData)
           }}
         />
       </div>
@@ -59,6 +126,7 @@ const GestionElectiva = () => {
 
   return (
     <div className="grid grid-cols-5 gap-4">
+      <Toast ref={toast} />
       <div className="col-span-5 flex justify-center">
         <h1 className="text-3xl font-semibold text-white">
           Gestión de Electivas
@@ -67,6 +135,17 @@ const GestionElectiva = () => {
       <DialogAsigElectiva
         activeDialogAsigElectiva={activeDialogAsigElectiva}
         setActiveDialogAsigElectiva={setActiveDialogAsigElectiva}
+      />
+      <ConfirmDialog
+        visible={dialogConfirmElminarElectiva}
+        onHide={() => setDialogConfirmElminarElectiva(false)}
+        message="¿Esta seguro que desea eliminar la electiva?"
+        header="Confirmación"
+        icon="pi pi-exclamation-triangle"
+        accept={acceptElminarElectiva}
+        reject={rejectElminarElectiva}
+        acceptLabel="SI"
+        rejectLabel="NO"
       />
       <span className="p-float-label field">
         <InputText
@@ -125,13 +204,13 @@ const GestionElectiva = () => {
       <div className="col-span-5">
         <HeaderCarrera />
         <DataTable
-          /* value={carreras?.obtenerTodasCarreras.response} */
-          emptyMessage="No se encuentran trayectos registrados."
+          value={electivas?.getTodasElectivas.response}
+          emptyMessage="No se encuentran electivas registrados."
         >
-          <Column field="codigo" header="Código" />
-          <Column field="nombre" header="Nombre" />
-          <Column field="tipo" header="Unidades de Credito" />
-          <Column field="ciclo" header="Horas Semanales" />
+          <Column field="co_electiva" header="Código" />
+          <Column field="nb_electiva" header="Nombre" />
+          <Column field="nu_credito" header="Unidades de Credito" />
+          <Column field="hr_semanal" header="Horas Semanales" />
           <Column body={actionBodyTemplate} />
         </DataTable>
       </div>
