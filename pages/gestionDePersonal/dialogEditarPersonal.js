@@ -120,7 +120,9 @@ const DialogEditarPersonal = ({
           detail: message
         })
         mutatePersonal()
-        setActiveDialogEditarPersonal(false)
+        setTimeout(() => {
+          setActiveDialogEditarPersonal(false)
+        }, 500);
       }
     )
   }

@@ -36,6 +36,7 @@ const Postulaciones = ({ cambioVista }) => {
   }
 
   const acceptPostu = () => {
+    console.log(datosPostularse)
     const InputPostulacion = {
       usuario: parseInt(idUser),
       carrera: parseInt(datosPostularse.id_carrera),
@@ -45,8 +46,8 @@ const Postulaciones = ({ cambioVista }) => {
         month: '2-digit',
         year: 'numeric'
       }),
-      idOferta: datosPostularse?.id_oferta/* ,
-      idSeccion: datosPostularse?.id_seccion */
+      idOferta: datosPostularse?.id_oferta,
+      idSeccion: datosPostularse?.id_seccion
     }
 
     crearPostulacion({ InputPostulacion }).then(
