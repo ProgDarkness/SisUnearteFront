@@ -1,7 +1,7 @@
 import useSWR from 'swr'
 import { Dialog } from 'primereact/dialog'
 import { Dropdown } from 'primereact/dropdown'
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import GQLregMallaCurricular from 'graphql/regMallaCurricular'
 import GQLconsultasGenerales from 'graphql/consultasGenerales'
 import GQLelectivas from 'graphql/electivas'
@@ -30,11 +30,17 @@ const DialogAsigElectiva = ({
   const { data: electivasAsig, mutate } = useSWR(
     GQLelectivas.GET_ASIG_ELECTIVAS
   )
-  const { data: electivas } = useSWR(GQLelectivas.GET_ELECTIVAS_DROPDOWN)
+  const { data: electivas, mutate: mutateElect } = useSWR(
+    GQLelectivas.GET_ELECTIVAS_DROPDOWN
+  )
   const { data: trayectos } = useSWR([
     carrera ? GQLregMallaCurricular.GET_TRAYECTOS_POR_CARRERA : null,
     { carrera: parseInt(carrera) }
   ])
+
+  useEffect(() => {
+    mutateElect()
+  }, [activeDialogAsigElectiva])
 
   const asignarElectiva = (variables) => {
     return request(

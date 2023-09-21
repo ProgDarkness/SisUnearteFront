@@ -9,6 +9,7 @@ import GQLelectivas from 'graphql/electivas'
 import { Toast } from 'primereact/toast'
 import useSWR from 'swr'
 import { ConfirmDialog } from 'primereact/confirmdialog'
+import DialogEditarElectiva from './dialogEditarElectiva'
 
 const GestionElectiva = () => {
   const [codElectiva, setCodElectiva] = useState('')
@@ -19,7 +20,10 @@ const GestionElectiva = () => {
     useState(false)
   const toast = useRef(null)
   const [datosEliminarElectiva, setDatosEliminarElectiva] = useState(null)
+  const [datosEditarElectiva, setDatosEditarElectiva] = useState(null)
   const [dialogConfirmElminarElectiva, setDialogConfirmElminarElectiva] =
+    useState(false)
+  const [activeDialogEditarElectiva, setActiveDialogEditarElectiva] =
     useState(false)
 
   const { data: electivas, mutate } = useSWR(GQLelectivas.GET_ELECTIVA, {
@@ -53,7 +57,7 @@ const GestionElectiva = () => {
       variables
     )
   }
-  
+
   const eliminarElectiva = (variables) => {
     return request(
       process.env.NEXT_PUBLIC_URL_BACKEND,
@@ -106,8 +110,8 @@ const GestionElectiva = () => {
           className="p-button-help mr-1"
           tooltip="Modificar"
           onClick={() => {
-            /* setDatosEditarCarrera(rowData)
-            setDialogEditarCarrera(true) */
+            setDatosEditarElectiva(rowData)
+            setActiveDialogEditarElectiva(true)
           }}
           tooltipOptions={{ position: 'top' }}
         />
@@ -136,6 +140,11 @@ const GestionElectiva = () => {
       <DialogAsigElectiva
         activeDialogAsigElectiva={activeDialogAsigElectiva}
         setActiveDialogAsigElectiva={setActiveDialogAsigElectiva}
+      />
+      <DialogEditarElectiva
+        activeDialogEditarElectiva={activeDialogEditarElectiva}
+        setActiveDialogEditarElectiva={setActiveDialogEditarElectiva}
+        datosEditarElectiva={datosEditarElectiva}
       />
       <ConfirmDialog
         visible={dialogConfirmElminarElectiva}
