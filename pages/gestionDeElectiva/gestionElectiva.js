@@ -26,6 +26,37 @@ const GestionElectiva = () => {
     )
   }
 
+  const regElectiva = () => {
+    console.log('reg electiva')
+  }
+
+  const actionBodyTemplate = (rowData) => {
+    return (
+      <div className="flex justify-center">
+        <Button
+          icon="pi pi-pencil"
+          className="p-button-help mr-1"
+          tooltip="Modificar"
+          onClick={() => {
+            /* setDatosEditarCarrera(rowData)
+            setDialogEditarCarrera(true) */
+          }}
+          tooltipOptions={{ position: 'top' }}
+        />
+        <Button
+          icon="pi pi-times"
+          className="p-button-danger"
+          tooltip="Eliminar"
+          tooltipOptions={{ position: 'top' }}
+          onClick={() => {
+            /* setDialogConfirmElminarOferta(true)
+            setDatosEliminarOferta(rowData) */
+          }}
+        />
+      </div>
+    )
+  }
+
   return (
     <div className="grid grid-cols-5 gap-4">
       <div className="col-span-5 flex justify-center">
@@ -85,8 +116,10 @@ const GestionElectiva = () => {
         <Button
           label="Registrar"
           icon="pi pi-plus"
-          /* onClick={regMateria} */
-          disabled={!codElectiva || !nombElectiva || !unCredito}
+          onClick={regElectiva}
+          disabled={
+            !codElectiva || !nombElectiva || !unCredito || !horasSemanales
+          }
         />
       </div>
       <div className="col-span-5">
@@ -99,7 +132,7 @@ const GestionElectiva = () => {
           <Column field="nombre" header="Nombre" />
           <Column field="tipo" header="Unidades de Credito" />
           <Column field="ciclo" header="Horas Semanales" />
-          {/* <Column body={accionBodyTemplate} /> */}
+          <Column body={actionBodyTemplate} />
         </DataTable>
       </div>
     </div>

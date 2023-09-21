@@ -34,7 +34,7 @@ const DialogEditarCarrera = ({
 
   const { data: infoCarrera, mutate } = useSWR(
     [
-      GQLregMallaCurricular.VER_DETALLE_CARRERA,
+      datosEditarCarrera?.id ? GQLregMallaCurricular.VER_DETALLE_CARRERA : null,
       {
         InputCarrera: {
           carrera: parseInt(datosEditarCarrera?.id)

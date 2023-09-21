@@ -15,7 +15,7 @@ const DialogVerMalla = ({
 }) => {
   const { data: infoMalla } = useSWR(
     [
-      GQLregMallaCurricular.VER_DETALLE_CARRERA,
+      datosVerMalla?.id ? GQLregMallaCurricular.VER_DETALLE_CARRERA : null,
       {
         InputCarrera: {
           carrera: parseInt(datosVerMalla?.id)

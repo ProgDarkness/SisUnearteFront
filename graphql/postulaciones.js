@@ -72,6 +72,7 @@ export default {
           nb_carrera
           id_sede
           nb_sede
+          id_seccion
         }
       }
     }

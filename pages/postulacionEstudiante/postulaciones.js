@@ -22,7 +22,7 @@ const Postulaciones = ({ cambioVista }) => {
     GQLpostulaciones.GET_OFERTAS_ACADEMICAS,
     { refreshInterval: 1000 }
   )
-  const { data: infoPostuUsu } = useSWR(
+  const { data: infoPostuUsu, mutate } = useSWR(
     [idUser ? GQLpostulaciones.GET_POSTULACION_USUARIO : null, { idUser }],
     { refreshInterval: 1000 }
   )
@@ -45,7 +45,8 @@ const Postulaciones = ({ cambioVista }) => {
         month: '2-digit',
         year: 'numeric'
       }),
-      idOferta: datosPostularse?.id_oferta
+      idOferta: datosPostularse?.id_oferta/* ,
+      idSeccion: datosPostularse?.id_seccion */
     }
 
     crearPostulacion({ InputPostulacion }).then(
@@ -56,19 +57,7 @@ const Postulaciones = ({ cambioVista }) => {
           detail: message,
           life: 3000
         })
-        setTimeout(() => {
-          const newVistas = {
-            [`inicio`]: true
-          }
-          cambioVista((prevState) => ({
-            ...prevState,
-            ...newVistas,
-            ...Object.keys(prevState).reduce((acc, key) => {
-              if (key !== 'inicio') acc[key] = false
-              return acc
-            }, {})
-          }))
-        }, 1000)
+        mutate()
       }
     )
   }

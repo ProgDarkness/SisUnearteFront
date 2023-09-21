@@ -55,8 +55,8 @@ export default {
             nombre
           }
           nombZona {
-            nombre
             id
+            nombre
             codigo_postal
           }
           tpVivienda {
