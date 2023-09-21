@@ -142,6 +142,7 @@ const GestionElectiva = () => {
         setActiveDialogAsigElectiva={setActiveDialogAsigElectiva}
       />
       <DialogEditarElectiva
+        mutateElectiva={mutate}
         activeDialogEditarElectiva={activeDialogEditarElectiva}
         setActiveDialogEditarElectiva={setActiveDialogEditarElectiva}
         datosEditarElectiva={datosEditarElectiva}
