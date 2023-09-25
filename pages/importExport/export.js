@@ -3,10 +3,20 @@ import { Button } from 'primereact/button'
 import ExcelJS from 'exceljs'
 import useSWR from 'swr'
 import GQLconsultasGenerales from 'graphql/vistaPostulado'
+import { DataTable } from 'primereact/datatable'
+import { Column } from 'primereact/column'
+import GQLinscripciones from 'graphql/inscripciones'
 
 const Export = ({ cambioVista }) => {
   const [postulados, setPostulados] = useState([])
   const { data } = useSWR(GQLconsultasGenerales.QUERY_LISTA_REPORTE)
+
+  const { data: dataInscritos } = useSWR(
+    GQLinscripciones.QUERY_LISTA_INSCRITOS,
+    {
+      refreshInterval: 1000
+    }
+  )
 
   useEffect(() => {
     setPostulados(data?.obtenerListadoPostuladoCarrera?.response)
@@ -27,6 +37,7 @@ const Export = ({ cambioVista }) => {
       { header: 'APELLIDOS', key: 'apellido', width: 30 },
       { header: 'FECHA DE POSTULACIÓN', key: 'fepostulacion', width: 30 },
       { header: 'CARRERA', key: 'carrera', width: 10 },
+      { header: 'SEDE', key: 'sede', width: 10 },
       { header: 'PERIODO', key: 'periodo', width: 20 },
       { header: 'TIPO PERIODO', key: 'tperiodo', width: 30 },
       { header: 'ESTATUS', key: 'estatus', width: 20 }
@@ -58,6 +69,7 @@ const Export = ({ cambioVista }) => {
         apellido: cf.apellido,
         fepostulacion: cf.fepostulacion,
         carrera: cf.carrera,
+        sede: cf.sede,
         periodo: cf.periodo,
         tperiodo: cf.tperiodo,
         estatus: cf.estatus
@@ -123,6 +135,22 @@ const Export = ({ cambioVista }) => {
           data-pr-tooltip="XLS"
           disabled={postulados?.length === 0}
         />
+      </div>
+      <div className="col-span-5">
+        <DataTable
+          value={dataInscritos?.obtenerListadoInscrito.response}
+          emptyMessage="No hay registros adjuntos"
+          header="Listado de Inscritos"
+        >
+          <Column field="conac" header="Nacionalidad" />
+          <Column field="cedest" header="Cédula" />
+          <Column field="nb1est" header="Nombre" />
+          <Column field="ape1est" header="Apellido" />
+          <Column field="nbsexo" header="Sexo" />
+          <Column field="coperiodo" header="Periodo" />
+          <Column field="anioperiodo" header="Año Periodo" />
+          <Column field="feingreso" header="Fecha Ingreso" />
+        </DataTable>
       </div>
     </div>
   )
