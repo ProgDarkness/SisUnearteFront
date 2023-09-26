@@ -17,6 +17,7 @@ import InformacionDelEstudiante from '../informacionDelEstudianteComps/informaci
 import GestionDePersonal from 'pages/gestionDePersonal/gestionDePersonal'
 import GestionElectiva from 'pages/gestionDeElectiva/gestionElectiva'
 import RegistrarMateria from 'pages/CargaDeMaterias/registrarMateria'
+import InscripcionRegular from 'pages/inscripcionRegular/inscripcion'
 import Inicio from './inicio'
 import PruebasImportExport from '../importExport/pruebasImportExport'
 
@@ -83,6 +84,7 @@ export default function index({ data }) {
               )}
               {mostrarVistas?.inicio && <Inicio />}
               {mostrarVistas?.inscripcionElectiva && <InscripcionElectiva />}
+              {mostrarVistas?.inscripcionesRegulares && <InscripcionRegular />}
               {mostrarVistas?.postulaciones && (
                 <Postulaciones cambioVista={setMostrarVistas} />
               )}

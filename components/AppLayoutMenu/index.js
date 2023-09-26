@@ -78,7 +78,7 @@ export default function Index({ children, verMenu = true }) {
                 }))
               }}
             >
-              Gestion de Personal
+              Gestión de Personal
             </h1>
             {permisoPostulacion?.obtenerPermisoPostulacion.response && (
               <h1
@@ -99,7 +99,7 @@ export default function Index({ children, verMenu = true }) {
                   }))
                 }}
               >
-                Postulacion
+                Postulación
               </h1>
             )}
             <h1
@@ -123,7 +123,7 @@ export default function Index({ children, verMenu = true }) {
                 }))
               }}
             >
-              Gestion De Postulaciones
+              Gestión De Postulaciones
             </h1>
             <h1
               className={`text-white font-medium text-sm rounded-md mt-2 cursor-pointer hover:bg-[#805e5e] ${
@@ -187,9 +187,9 @@ export default function Index({ children, verMenu = true }) {
                 }))
               }}
             >
-              Registro Oferta Academica
+              Registro Oferta Académica
             </h1>
-            {/*  <h1
+            <h1
               className={`text-white font-medium rounded-md mt-2 cursor-pointer hover:bg-[#805e5e] ${
                 mostrarVistas?.inscripcionesRegulares
                   ? 'bg-[#805e5e]'
@@ -210,8 +210,8 @@ export default function Index({ children, verMenu = true }) {
                 }))
               }}
             >
-              Inscripcion Regular
-            </h1> */}
+              Inscripción Regular
+            </h1>
             <h1
               className={`text-white font-medium rounded-md mt-2 cursor-pointer hover:bg-[#805e5e] ${
                 mostrarVistas?.gestionElectiva ? 'bg-[#805e5e]' : 'bg-[#ae8e8e]'
@@ -252,7 +252,7 @@ export default function Index({ children, verMenu = true }) {
                 }))
               }}
             >
-              Inscripcion Electiva
+              Inscripción Electiva
             </h1>
             <h1
               className={`text-white font-medium rounded-md mt-2 cursor-pointer hover:bg-[#805e5e] ${
@@ -275,7 +275,7 @@ export default function Index({ children, verMenu = true }) {
                 }))
               }}
             >
-              Informacion Del Estudiante
+              Información Del Estudiante
             </h1>
             <h1
               className={`text-white font-medium rounded-md mt-2 cursor-pointer hover:bg-[#805e5e] ${

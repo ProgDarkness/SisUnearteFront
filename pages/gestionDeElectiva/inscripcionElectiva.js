@@ -1,74 +1,8 @@
 import { InputText } from 'primereact/inputtext'
-import { useEffect, useState } from 'react'
 import { Dropdown } from 'primereact/dropdown'
 import { Divider } from 'primereact/divider'
 
 const InscripcionElectiva = () => {
-  const [datosEstudiante, setDatosEstudiante] = useState({
-    cedula: '',
-    nombreCompleto: '',
-    seccion: '',
-    trayecto: '',
-    turno: '',
-    semestre: '',
-    electiva: null
-  })
-
-  const electivas = [
-    {
-      code: 1,
-      name: 'Estudios Ambientales',
-      profesor: 'Gilberto Mares',
-      dias: 'Lunes y Jueves',
-      turno: 'Nocturno',
-      horas: '8:00 - 9:00',
-      correo: 'gmares@gmail.com',
-      telefono: '0418674321'
-    },
-    {
-      code: 2,
-      name: 'Electrónica',
-      profesor: 'Antonio Velazques',
-      dias: 'Martes y Viernes',
-      turno: 'Nocturno',
-      horas: '8:00 - 9:00',
-      correo: 'avelazques@gmail.com',
-      telefono: '0418674321'
-    },
-    {
-      code: 3,
-      name: 'Ofimática',
-      profesor: 'Jesus Perez',
-      dias: 'Lunes y Jueves',
-      turno: 'Nocturno',
-      horas: '8:00 - 9:00',
-      correo: 'jperez@gmail.com',
-      telefono: '0418674321'
-    },
-    {
-      code: 5,
-      name: 'Computación',
-      profesor: 'Maria Zambrano',
-      dias: 'Jueves y Viernes',
-      turno: 'Nocturno',
-      horas: '8:00 - 9:00',
-      correo: 'mzambrano@gmail.com',
-      telefono: '0418674321'
-    }
-  ]
-
-  useEffect(() => {
-    setDatosEstudiante({
-      ...datosEstudiante,
-      cedula: '29377621',
-      nombreCompleto: 'Daniel José Manzano Mejías',
-      seccion: '30121',
-      trayecto: '2',
-      turno: 'Nocturno',
-      semestre: '1'
-    })
-  }, [])
-
   return (
     <div className="grid grid-cols-5 gap-4 m-2 -mt-2">
       <div className="col-span-5 text-center">
@@ -80,7 +14,7 @@ const InscripcionElectiva = () => {
         <InputText
           className="w-full"
           id="cedula"
-          value={datosEstudiante?.cedula}
+          /* value={datosEstudiante?.cedula} */
           autoComplete="off"
         />
         <label htmlFor="cedula">Cédula</label>
@@ -89,7 +23,7 @@ const InscripcionElectiva = () => {
         <InputText
           className="w-full"
           id="NombresApellidos"
-          value={datosEstudiante?.nombreCompleto}
+          /* value={datosEstudiante?.nombreCompleto} */
           autoComplete="off"
         />
         <label htmlFor="NombresApellidos">Nombres y Apellidos</label>
@@ -98,7 +32,7 @@ const InscripcionElectiva = () => {
         <InputText
           className="w-full"
           id="seccion"
-          value={datosEstudiante?.seccion}
+          /* value={datosEstudiante?.seccion} */
           autoComplete="off"
         />
         <label htmlFor="seccion">Sección</label>
@@ -107,7 +41,7 @@ const InscripcionElectiva = () => {
         <InputText
           className="w-full"
           id="trayecto"
-          value={datosEstudiante?.trayecto}
+          /* value={datosEstudiante?.trayecto} */
           autoComplete="off"
         />
         <label htmlFor="trayecto">Trayecto</label>
@@ -116,7 +50,7 @@ const InscripcionElectiva = () => {
         <InputText
           className="w-full"
           id="turno"
-          value={datosEstudiante?.turno}
+          /* value={datosEstudiante?.turno} */
           autoComplete="off"
         />
         <label htmlFor="turno">Turno</label>
@@ -125,7 +59,7 @@ const InscripcionElectiva = () => {
         <InputText
           className="w-full"
           id="semestre"
-          value={datosEstudiante?.semestre}
+          /* value={datosEstudiante?.semestre} */
           autoComplete="off"
         />
         <label htmlFor="semestre">Semestre</label>
@@ -134,29 +68,29 @@ const InscripcionElectiva = () => {
         <Dropdown
           className="w-full"
           id="electiva"
-          options={electivas}
-          value={datosEstudiante?.electiva}
+          /* options={electivas} */
+          /* value={datosEstudiante?.electiva} */
           onChange={(e) => {
-            setDatosEstudiante({ ...datosEstudiante, electiva: e.value })
+            /* setDatosEstudiante({ ...datosEstudiante, electiva: e.value }) */
           }}
           optionLabel="name"
         />
         <label htmlFor="electiva">Seleccione la Electiva</label>
       </span>
       <div className="col-span-2" />
-      {datosEstudiante?.electiva?.name && (
+      {/* {datosEstudiante?.electiva?.name && ( */}
         <div className="grid grid-cols-5 gap-4 col-span-5">
           <Divider className="col-span-5" type="solid" />
           <div className="col-span-5">
             <h4 className="text-2xl font-semibold text-white">
-              Información de la Electiva: {datosEstudiante?.electiva?.name}
+              Información de la Electiva: {/* {datosEstudiante?.electiva?.name} */}
             </h4>
           </div>
           <span className="p-float-label field">
             <InputText
               className="w-full"
               id="NombresApellidos"
-              value={datosEstudiante?.electiva?.profesor}
+              /* value={datosEstudiante?.electiva?.profesor} */
               autoComplete="off"
             />
             <label htmlFor="NombresApellidos">Nombre del Profesor</label>
@@ -165,7 +99,7 @@ const InscripcionElectiva = () => {
             <InputText
               className="w-full"
               id="trayecto"
-              value={datosEstudiante?.electiva?.dias}
+              /* value={datosEstudiante?.electiva?.dias} */
               autoComplete="off"
             />
             <label htmlFor="trayecto">Dias</label>
@@ -174,7 +108,7 @@ const InscripcionElectiva = () => {
             <InputText
               className="w-full"
               id="trayecto"
-              value={datosEstudiante?.electiva?.turno}
+              /* value={datosEstudiante?.electiva?.turno} */
               autoComplete="off"
             />
             <label htmlFor="trayecto">Turno</label>
@@ -183,7 +117,7 @@ const InscripcionElectiva = () => {
             <InputText
               className="w-full"
               id="trayecto"
-              value={datosEstudiante?.electiva?.horas}
+              /* value={datosEstudiante?.electiva?.horas} */
               autoComplete="off"
             />
             <label htmlFor="trayecto">Horas</label>
@@ -192,7 +126,7 @@ const InscripcionElectiva = () => {
             <InputText
               className="w-full"
               id="trayecto"
-              value={datosEstudiante?.electiva?.correo}
+              /* value={datosEstudiante?.electiva?.correo} */
               autoComplete="off"
             />
             <label htmlFor="trayecto">Correo</label>
@@ -201,13 +135,13 @@ const InscripcionElectiva = () => {
             <InputText
               className="w-full"
               id="trayecto"
-              value={datosEstudiante?.electiva?.telefono}
+              /* value={datosEstudiante?.electiva?.telefono} */
               autoComplete="off"
             />
             <label htmlFor="trayecto">Teléfono</label>
           </span>
         </div>
-      )}
+      {/* )} */}
       {/*  eslint-disable-next-line react/no-unknown-property */}
       <style jsx global>{`
         .p-float-label input:focus ~ label,
