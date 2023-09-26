@@ -13,29 +13,11 @@ const InscripcionElectiva = () => {
       <span className="p-float-label field">
         <InputText
           className="w-full"
-          id="cedula"
+          id="carrera"
           /* value={datosEstudiante?.cedula} */
           autoComplete="off"
         />
-        <label htmlFor="cedula">Cédula</label>
-      </span>
-      <span className="p-float-label field col-span-2">
-        <InputText
-          className="w-full"
-          id="NombresApellidos"
-          /* value={datosEstudiante?.nombreCompleto} */
-          autoComplete="off"
-        />
-        <label htmlFor="NombresApellidos">Nombres y Apellidos</label>
-      </span>
-      <span className="p-float-label field">
-        <InputText
-          className="w-full"
-          id="seccion"
-          /* value={datosEstudiante?.seccion} */
-          autoComplete="off"
-        />
-        <label htmlFor="seccion">Sección</label>
+        <label htmlFor="carrera">Carrera</label>
       </span>
       <span className="p-float-label field">
         <InputText
@@ -49,20 +31,11 @@ const InscripcionElectiva = () => {
       <span className="p-float-label field">
         <InputText
           className="w-full"
-          id="turno"
+          id="periodo"
           /* value={datosEstudiante?.turno} */
           autoComplete="off"
         />
-        <label htmlFor="turno">Turno</label>
-      </span>
-      <span className="p-float-label field">
-        <InputText
-          className="w-full"
-          id="semestre"
-          /* value={datosEstudiante?.semestre} */
-          autoComplete="off"
-        />
-        <label htmlFor="semestre">Semestre</label>
+        <label htmlFor="periodo">Periodo</label>
       </span>
       <span className="p-float-label field">
         <Dropdown
@@ -79,68 +52,60 @@ const InscripcionElectiva = () => {
       </span>
       <div className="col-span-2" />
       {/* {datosEstudiante?.electiva?.name && ( */}
-        <div className="grid grid-cols-5 gap-4 col-span-5">
-          <Divider className="col-span-5" type="solid" />
-          <div className="col-span-5">
-            <h4 className="text-2xl font-semibold text-white">
-              Información de la Electiva: {/* {datosEstudiante?.electiva?.name} */}
-            </h4>
-          </div>
-          <span className="p-float-label field">
-            <InputText
-              className="w-full"
-              id="NombresApellidos"
-              /* value={datosEstudiante?.electiva?.profesor} */
-              autoComplete="off"
-            />
-            <label htmlFor="NombresApellidos">Nombre del Profesor</label>
-          </span>
-          <span className="p-float-label field">
-            <InputText
-              className="w-full"
-              id="trayecto"
-              /* value={datosEstudiante?.electiva?.dias} */
-              autoComplete="off"
-            />
-            <label htmlFor="trayecto">Dias</label>
-          </span>
-          <span className="p-float-label field">
-            <InputText
-              className="w-full"
-              id="trayecto"
-              /* value={datosEstudiante?.electiva?.turno} */
-              autoComplete="off"
-            />
-            <label htmlFor="trayecto">Turno</label>
-          </span>
-          <span className="p-float-label field">
-            <InputText
-              className="w-full"
-              id="trayecto"
-              /* value={datosEstudiante?.electiva?.horas} */
-              autoComplete="off"
-            />
-            <label htmlFor="trayecto">Horas</label>
-          </span>
-          <span className="p-float-label field">
-            <InputText
-              className="w-full"
-              id="trayecto"
-              /* value={datosEstudiante?.electiva?.correo} */
-              autoComplete="off"
-            />
-            <label htmlFor="trayecto">Correo</label>
-          </span>
-          <span className="p-float-label field">
-            <InputText
-              className="w-full"
-              id="trayecto"
-              /* value={datosEstudiante?.electiva?.telefono} */
-              autoComplete="off"
-            />
-            <label htmlFor="trayecto">Teléfono</label>
-          </span>
+      <div className="grid grid-cols-5 gap-4 col-span-5">
+        <Divider className="col-span-5" type="solid" />
+        <div className="col-span-5">
+          <h4 className="text-2xl font-semibold text-white">
+            Información de la Electiva:{' '}
+            {/* {datosEstudiante?.electiva?.name} */}
+          </h4>
         </div>
+        <span className="p-float-label field">
+          <InputText
+            className="w-full"
+            id="codigo"
+            /* value={datosEstudiante?.electiva?.dias} */
+            autoComplete="off"
+          />
+          <label htmlFor="codigo">Código</label>
+        </span>
+        <span className="p-float-label field">
+          <InputText
+            className="w-full"
+            id="trayecto"
+            /* value={datosEstudiante?.electiva?.turno} */
+            autoComplete="off"
+          />
+          <label htmlFor="trayecto">Electiva</label>
+        </span>
+        <span className="p-float-label field">
+          <InputText
+            className="w-full"
+            id="NombresProfesor"
+            /* value={datosEstudiante?.electiva?.profesor} */
+            autoComplete="off"
+          />
+          <label htmlFor="NombresProfesor">Nombre del Profesor</label>
+        </span>
+        <span className="p-float-label field">
+          <InputText
+            className="w-full"
+            id="trayecto"
+            /* value={datosEstudiante?.electiva?.horas} */
+            autoComplete="off"
+          />
+          <label htmlFor="trayecto">Horas</label>
+        </span>
+        <span className="p-float-label field">
+          <InputText
+            className="w-full"
+            id="unidades"
+            /* value={datosEstudiante?.electiva?.telefono} */
+            autoComplete="off"
+          />
+          <label htmlFor="unidades">Unidades de Crédito</label>
+        </span>
+      </div>
       {/* )} */}
       {/*  eslint-disable-next-line react/no-unknown-property */}
       <style jsx global>{`
