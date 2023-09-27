@@ -3,6 +3,7 @@ import { Dialog } from 'primereact/dialog'
 import { Dropdown } from 'primereact/dropdown'
 import { useEffect, useRef, useState } from 'react'
 import GQLregMallaCurricular from 'graphql/regMallaCurricular'
+import GQLregOfertaAcademica from 'graphql/regOfertaAcademica'
 import GQLconsultasGenerales from 'graphql/consultasGenerales'
 import GQLelectivas from 'graphql/electivas'
 import { Button } from 'primereact/button'
@@ -20,6 +21,8 @@ const DialogAsigElectiva = ({
   const [carrera, setCarrera] = useState(null)
   const [electiva, setElectiva] = useState(null)
   const [trayecto, setTrayecto] = useState(null)
+  const [profesor, setProfesor] = useState(null)
+  const [sede, setSede] = useState(null)
   const [
     dialogConfirmEliminarAsigElectiva,
     setDialogConfirmEliminarAsigElectiva
@@ -27,16 +30,30 @@ const DialogAsigElectiva = ({
   const [datosEliminarAsigElec, setDatosEliminarAsigElec] = useState(null)
 
   const { data: carreras } = useSWR(GQLconsultasGenerales.GET_CARRERAS)
+
   const { data: electivasAsig, mutate } = useSWR(
     GQLelectivas.GET_ASIG_ELECTIVAS
   )
+
   const { data: electivas, mutate: mutateElect } = useSWR(
     GQLelectivas.GET_ELECTIVAS_DROPDOWN
   )
+
   const { data: trayectos } = useSWR([
     carrera ? GQLregMallaCurricular.GET_TRAYECTOS_POR_CARRERA : null,
     { carrera: parseInt(carrera) }
   ])
+
+  const { data: profesores } = useSWR(GQLregOfertaAcademica.GET_PROFESORES)
+
+  const { data: sedes } = useSWR(
+    carrera
+      ? [
+          GQLregMallaCurricular.GET_SEDE_CARRERA_MATERIA,
+          { carrera: parseInt(carrera) }
+        ]
+      : null
+  )
 
   useEffect(() => {
     mutateElect()
@@ -84,7 +101,9 @@ const DialogAsigElectiva = ({
     const inputAsigElectiva = {
       idCarrera: parseInt(carrera),
       idTrayecto: parseInt(trayecto),
-      idElectiva: parseInt(electiva)
+      idElectiva: parseInt(electiva),
+      idPersonal: parseInt(profesor),
+      idSede: parseInt(sede)
     }
 
     asignarElectiva({ inputAsigElectiva }).then(
@@ -97,6 +116,8 @@ const DialogAsigElectiva = ({
         setCarrera(null)
         setElectiva(null)
         setTrayecto(null)
+        setSede(null)
+        setProfesor(null)
         mutate()
       }
     )
@@ -140,7 +161,7 @@ const DialogAsigElectiva = ({
           setElectiva(null)
           setTrayecto(null)
         }}
-        style={{ width: '40%' }}
+        style={{ width: '70%' }}
       >
         <div className="grid grid-cols-3 gap-4 p-2">
           <span className="p-float-label field">
@@ -154,6 +175,18 @@ const DialogAsigElectiva = ({
               optionValue="id"
             />
             <label htmlFor="electiva_carrera">Carrera</label>
+          </span>
+          <span className="p-float-label field">
+            <Dropdown
+              className="w-full"
+              id="sede_carrera"
+              value={sede}
+              onChange={(e) => setSede(e.value)}
+              options={sedes?.obtenerSedesPorCarrera.response}
+              optionLabel="nombre"
+              optionValue="id"
+            />
+            <label htmlFor="sede_carrera">Sede</label>
           </span>
           <span className="p-float-label field">
             <Dropdown
@@ -179,6 +212,18 @@ const DialogAsigElectiva = ({
             />
             <label htmlFor="electiva">Electiva</label>
           </span>
+          <span className="p-float-label field">
+            <Dropdown
+              className="w-full"
+              id="profesor"
+              value={profesor}
+              onChange={(e) => setProfesor(e.value)}
+              options={profesores?.obtenerPersonalOferta.response}
+              optionLabel="nombre"
+              optionValue="id"
+            />
+            <label htmlFor="electiva">Profesor</label>
+          </span>
           <div className="col-span-3 flex justify-center">
             <Button
               label="Asignar"
@@ -188,9 +233,11 @@ const DialogAsigElectiva = ({
           </div>
           <div className="col-span-3">
             <DataTable value={electivasAsig?.getElectivasAsignadas.response}>
+              <Column field="nb_sede" header="Sede" />
               <Column field="nb_carrera" header="Carrera" />
               <Column field="nb_trayecto" header="Trayecto" />
               <Column field="nb_electiva" header="Electiva" />
+              <Column field="nb_personal" header="Profesor" />
               <Column body={accionBodyTemplate} />
             </DataTable>
           </div>

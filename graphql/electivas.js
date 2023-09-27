@@ -12,9 +12,16 @@ export default {
           id_carrera
           nb_carrera
           id_electiva
+          co_electiva
+          nu_credito
+          hr_semanal
           nb_electiva
           id_trayecto
           nb_trayecto
+          id_personal
+          nb_personal
+          id_sede
+          nb_sede
         }
       }
     }
