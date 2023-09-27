@@ -11,7 +11,7 @@ import GQLinscripciones from 'graphql/inscripciones'
 import GQLregOfertaAcademica from 'graphql/regOfertaAcademica'
 import GQLregMallaCurricular from 'graphql/regMallaCurricular'
 
-const Export = ({ cambioVista }) => {
+const ExportInscritos = ({ cambioVista }) => {
   const [postulados, setPostulados] = useState([])
   const [sede, setSedes] = useState(null)
   const [carrera, setCarreras] = useState(null)
