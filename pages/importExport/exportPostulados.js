@@ -7,37 +7,30 @@ import GQLconsultasPostulados from 'graphql/vistaPostulado'
 import GQLconsultasGenerales from 'graphql/consultasGenerales'
 import { DataTable } from 'primereact/datatable'
 import { Column } from 'primereact/column'
-import GQLinscripciones from 'graphql/inscripciones'
 import GQLregOfertaAcademica from 'graphql/regOfertaAcademica'
-import GQLregMallaCurricular from 'graphql/regMallaCurricular'
 
 const Export = ({ cambioVista }) => {
   const [postulados, setPostulados] = useState([])
   const [sede, setSedes] = useState(null)
   const [carrera, setCarreras] = useState(null)
   const [periodo, setPeriodos] = useState(null)
-  const [materia, setMaterias] = useState(null)
 
-  const { data } = useSWR(GQLconsultasPostulados.QUERY_LISTA_REPORTE)
-  const { data: sedes } = useSWR(GQLconsultasGenerales.GET_SEDES)
-  const { data: carreras } = useSWR(
-    GQLconsultasGenerales.GET_CARRERAS
-  )
-  const { data: periodos } = useSWR(GQLregOfertaAcademica.GET_PERIODOS_OFER)
-  const { data: materias } = useSWR(
-    GQLconsultasGenerales.GET_MATERIAS_ONE,
-    { refreshInterval: 1000 }
-  )
-  const { data: profesores } = useSWR(GQLregOfertaAcademica.GET_PROFESORES)
-
-  const { data: dataInscritos } = useSWR(
-    GQLinscripciones.QUERY_LISTA_INSCRITOS,
+  const { data } = useSWR([
+    carrera || periodo || sede
+      ? GQLconsultasPostulados.QUERY_LISTA_REPORTE
+      : null,
     {
-      refreshInterval: 1000
+      input: {
+        periodo: parseInt(periodo),
+        carrera: parseInt(carrera),
+        sede: parseInt(sede)
+      }
     }
-  )
+  ])
 
-  console.log(carreras)
+  const { data: sedes } = useSWR(GQLconsultasGenerales.GET_SEDES)
+  const { data: carreras } = useSWR(GQLconsultasGenerales.GET_CARRERAS)
+  const { data: periodos } = useSWR(GQLregOfertaAcademica.GET_PERIODOS_OFER)
 
   useEffect(() => {
     setPostulados(data?.obtenerListadoPostuladoCarrera?.response)
@@ -127,11 +120,10 @@ const Export = ({ cambioVista }) => {
 
   return (
     <div className="grid col-span-5 gap-4 mt-2">
-      <div className="col-span-5 flex justify-between">
-        <div />
-        <h1 className="text-3xl font-semibold text-white">Export de Data</h1>
+      <div className="col-span-5 flex justify-end">
         <Button
-          label="Ir a Import"
+          label="Import"
+          className="mr-1"
           onClick={() => {
             const newVistas = {
               [`import`]: true
@@ -146,79 +138,111 @@ const Export = ({ cambioVista }) => {
             }))
           }}
         />
+        <Button
+          label="Export Inscritos"
+          className="mr-1"
+          onClick={() => {
+            const newVistas = {
+              [`exportInscrito`]: true
+            }
+            cambioVista((prevState) => ({
+              ...prevState,
+              ...newVistas,
+              ...Object.keys(prevState).reduce((acc, key) => {
+                if (key !== 'exportInscrito') acc[key] = false
+                return acc
+              }, {})
+            }))
+          }}
+        />
+        <Button
+          label="Export Postulados"
+          onClick={() => {
+            const newVistas = {
+              [`export`]: true
+            }
+            cambioVista((prevState) => ({
+              ...prevState,
+              ...newVistas,
+              ...Object.keys(prevState).reduce((acc, key) => {
+                if (key !== 'export') acc[key] = false
+                return acc
+              }, {})
+            }))
+          }}
+        />
+      </div>
+      <div className="col-span-5 flex justify-between">
+        <div />
+        <h1 className="text-3xl font-semibold text-white">Export de Data</h1>
+        <div />
       </div>
       <div className="grid grid-cols-5 gap-5 pt-2">
-        <Button
-          type="button"
-          icon="pi pi-file-excel"
-          onClick={exportExcel}
-          className="p-button-success p-mr-2"
-          data-pr-tooltip="XLS"
-          disabled={postulados?.length === 0}
-        />
         <span className="p-float-label field">
-            <Dropdown
-              className="w-full"
-              id="tp_sede"
-              value={sede}
-              onChange={(e) => setSedes(e.target.value)}
-              options={sedes?.obtenerSedes.response}
-              optionLabel="nombre"
-              optionValue="id"
-            />
-            <label htmlFor="tp_sede">Sede</label>
-          </span>
-          <span className="p-float-label field">
-            <Dropdown
-              className="w-full"
-              id="tp_carrera"
-              value={carrera}
-              onChange={(e) => setCarreras(e.target.value)}
-              options={carreras?.obtenerCarreras.response}
-              optionLabel="nombre"
-              optionValue="id"
-            />
-            <label htmlFor="tp_carrera">Carrera</label>
-          </span>
-          <span className="p-float-label field">
-            <Dropdown
-              className="w-full"
-              id="tp_periodo"
-              value={periodo}
-              onChange={(e) => setPeriodos(e.target.value)}
-              options={periodos?.obtenerPeridosOferta.response}
-              optionLabel="nombre"
-              optionValue="id"
-            />
-            <label htmlFor="tp_periodo">Periodo</label>
-          </span>
-          <span className="p-float-label field">
-            <Dropdown
-              className="w-full"
-              id="tp_materia"
-              value={materia}
-              onChange={(e) => setMaterias(e.target.value)}
-              options={materias?.obtenerMaterias.response}
-              optionLabel="nombre"
-              optionValue="id"
-            />
-            <label htmlFor="tp_materia">Materia</label>
-          </span>
+          <Dropdown
+            className="w-full"
+            id="tp_sede"
+            value={sede}
+            onChange={(e) => setSedes(e.target.value)}
+            options={sedes?.obtenerSedes.response}
+            showClear
+            optionLabel="nombre"
+            optionValue="id"
+          />
+          <label htmlFor="tp_sede">Sede</label>
+        </span>
+        <span className="p-float-label field">
+          <Dropdown
+            className="w-full"
+            id="tp_carrera"
+            value={carrera}
+            onChange={(e) => setCarreras(e.target.value)}
+            options={carreras?.obtenerCarreras.response}
+            showClear
+            optionLabel="nombre"
+            optionValue="id"
+          />
+          <label htmlFor="tp_carrera">Carrera</label>
+        </span>
+        <span className="p-float-label field">
+          <Dropdown
+            className="w-full"
+            id="tp_periodo"
+            value={periodo}
+            onChange={(e) => setPeriodos(e.target.value)}
+            options={periodos?.obtenerPeridosOferta.response}
+            showClear
+            optionLabel="nombre"
+            optionValue="id"
+          />
+          <label htmlFor="tp_periodo">Periodo</label>
+        </span>
+        <div className="my-auto">
+          <Button
+            type="button"
+            icon="pi pi-file-excel"
+            label="Exportar"
+            onClick={exportExcel}
+            className="p-button-success p-mr-2"
+            data-pr-tooltip="XLS"
+            disabled={postulados?.length === 0}
+          />
+        </div>
       </div>
       <div className="col-span-5">
         <DataTable
-          value={dataInscritos?.obtenerListadoInscrito.response}
+          value={data?.obtenerListadoPostuladoCarrera.response}
           emptyMessage="No hay registros adjuntos"
           header="Listado de Inscritos"
         >
-          <Column field="conac" header="Nacionalidad" />
-          <Column field="cedest" header="Cédula" />
-          <Column field="nb1est" header="Nombre" />
-          <Column field="ape1est" header="Apellido" />
-          <Column field="nbsexo" header="Sexo" />
-          <Column field="coperiodo" header="Periodo" />
-          <Column field="anioperiodo" header="Año Periodo" />
-          <Column field="feingreso" header="Fecha Ingreso" />
+          <Column field="nacionalidad" header="Nacionalidad" />
+          <Column field="cedula" header="Cédula" />
+          <Column field="nombre" header="Nombre" />
+          <Column field="apellido" header="Apellido" />
+          <Column field="periodo" header="Periodo" />
+          <Column field="carrera" header="Sexo" />
+          <Column field="sede" header="Sede" />
+          <Column field="fepostulacion" header="Fecha Postulación" />
         </DataTable>
       </div>
     </div>

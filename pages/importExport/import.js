@@ -65,11 +65,43 @@ const Import = ({ cambioVista }) => {
   return (
     <div className="grid col-span-5 gap-4 mt-2">
       <Toast ref={toast} />
-      <div className="col-span-5 flex justify-between">
-        <div />
-        <h1 className="text-3xl font-semibold text-white">Import de Data</h1>
+      <div className="col-span-5 flex justify-end">
         <Button
-          label="Ir a Export"
+          label="Import"
+          className="mr-1"
+          onClick={() => {
+            const newVistas = {
+              [`import`]: true
+            }
+            cambioVista((prevState) => ({
+              ...prevState,
+              ...newVistas,
+              ...Object.keys(prevState).reduce((acc, key) => {
+                if (key !== 'import') acc[key] = false
+                return acc
+              }, {})
+            }))
+          }}
+        />
+        <Button
+          label="Export Inscritos"
+          className="mr-1"
+          onClick={() => {
+            const newVistas = {
+              [`exportInscrito`]: true
+            }
+            cambioVista((prevState) => ({
+              ...prevState,
+              ...newVistas,
+              ...Object.keys(prevState).reduce((acc, key) => {
+                if (key !== 'exportInscrito') acc[key] = false
+                return acc
+              }, {})
+            }))
+          }}
+        />
+        <Button
+          label="Export Postulados"
           onClick={() => {
             const newVistas = {
               [`export`]: true
@@ -84,6 +116,11 @@ const Import = ({ cambioVista }) => {
             }))
           }}
         />
+      </div>
+      <div className="col-span-5 flex justify-between">
+        <div />
+        <h1 className="text-3xl font-semibold text-white">Import de Data</h1>
+        <div />
       </div>
       <div>
         <Button

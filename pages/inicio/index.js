@@ -18,8 +18,8 @@ import GestionDePersonal from 'pages/gestionDePersonal/gestionDePersonal'
 import GestionElectiva from 'pages/gestionDeElectiva/gestionElectiva'
 import RegistrarMateria from 'pages/CargaDeMaterias/registrarMateria'
 import InscripcionRegular from 'pages/inscripcionRegular/inscripcion'
+import ReportesData from 'pages/importExport/reportes'
 import Inicio from './inicio'
-import PruebasImportExport from '../importExport/pruebasImportExport'
 
 const VistasContext = createContext({})
 
@@ -99,7 +99,7 @@ export default function index({ data }) {
               {mostrarVistas?.informacionDelEstudiante && (
                 <InformacionDelEstudiante />
               )}
-              {mostrarVistas?.pruebasImportExport && <PruebasImportExport />}
+              {mostrarVistas?.pruebasImportExport && <ReportesData />}
               {mostrarVistas?.gestionDePersonal && <GestionDePersonal />}
             </Card>
             {/* eslint-disable-next-line react/no-unknown-property */}

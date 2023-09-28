@@ -2,8 +2,8 @@ import { gql } from 'graphql-request'
 
 export default {
   QUERY_LISTA_REPORTE: gql`
-    query postulados {
-      obtenerListadoPostuladoCarrera {
+    query obtenerListadoPostuladoCarrera($input: InputFiltroPostu) {
+      obtenerListadoPostuladoCarrera(input: $input) {
         response {
           id
           idusuario

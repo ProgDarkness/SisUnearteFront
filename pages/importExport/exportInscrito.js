@@ -20,14 +20,11 @@ const ExportInscritos = ({ cambioVista }) => {
 
   const { data } = useSWR(GQLconsultasPostulados.QUERY_LISTA_REPORTE)
   const { data: sedes } = useSWR(GQLconsultasGenerales.GET_SEDES)
-  const { data: carreras } = useSWR(
-    GQLconsultasGenerales.GET_CARRERAS
-  )
+  const { data: carreras } = useSWR(GQLconsultasGenerales.GET_CARRERAS)
   const { data: periodos } = useSWR(GQLregOfertaAcademica.GET_PERIODOS_OFER)
-  const { data: materias } = useSWR(
-    GQLconsultasGenerales.GET_MATERIAS_ONE,
-    { refreshInterval: 1000 }
-  )
+  const { data: materias } = useSWR(GQLconsultasGenerales.GET_MATERIAS_ONE, {
+    refreshInterval: 1000
+  })
   const { data: profesores } = useSWR(GQLregOfertaAcademica.GET_PROFESORES)
 
   const { data: dataInscritos } = useSWR(
@@ -127,11 +124,10 @@ const ExportInscritos = ({ cambioVista }) => {
 
   return (
     <div className="grid col-span-5 gap-4 mt-2">
-      <div className="col-span-5 flex justify-between">
-        <div />
-        <h1 className="text-3xl font-semibold text-white">Export de Data</h1>
+      <div className="col-span-5 flex justify-end">
         <Button
-          label="Ir a Import"
+          label="Import"
+          className="mr-1"
           onClick={() => {
             const newVistas = {
               [`import`]: true
@@ -146,6 +142,44 @@ const ExportInscritos = ({ cambioVista }) => {
             }))
           }}
         />
+        <Button
+          label="Export Inscritos"
+          className="mr-1"
+          onClick={() => {
+            const newVistas = {
+              [`exportInscrito`]: true
+            }
+            cambioVista((prevState) => ({
+              ...prevState,
+              ...newVistas,
+              ...Object.keys(prevState).reduce((acc, key) => {
+                if (key !== 'exportInscrito') acc[key] = false
+                return acc
+              }, {})
+            }))
+          }}
+        />
+        <Button
+          label="Export Postulados"
+          onClick={() => {
+            const newVistas = {
+              [`export`]: true
+            }
+            cambioVista((prevState) => ({
+              ...prevState,
+              ...newVistas,
+              ...Object.keys(prevState).reduce((acc, key) => {
+                if (key !== 'export') acc[key] = false
+                return acc
+              }, {})
+            }))
+          }}
+        />
+      </div>
+      <div className="col-span-5 flex justify-between">
+        <div />
+        <h1 className="text-3xl font-semibold text-white">Export de Data</h1>
+        <div />
       </div>
       <div className="grid grid-cols-5 gap-5 pt-2">
         <Button
@@ -157,53 +191,53 @@ const ExportInscritos = ({ cambioVista }) => {
           disabled={postulados?.length === 0}
         />
         <span className="p-float-label field">
-            <Dropdown
-              className="w-full"
-              id="tp_sede"
-              value={sede}
-              onChange={(e) => setSedes(e.target.value)}
-              options={sedes?.obtenerSedes.response}
-              optionLabel="nombre"
-              optionValue="id"
-            />
-            <label htmlFor="tp_sede">Sede</label>
-          </span>
-          <span className="p-float-label field">
-            <Dropdown
-              className="w-full"
-              id="tp_carrera"
-              value={carrera}
-              onChange={(e) => setCarreras(e.target.value)}
-              options={carreras?.obtenerCarreras.response}
-              optionLabel="nombre"
-              optionValue="id"
-            />
-            <label htmlFor="tp_carrera">Carrera</label>
-          </span>
-          <span className="p-float-label field">
-            <Dropdown
-              className="w-full"
-              id="tp_periodo"
-              value={periodo}
-              onChange={(e) => setPeriodos(e.target.value)}
-              options={periodos?.obtenerPeridosOferta.response}
-              optionLabel="nombre"
-              optionValue="id"
-            />
-            <label htmlFor="tp_periodo">Periodo</label>
-          </span>
-          <span className="p-float-label field">
-            <Dropdown
-              className="w-full"
-              id="tp_materia"
-              value={materia}
-              onChange={(e) => setMaterias(e.target.value)}
-              options={materias?.obtenerMaterias.response}
-              optionLabel="nombre"
-              optionValue="id"
-            />
-            <label htmlFor="tp_materia">Materia</label>
-          </span>
+          <Dropdown
+            className="w-full"
+            id="tp_sede"
+            value={sede}
+            onChange={(e) => setSedes(e.target.value)}
+            options={sedes?.obtenerSedes.response}
+            optionLabel="nombre"
+            optionValue="id"
+          />
+          <label htmlFor="tp_sede">Sede</label>
+        </span>
+        <span className="p-float-label field">
+          <Dropdown
+            className="w-full"
+            id="tp_carrera"
+            value={carrera}
+            onChange={(e) => setCarreras(e.target.value)}
+            options={carreras?.obtenerCarreras.response}
+            optionLabel="nombre"
+            optionValue="id"
+          />
+          <label htmlFor="tp_carrera">Carrera</label>
+        </span>
+        <span className="p-float-label field">
+          <Dropdown
+            className="w-full"
+            id="tp_periodo"
+            value={periodo}
+            onChange={(e) => setPeriodos(e.target.value)}
+            options={periodos?.obtenerPeridosOferta.response}
+            optionLabel="nombre"
+            optionValue="id"
+          />
+          <label htmlFor="tp_periodo">Periodo</label>
+        </span>
+        <span className="p-float-label field">
+          <Dropdown
+            className="w-full"
+            id="tp_materia"
+            value={materia}
+            onChange={(e) => setMaterias(e.target.value)}
+            options={materias?.obtenerMaterias.response}
+            optionLabel="nombre"
+            optionValue="id"
+          />
+          <label htmlFor="tp_materia">Materia</label>
+        </span>
       </div>
       <div className="col-span-5">
         <DataTable
@@ -225,4 +259,4 @@ const ExportInscritos = ({ cambioVista }) => {
   )
 }
 
-export default Export
+export default ExportInscritos

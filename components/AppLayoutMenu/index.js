@@ -297,7 +297,7 @@ export default function Index({ children, verMenu = true }) {
                 }))
               }}
             >
-              Pruebas para Import Export
+              Reportes
             </h1>
           </div>
         </div>
