@@ -2,8 +2,8 @@ import { gql } from 'graphql-request'
 
 export default {
   QUERY_LISTA_INSCRITOS: gql`
-    query inscritos {
-      obtenerListadoInscrito {
+    query obtenerListadoInscrito {
+      obtenerListadoInscrito(input: { periodo: 2, carrera: 3, sede: 2 }) {
         response {
           idest
           idnac
@@ -60,6 +60,8 @@ export default {
           coperiodo
           anioperiodo
           feingreso
+          nbcarrera
+          nbsede
         }
       }
     }

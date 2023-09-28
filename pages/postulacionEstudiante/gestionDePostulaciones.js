@@ -14,7 +14,7 @@ import { useSesion } from 'hooks/useSesion'
 
 const GestionDePostulaciones = () => {
   const { data: listadoPostulados, mutate } = useSWR(
-    GQLvistaPostulado.QUERY_LISTA_REPORTE,
+    GQLvistaPostulado.QUERY_LISTA_POSTULADOS,
     { refreshInterval: 1000 }
   )
   const [reload, setReload] = useState(true)
@@ -202,7 +202,7 @@ const GestionDePostulaciones = () => {
       <div>
         {reload && (
           <DataTable
-            value={listadoPostulados?.obtenerListadoPostuladoCarrera.response}
+            value={listadoPostulados?.obtenerListadoPostulado.response}
             emptyMessage="No hay carreras registradas."
             filterDisplay="row"
             id="filter"

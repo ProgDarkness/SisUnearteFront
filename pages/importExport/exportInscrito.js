@@ -3,62 +3,56 @@ import { Button } from 'primereact/button'
 import { Dropdown } from 'primereact/dropdown'
 import ExcelJS from 'exceljs'
 import useSWR from 'swr'
-import GQLconsultasPostulados from 'graphql/vistaPostulado'
 import GQLconsultasGenerales from 'graphql/consultasGenerales'
 import { DataTable } from 'primereact/datatable'
 import { Column } from 'primereact/column'
 import GQLinscripciones from 'graphql/inscripciones'
 import GQLregOfertaAcademica from 'graphql/regOfertaAcademica'
-import GQLregMallaCurricular from 'graphql/regMallaCurricular'
 
 const ExportInscritos = ({ cambioVista }) => {
-  const [postulados, setPostulados] = useState([])
+  const [inscritos, setInscritos] = useState([])
   const [sede, setSedes] = useState(null)
   const [carrera, setCarreras] = useState(null)
   const [periodo, setPeriodos] = useState(null)
-  const [materia, setMaterias] = useState(null)
 
-  const { data } = useSWR(GQLconsultasPostulados.QUERY_LISTA_REPORTE)
   const { data: sedes } = useSWR(GQLconsultasGenerales.GET_SEDES)
   const { data: carreras } = useSWR(GQLconsultasGenerales.GET_CARRERAS)
   const { data: periodos } = useSWR(GQLregOfertaAcademica.GET_PERIODOS_OFER)
-  const { data: materias } = useSWR(GQLconsultasGenerales.GET_MATERIAS_ONE, {
-    refreshInterval: 1000
-  })
-  const { data: profesores } = useSWR(GQLregOfertaAcademica.GET_PROFESORES)
 
-  const { data: dataInscritos } = useSWR(
-    GQLinscripciones.QUERY_LISTA_INSCRITOS,
+  const { data } = useSWR([
+    carrera || periodo || sede ? GQLinscripciones.QUERY_LISTA_INSCRITOS : null,
     {
-      refreshInterval: 1000
+      input: {
+        periodo: parseInt(periodo),
+        carrera: parseInt(carrera),
+        sede: parseInt(sede)
+      }
     }
-  )
-
-  console.log(carreras)
+  ])
 
   useEffect(() => {
-    setPostulados(data?.obtenerListadoPostuladoCarrera?.response)
+    setInscritos(data?.obtenerListadoInscrito?.response)
   }, [data])
 
   const exportExcel = async (e) => {
     e.preventDefault()
     const workbook = new ExcelJS.Workbook()
-    const worksheet = workbook.addWorksheet('Estudiantes_Postulados')
+    const worksheet = workbook.addWorksheet('Estudiantes_Inscritos')
     worksheet.columns = [
       {
         header: 'NACIONALIDAD',
-        key: 'nacionalidad',
+        key: 'conac',
         width: 30
       },
-      { header: 'CÉDULA', key: 'cedula', width: 30 },
-      { header: 'NOMBRES', key: 'nombre', width: 30 },
-      { header: 'APELLIDOS', key: 'apellido', width: 30 },
-      { header: 'FECHA DE POSTULACIÓN', key: 'fepostulacion', width: 30 },
-      { header: 'CARRERA', key: 'carrera', width: 10 },
-      { header: 'SEDE', key: 'sede', width: 10 },
-      { header: 'PERIODO', key: 'periodo', width: 20 },
-      { header: 'TIPO PERIODO', key: 'tperiodo', width: 30 },
-      { header: 'ESTATUS', key: 'estatus', width: 20 }
+      { header: 'CÉDULA', key: 'cedest', width: 30 },
+      { header: 'NOMBRES', key: 'nb1est', width: 30 },
+      { header: 'APELLIDOS', key: 'ape1est', width: 30 },
+      { header: 'FECHA DE INGRESO', key: 'feingreso', width: 30 },
+      { header: 'CARRERA', key: 'nbcarrera', width: 10 },
+      { header: 'SEDE', key: 'nbsede', width: 10 },
+      { header: 'PERIODO', key: 'coperiodo', width: 20 },
+      { header: 'AÑO PERIODO', key: 'anioperiodo', width: 30 },
+      { header: 'ESTATUS', key: 'nbestatus', width: 20 }
     ]
 
     // worksheet.getRow(1).font = { name: 'Comic Sans MS', family: 4, size: 12, underline: 'double', bold: true };
@@ -79,18 +73,18 @@ const ExportInscritos = ({ cambioVista }) => {
         fgColor: { argb: '007AD9' }
       }
     })
-    postulados.forEach((cf, i) => {
+    inscritos.forEach((cf, i) => {
       worksheet.addRow({
-        nacionalidad: cf.nacionalidad,
-        cedula: cf.cedula,
-        nombre: cf.nombre,
-        apellido: cf.apellido,
-        fepostulacion: cf.fepostulacion,
-        carrera: cf.carrera,
-        sede: cf.sede,
-        periodo: cf.periodo,
-        tperiodo: cf.tperiodo,
-        estatus: cf.estatus
+        conac: cf.conac,
+        cedest: cf.cedest,
+        nb1est: cf.nb1est,
+        ape1est: cf.ape1est,
+        feingreso: cf.feingreso,
+        nbcarrera: cf.nbcarrera,
+        nbsede: cf.nbsede,
+        coperiodo: cf.coperiodo,
+        anioperiodo: cf.anioperiodo,
+        nbestatus: cf.nbestatus
       })
       /* if (cf.parentesco.includes('TITULAR')) {
         worksheet
@@ -117,7 +111,7 @@ const ExportInscritos = ({ cambioVista }) => {
     const documentoBlob = new Blob([buffer], { type: 'xlsx' })
     const documento = URL.createObjectURL(documentoBlob)
     const link = document.createElement('a')
-    link.download = 'Reporte_Estudiantes_Postulados.xlsx'
+    link.download = 'Reporte_Estudiantes_Inscritos.xlsx'
     link.href = documento
     link.click()
   }
@@ -160,7 +154,7 @@ const ExportInscritos = ({ cambioVista }) => {
           }}
         />
         <Button
-          label="Export Postulados"
+          label="Export Inscritos"
           onClick={() => {
             const newVistas = {
               [`export`]: true
@@ -182,14 +176,6 @@ const ExportInscritos = ({ cambioVista }) => {
         <div />
       </div>
       <div className="grid grid-cols-5 gap-5 pt-2">
-        <Button
-          type="button"
-          icon="pi pi-file-excel"
-          onClick={exportExcel}
-          className="p-button-success p-mr-2"
-          data-pr-tooltip="XLS"
-          disabled={postulados?.length === 0}
-        />
         <span className="p-float-label field">
           <Dropdown
             className="w-full"
@@ -226,22 +212,21 @@ const ExportInscritos = ({ cambioVista }) => {
           />
           <label htmlFor="tp_periodo">Periodo</label>
         </span>
-        <span className="p-float-label field">
-          <Dropdown
-            className="w-full"
-            id="tp_materia"
-            value={materia}
-            onChange={(e) => setMaterias(e.target.value)}
-            options={materias?.obtenerMaterias.response}
-            optionLabel="nombre"
-            optionValue="id"
+        <div className="my-auto">
+          <Button
+            type="button"
+            icon="pi pi-file-excel"
+            label="Exportar"
+            onClick={exportExcel}
+            className="p-button-success p-mr-2"
+            data-pr-tooltip="XLS"
+            disabled={inscritos?.length === 0}
           />
-          <label htmlFor="tp_materia">Materia</label>
-        </span>
+        </div>
       </div>
       <div className="col-span-5">
         <DataTable
-          value={dataInscritos?.obtenerListadoInscrito.response}
+          value={data?.obtenerListadoInscrito.response}
           emptyMessage="No hay registros adjuntos"
           header="Listado de Inscritos"
         >

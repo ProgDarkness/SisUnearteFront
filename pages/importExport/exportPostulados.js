@@ -139,7 +139,7 @@ const Export = ({ cambioVista }) => {
           }}
         />
         <Button
-          label="Export Inscritos"
+          label="Exportar Postulados"
           className="mr-1"
           onClick={() => {
             const newVistas = {
@@ -156,7 +156,7 @@ const Export = ({ cambioVista }) => {
           }}
         />
         <Button
-          label="Export Postulados"
+          label="Exportar Postulados"
           onClick={() => {
             const newVistas = {
               [`export`]: true
@@ -174,7 +174,7 @@ const Export = ({ cambioVista }) => {
       </div>
       <div className="col-span-5 flex justify-between">
         <div />
-        <h1 className="text-3xl font-semibold text-white">Export de Data</h1>
+        <h1 className="text-3xl font-semibold text-white">Exportar de Data</h1>
         <div />
       </div>
       <div className="grid grid-cols-5 gap-5 pt-2">
@@ -233,7 +233,7 @@ const Export = ({ cambioVista }) => {
         <DataTable
           value={data?.obtenerListadoPostuladoCarrera.response}
           emptyMessage="No hay registros adjuntos"
-          header="Listado de Inscritos"
+          header="Listado de Postulados"
         >
           <Column field="nacionalidad" header="Nacionalidad" />
           <Column field="cedula" header="Cédula" />
