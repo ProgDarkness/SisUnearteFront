@@ -122,7 +122,7 @@ const Export = ({ cambioVista }) => {
     <div className="grid col-span-5 gap-4 mt-2">
       <div className="col-span-5 flex justify-end">
         <Button
-          label="Import"
+          label="Importar"
           className="mr-1"
           onClick={() => {
             const newVistas = {
@@ -139,7 +139,7 @@ const Export = ({ cambioVista }) => {
           }}
         />
         <Button
-          label="Exportar Postulados"
+          label="Exportar Inscritos"
           className="mr-1"
           onClick={() => {
             const newVistas = {

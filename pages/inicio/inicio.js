@@ -1,15 +1,17 @@
-import { InputText } from 'primereact/inputtext'
+/* import { InputText } from 'primereact/inputtext'
 import { Dropdown } from 'primereact/dropdown'
 import { Column } from 'primereact/column'
 import { Button } from 'primereact/button'
-import { DataTable } from 'primereact/datatable'
+import { DataTable } from 'primereact/datatable' */
 import { Divider } from 'primereact/divider'
-import { useEffect, useState } from 'react'
+import Image from 'next/image'
+import arte1 from 'public/images/imagenInicio3.png'
+/* import { useEffect, useState } from 'react'
 import GQLpostulaciones from 'graphql/postulaciones'
 import GQLUsuarios from 'graphql/usuarios'
 import GQLconsultasGenerales from 'graphql/consultasGenerales'
 import useSWR from 'swr'
-import { useSesion } from 'hooks/useSesion'
+import { useSesion } from 'hooks/useSesion' */
 
 const Inicio = () => {
   /* const { idUser } = useSesion()
@@ -62,32 +64,43 @@ const Inicio = () => {
 
   return (
     <div className="flex flex-col">
-      <div className="overflow-x-auto relative shadow-md sm:rounded-lg background pt-5">
-        <h1 className="text-3xl font-semibold text-white text-center mr-32 mb-6 -mt-3">
-          Notas Informativas
-        </h1>
-
-        <div className="grid grid-cols-5 gap-4 mt-4 p-4">
-          <p>0</p>
+      <div className="relative rounded-lg">
+        <div className="text-center text-white text-4xl mb-12 mt-4 font-semibold">
+          <h1>Universidad Nacional Experimental de las Artes</h1>
         </div>
       </div>
-      <Divider className="col-span-5" />
       <div>
         <div className="flex flex-row">
-          <div className="tab-content justify-center rounded-lg shadow-md p-2 w-3/5">
-            <p>1</p>
+          <div className="tab-content justify-center rounded-lg w-3/5 pr-3 pl-3">
+            <h1 className="text-3xl text-white text-center mb-6 -mt-3">
+              Notas Informativas
+            </h1>
+            <div className="text-white -mt-2">
+              <p>INSCRIPCIONES:</p>
+              <p className="pl-4">
+                Fecha de Próximas Inscripciones: 12/10/2023
+              </p>
+              <p className="pl-4">Núcleo: UNEARTE, Bellas Artes, Caracas</p>
+              <Divider />
+              <p>CORTE DE NOTAS:</p>
+              <p className="pl-4">Fecha de Cierre: 07/10/2023</p>
+              <p className="pl-4">Fecha de Corte de Notas: 09/10/2023</p>
+              <Divider />
+              <p>PERIODO:</p>
+              <p className="pl-4">2023-2024</p>
+            </div>
           </div>
 
-          <div className="tab-content justify-center rounded-lg shadow-md py-1 px-3 bg-gray-200 w-2/5">
-            <p>2</p>
+          <div className="tab-content justify-center py-1 px-3 w-2/5">
+            <Image
+              src={arte1}
+              loading="eager"
+              fill
+              sizes="(max-width: 30vw) 100%"
+              priority={true}
+              className="rounded-lg"
+            />
           </div>
-          {/* eslint-disable-next-line react/no-unknown-property */}
-          <style jsx global>{`
-            .p-disabled,
-            .p-component:disabled {
-              opacity: 1;
-            }
-          `}</style>
         </div>
       </div>
     </div>

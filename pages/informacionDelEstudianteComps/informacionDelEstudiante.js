@@ -15,15 +15,43 @@ const InformacionDelEstudiante = () => {
     setDatosEstudiantes([
       {
         nacionalidad: 'V',
-        cedula: '15.681.973',
+        cedula: '15681973',
         nombre: 'Kendrick',
         apellido: 'Lamar',
-        fecha_de_postulacion: '10/08/2023',
-        carrera: 'Artes Plasticas',
-        trayecto: 'Trayecto 1',
-        periodo: 'Basico Comun',
-        tipo_de_periodo: 'Pre-Grado',
-        estatus: 'Activo'
+        carrera: 'ARTES PLASTICAS',
+        trayecto: 'Trayecto 1'
+      },
+      {
+        nacionalidad: 'V',
+        cedula: '23456781',
+        nombre: 'Luz',
+        apellido: 'Varela',
+        carrera: 'MUSICA CA JAZZ',
+        trayecto: 'Trayecto 2'
+      },
+      {
+        nacionalidad: 'V',
+        cedula: '17645897',
+        nombre: 'Ines',
+        apellido: 'Vallejo',
+        carrera: 'EDUCACION APL',
+        trayecto: 'Trayecto Inicial'
+      },
+      {
+        nacionalidad: 'V',
+        cedula: '14238956',
+        nombre: 'Hector',
+        apellido: 'Becerra',
+        carrera: 'ARTES',
+        trayecto: 'Trayecto 3'
+      },
+      {
+        nacionalidad: 'V',
+        cedula: '15681973',
+        nombre: 'Ricardo',
+        apellido: 'Alvarado',
+        carrera: 'DANZA',
+        trayecto: 'Trayecto 2'
       }
     ])
   }, [])

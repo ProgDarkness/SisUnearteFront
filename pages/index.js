@@ -111,84 +111,83 @@ export default function Index() {
   return (
     <AppLayout marca={true} verFooter={true}>
       <Toast ref={toast} />
-      <div className="w-full">
-        <Card className="w-full h-[80vh] mx-auto text-center bg-[#ae8e8e] -mt-10">
-          <div className="flex flex-row">
-            <div className="basis-1/3 h-[70vh] mx-[3%]">
-              <div className="grid grid-cols-1 content-center h-full">
-                <div className="text-center">
-                  <h1 className="text-4xl font-extrabold text-white">
-                    Inicio de Sesión
-                  </h1>
+      <Card className="w-full h-[80vh] mx-auto text-center bg-[#ae8e8e] -mt-16">
+        <div className="flex flex-row">
+          <div className="basis-1/3 h-[70vh] mx-[3%]">
+            <div className="grid grid-cols-1 content-center h-full">
+              <div className="text-center">
+                <h1 className="text-4xl font-extrabold text-white">
+                  Inicio de Sesión
+                </h1>
+              </div>
+              <div className="grid grid-cols-1 gap-4 w-full">
+                <i className="fa-regular fa-user"></i>
+                <div className="rounded-full">
+                  <div className="p-inputgroup">
+                    <span className="p-inputgroup-addon">
+                      <FontAwesomeIcon icon={faUser} />
+                    </span>
+                    <InputText
+                      placeholder="USUARIO"
+                      onChange={({ target: { value } }) => {
+                        setInputLogin((ps) => ({
+                          ...ps,
+                          usuario: value
+                        }))
+                      }}
+                    />
+                  </div>
                 </div>
-                <div className="grid grid-cols-1 gap-4 w-full">
-                  <i className="fa-regular fa-user"></i>
-                  <div className="rounded-full">
-                    <div className="p-inputgroup">
-                      <span className="p-inputgroup-addon">
-                        <FontAwesomeIcon icon={faUser} />
-                      </span>
-                      <InputText
-                        placeholder="USUARIO"
-                        onChange={({ target: { value } }) => {
-                          setInputLogin((ps) => ({
-                            ...ps,
-                            usuario: value
-                          }))
-                        }}
-                      />
-                    </div>
-                  </div>
-                  <div>
-                    <div className="p-inputgroup">
-                      <span className="p-inputgroup-addon">
-                        <FontAwesomeIcon icon={faKey} />
-                      </span>
-                      <InputText
-                        placeholder="CONTRASEÑA"
-                        onChange={({ target: { value } }) => {
-                          setInputLogin((ps) => ({
-                            ...ps,
-                            clave: value
-                          }))
-                        }}
-                        type="password"
-                        onKeyPress={onEnter}
-                      />
-                    </div>
-                  </div>
-                  <div className="flex w-full justify-center">
-                    <Button
-                      id="Entrar"
-                      className="rounded-full w-32 bg-[#4a9a66]"
-                      label="Entrar"
-                      onClick={entrar}
-                    />
-                    <Button
-                      className="rounded-full w-32 bg-[#4a9a66] ml-2"
-                      label="Registrarse"
-                      onClick={registrarse}
+                <div>
+                  <div className="p-inputgroup">
+                    <span className="p-inputgroup-addon">
+                      <FontAwesomeIcon icon={faKey} />
+                    </span>
+                    <InputText
+                      placeholder="CONTRASEÑA"
+                      onChange={({ target: { value } }) => {
+                        setInputLogin((ps) => ({
+                          ...ps,
+                          clave: value
+                        }))
+                      }}
+                      type="password"
+                      onKeyPress={onEnter}
                     />
                   </div>
+                </div>
+                <div className="flex w-full justify-center">
+                  <Button
+                    id="Entrar"
+                    className="rounded-full w-32 bg-[#4a9a66]"
+                    label="Entrar"
+                    onClick={entrar}
+                  />
+                  <Button
+                    className="rounded-full w-32 bg-[#4a9a66] ml-2"
+                    label="Registrarse"
+                    onClick={registrarse}
+                  />
                 </div>
               </div>
             </div>
-            <div className="h-[70vh] basis-1/7 ml-10">
-              <Divider layout="vertical" type="solid" />
-            </div>
-            <div className="-mt-2 basis-1/2 mx-[7%]">
+          </div>
+          <div className="h-[70vh] basis-1/7 ml-10">
+            <Divider layout="vertical" type="solid" />
+          </div>
+          <div className="h-[70vh] basis-1/2 flex justify-center">
+            <div className="w-[94vh] h-[70vh] ml-[10%]">
               <Image
                 src={imagenBienvenida}
-                width={620}
-                height={460}
+                fill
                 alt="UNEARTE"
                 loading="eager"
                 priority={true}
               />
             </div>
           </div>
-        </Card>
-      </div>
+        </div>
+      </Card>
 
       {/* eslint-disable-next-line react/no-unknown-property */}
       <style jsx global>{`

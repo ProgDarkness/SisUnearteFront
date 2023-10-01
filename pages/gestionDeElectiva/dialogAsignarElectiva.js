@@ -4,7 +4,6 @@ import { Dropdown } from 'primereact/dropdown'
 import { useEffect, useRef, useState } from 'react'
 import GQLregMallaCurricular from 'graphql/regMallaCurricular'
 import GQLregOfertaAcademica from 'graphql/regOfertaAcademica'
-import GQLconsultasGenerales from 'graphql/consultasGenerales'
 import GQLelectivas from 'graphql/electivas'
 import { Button } from 'primereact/button'
 import request from 'graphql-request'
@@ -29,7 +28,10 @@ const DialogAsigElectiva = ({
   ] = useState(false)
   const [datosEliminarAsigElec, setDatosEliminarAsigElec] = useState(null)
 
-  const { data: carreras } = useSWR(GQLconsultasGenerales.GET_CARRERAS)
+  const { data: carreras } = useSWR(
+    [GQLregOfertaAcademica.OBTENER_OFERTAS, { idStatus: 1 }],
+    { refreshInterval: 1000 }
+  )
 
   const { data: electivasAsig, mutate } = useSWR(
     GQLelectivas.GET_ASIG_ELECTIVAS
@@ -170,9 +172,9 @@ const DialogAsigElectiva = ({
               id="electiva_carrera"
               value={carrera}
               onChange={(e) => setCarrera(e.value)}
-              options={carreras?.obtenerCarreras.response}
-              optionLabel="nombre"
-              optionValue="id"
+              options={carreras?.obtenerOfertaAcademica.response}
+              optionLabel="nb_carrera"
+              optionValue="id_carrera"
             />
             <label htmlFor="electiva_carrera">Carrera</label>
           </span>

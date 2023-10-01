@@ -67,7 +67,7 @@ const Import = ({ cambioVista }) => {
       <Toast ref={toast} />
       <div className="col-span-5 flex justify-end">
         <Button
-          label="Import"
+          label="Importar"
           className="mr-1"
           onClick={() => {
             const newVistas = {
@@ -84,7 +84,7 @@ const Import = ({ cambioVista }) => {
           }}
         />
         <Button
-          label="Export Inscritos"
+          label="Exportar Inscritos"
           className="mr-1"
           onClick={() => {
             const newVistas = {
@@ -101,7 +101,7 @@ const Import = ({ cambioVista }) => {
           }}
         />
         <Button
-          label="Export Postulados"
+          label="Exportar Postulados"
           onClick={() => {
             const newVistas = {
               [`export`]: true
