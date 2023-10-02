@@ -95,7 +95,7 @@ const Inicio = () => {
             <Image
               src={arte1}
               loading="eager"
-              fill
+              fill="true"
               sizes="(max-width: 30vw) 100%"
               priority={true}
               className="rounded-lg"

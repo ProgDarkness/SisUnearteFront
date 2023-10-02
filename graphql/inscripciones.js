@@ -2,8 +2,8 @@ import { gql } from 'graphql-request'
 
 export default {
   QUERY_LISTA_INSCRITOS: gql`
-    query obtenerListadoInscrito {
-      obtenerListadoInscrito(input: { periodo: 2, carrera: 3, sede: 2 }) {
+    query obtenerListadoInscrito($InputFiltro: InputFiltro!) {
+      obtenerListadoInscrito(input: $InputFiltro) {
         response {
           idest
           idnac

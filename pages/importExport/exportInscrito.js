@@ -22,7 +22,7 @@ const ExportInscritos = ({ cambioVista }) => {
   const { data } = useSWR([
     carrera || periodo || sede ? GQLinscripciones.QUERY_LISTA_INSCRITOS : null,
     {
-      input: {
+      InputFiltro: {
         periodo: parseInt(periodo),
         carrera: parseInt(carrera),
         sede: parseInt(sede)
@@ -175,11 +175,12 @@ const ExportInscritos = ({ cambioVista }) => {
         <h1 className="text-3xl font-semibold text-white">Export de Data</h1>
         <div />
       </div>
-      <div className="grid grid-cols-5 gap-5 pt-2">
+      <div className="col-span-5 grid grid-cols-4 gap-5 pt-2">
         <span className="p-float-label field">
           <Dropdown
             className="w-full"
             id="tp_sede"
+            showClear
             value={sede}
             onChange={(e) => setSedes(e.target.value)}
             options={sedes?.obtenerSedes.response}
@@ -192,6 +193,7 @@ const ExportInscritos = ({ cambioVista }) => {
           <Dropdown
             className="w-full"
             id="tp_carrera"
+            showClear
             value={carrera}
             onChange={(e) => setCarreras(e.target.value)}
             options={carreras?.obtenerCarreras.response}
@@ -204,6 +206,7 @@ const ExportInscritos = ({ cambioVista }) => {
           <Dropdown
             className="w-full"
             id="tp_periodo"
+            showClear
             value={periodo}
             onChange={(e) => setPeriodos(e.target.value)}
             options={periodos?.obtenerPeridosOferta.response}

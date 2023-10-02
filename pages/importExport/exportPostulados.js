@@ -177,7 +177,7 @@ const Export = ({ cambioVista }) => {
         <h1 className="text-3xl font-semibold text-white">Exportar de Data</h1>
         <div />
       </div>
-      <div className="grid grid-cols-5 gap-5 pt-2">
+      <div className="col-span-5 grid grid-cols-4 gap-5 pt-2">
         <span className="p-float-label field">
           <Dropdown
             className="w-full"

@@ -179,7 +179,7 @@ export default function Index() {
             <div className="w-[94vh] h-[70vh] ml-[10%]">
               <Image
                 src={imagenBienvenida}
-                fill
+                fill="true"
                 alt="UNEARTE"
                 loading="eager"
                 priority={true}
