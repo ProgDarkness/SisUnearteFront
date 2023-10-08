@@ -48,8 +48,6 @@ const RegistroPrevio = ({ data }) => {
   const [blockedPanel, setBlockedPanel] = useState(false)
   const [evalToFormForPais, setEvalToFormForPais] = useState(true)
 
-  console.log(nombreDeZona)
-
   const { data: infoUser } = useSWR(
     idUser ? [GQLUsuarios.GET_INFO_USER_REG, { id_usuario: idUser }] : null
   )
@@ -126,8 +124,6 @@ const RegistroPrevio = ({ data }) => {
       setEstadoNacimiento(infoUser?.getInfoUsuario.response.estadoNac)
     }
   }, [infoUser])
-
-  console.log(nombreDeZona)
 
   useEffect(() => {
     if (nacionalidadUser && cedUsuario && nbUsuario && apUsuario) {

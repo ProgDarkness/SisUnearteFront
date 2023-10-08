@@ -36,7 +36,6 @@ const Postulaciones = ({ cambioVista }) => {
   }
 
   const acceptPostu = () => {
-    console.log(datosPostularse)
     const InputPostulacion = {
       usuario: parseInt(idUser),
       carrera: parseInt(datosPostularse.id_carrera),
