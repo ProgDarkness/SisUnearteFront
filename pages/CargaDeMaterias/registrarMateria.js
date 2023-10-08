@@ -29,7 +29,7 @@ const RegistrarMateria = () => {
   const { data: tpmateria } = useSWR(GQLconsultasGenerales.GET_TIPO_MATERIA)
   const { data: materias, mutate } = useSWR(
     GQLregMallaCurricular.GET_MATERIAS,
-    { refreshInterval: 1000 }
+    { refreshInterval: 10000 }
   )
 
   const crearMateria = (variables) => {
@@ -147,7 +147,9 @@ const RegistrarMateria = () => {
       <div className="grid grid-cols-5 gap-4 m-2">
         <div className="col-span-5 flex justify-between">
           <div />
-          <h1 className="text-3xl font-semibold text-white">Registrar Materia</h1>
+          <h1 className="text-3xl font-semibold text-white">
+            Registrar Materia
+          </h1>
           <div />
         </div>
         {reload && (

@@ -20,7 +20,7 @@ const DialogVerInfoPostulacion = ({
         : null,
       { carrera: parseInt(datosVerMalla?.id_carrera) }
     ],
-    { refreshInterval: 1000 }
+    { refreshInterval: 10000 }
   )
 
   const animation = {

@@ -19,7 +19,7 @@ const DialogVerRegOferta = ({
         : null,
       { carrera: parseInt(datosVerCarrera?.id_carrera) }
     ],
-    { refreshInterval: 1000 }
+    { refreshInterval: 10000 }
   )
 
   const animation = {

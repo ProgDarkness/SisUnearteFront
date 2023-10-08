@@ -41,7 +41,7 @@ const DialogEditarCarrera = ({
         }
       }
     ],
-    { refreshInterval: 1000 }
+    { refreshInterval: 10000 }
   )
 
   const { data: materias, mutate: mutateMaterias } = useSWR(

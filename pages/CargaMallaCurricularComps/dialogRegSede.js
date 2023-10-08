@@ -21,7 +21,7 @@ const DialogAsigSede = ({ dialogAsigSede, setDialogAsigSede }) => {
   )
   const { data: sedesCarreras, mutate } = useSWR(
     GQLregMallaCurricular.GET_SEDES_CARRERAS,
-    { refreshInterval: 1000 }
+    { refreshInterval: 10000 }
   )
   const [dialogRegSede, setDialogRegSede] = useState(false)
 

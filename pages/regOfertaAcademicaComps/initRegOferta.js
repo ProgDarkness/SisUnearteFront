@@ -19,7 +19,7 @@ const RegOfertaAcademica = ({ cambioVista }) => {
 
   const { data: ofertas, mutate } = useSWR(
     [GQLregOfertaAcademica.OBTENER_OFERTAS, { idStatus: 1 }],
-    { refreshInterval: 1000 }
+    { refreshInterval: 10000 }
   )
 
   const statusOferta = (variables) => {

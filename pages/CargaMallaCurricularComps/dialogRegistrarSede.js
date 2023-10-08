@@ -27,7 +27,7 @@ const DialogRegistrarSede = ({ dialogRegSede, setDialogRegSede }) => {
   const [ciudad, setCiudad] = useState(null)
 
   const { data: sedes, mutate } = useSWR(GQLregMallaCurricular.GET_SEDES_CRUD, {
-    refreshInterval: 1000
+    refreshInterval: 10000
   })
   const { data: estados } = useSWR(GQLregMallaCurricular.GET_ESTADOS_CRUD)
 

@@ -15,7 +15,7 @@ import { useSesion } from 'hooks/useSesion'
 const GestionDePostulaciones = () => {
   const { data: listadoPostulados, mutate } = useSWR(
     GQLvistaPostulado.QUERY_LISTA_POSTULADOS,
-    { refreshInterval: 1000 }
+    { refreshInterval: 10000 }
   )
   const [reload, setReload] = useState(true)
   const toast = useRef(null)
@@ -40,6 +40,14 @@ const GestionDePostulaciones = () => {
     )
   }
 
+  const verificarDocs = (variables) => {
+    return request(
+      process.env.NEXT_PUBLIC_URL_BACKEND,
+      GQLpostulaciones.GET_DOCS_ESTUDIANTE,
+      variables
+    )
+  }
+
   const acceptElminarPostulado = () => {
     console.log('SI')
   }
@@ -48,30 +56,53 @@ const GestionDePostulaciones = () => {
     console.log('NO')
   }
 
-  const acceptConfirmarPostulado = () => {
-    console.log(dataAprobarPostulacion)
-    const InputAprobarPostulacion = {
-      usuario: idUser,
-      idpostulado: parseInt(dataAprobarPostulacion?.idusuario),
-      idcarrera: parseInt(dataAprobarPostulacion?.idcarrera),
-      idperiodo: parseInt(dataAprobarPostulacion?.idperiodo),
-      idsede: parseInt(dataAprobarPostulacion?.idsede),
-      idpostulacion: parseInt(dataAprobarPostulacion?.id)
-    }
-    aprobarPostulacion({ InputAprobarPostulacion }).then(
-      ({ aprobarPostulacion: { status, message, type } }) => {
-        setReload(false)
-        toast.current.show({
-          severity: type,
-          summary: '¡ Atención !',
-          detail: message
-        })
-        mutate()
-        setTimeout(() => {
-          setReload(true)
-        }, 50)
+  function checkForNull(obj) {
+    for (const key in obj) {
+      if (obj[key] === null) {
+        return true
       }
-    )
+    }
+
+    return false
+  }
+
+  const acceptConfirmarPostulado = () => {
+    verificarDocs({
+      idEstudiante: parseInt(datosVerPostulado?.idusuario)
+    }).then(({ obtenerDocsEstudiante: { docs } }) => {
+      const validate = checkForNull(docs)
+
+      if (validate) {
+        toast.current.show({
+          severity: 'error',
+          summary: '¡ Atención !',
+          detail: 'El estudiante no a presentado los documentos requeridos'
+        })
+      } else {
+        const InputAprobarPostulacion = {
+          usuario: idUser,
+          idpostulado: parseInt(dataAprobarPostulacion?.idusuario),
+          idcarrera: parseInt(dataAprobarPostulacion?.idcarrera),
+          idperiodo: parseInt(dataAprobarPostulacion?.idperiodo),
+          idsede: parseInt(dataAprobarPostulacion?.idsede),
+          idpostulacion: parseInt(dataAprobarPostulacion?.id)
+        }
+        aprobarPostulacion({ InputAprobarPostulacion }).then(
+          ({ aprobarPostulacion: { status, message, type } }) => {
+            setReload(false)
+            toast.current.show({
+              severity: type,
+              summary: '¡ Atención !',
+              detail: message
+            })
+            mutate()
+            setTimeout(() => {
+              setReload(true)
+            }, 50)
+          }
+        )
+      }
+    })
   }
 
   const rejectConfirmarPostulado = () => {

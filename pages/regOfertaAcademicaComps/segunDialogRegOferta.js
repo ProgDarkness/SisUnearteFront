@@ -67,7 +67,7 @@ const DialogRegOferta = ({
       carreraOferta?.id ? GQLregOfertaAcademica.DETALLES_MALLAS_CARRERA : null,
       { carrera: parseInt(carreraOferta?.id) }
     ],
-    { refreshInterval: 1000 }
+    { refreshInterval: 10000 }
   )
 
   const regOferta = (variables) => {

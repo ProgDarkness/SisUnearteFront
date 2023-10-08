@@ -22,7 +22,7 @@ const DialogVerMalla = ({
         }
       }
     ],
-    { refreshInterval: 1000 }
+    { refreshInterval: 10000 }
   )
 
   const animation = {

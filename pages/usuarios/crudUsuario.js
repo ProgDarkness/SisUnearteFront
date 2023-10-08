@@ -19,12 +19,11 @@ const DialogCrudUser = ({ active, setActive }) => {
   const router = useRouter()
   const { token, rolUser } = useSesion()
 
-  const { data, mutate } = useSWR(
-    [rolUser === 2 ? GQLPlantilla.GET_USUARIOS : null, {}, token],
-    {
-      refreshInterval: 1000
-    }
-  )
+  const { data, mutate } = useSWR([
+    rolUser === 2 ? GQLPlantilla.GET_USUARIOS : null,
+    {},
+    token
+  ])
 
   const bodyFecha = (rowData) => {
     const fecha = new Date(parseInt(rowData?.created_at))

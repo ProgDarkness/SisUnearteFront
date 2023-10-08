@@ -42,7 +42,7 @@ const RegistroCarrera = ({ cambioVista }) => {
   const { data: carreras, mutate } = useSWR(
     GQLregMallaCurricular.GET_CARRERAS,
     {
-      refreshInterval: 1000
+      refreshInterval: 10000
     }
   )
 

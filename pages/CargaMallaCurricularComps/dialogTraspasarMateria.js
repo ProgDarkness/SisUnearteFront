@@ -22,7 +22,7 @@ const DialogTrasMateria = ({ dialogTrasMateria, setDialogTrasMateria }) => {
 
   const { data: materias, mutate } = useSWR(
     GQLregMallaCurricular.GET_MATERIAS,
-    { refreshInterval: 1000 }
+    { refreshInterval: 10000 }
   )
   const { data: materiasDrop } = useSWR(GQLconsultasGenerales.GET_MATERIAS_ONE)
   const { data: carreras } = useSWR(GQLconsultasGenerales.GET_CARRERAS)

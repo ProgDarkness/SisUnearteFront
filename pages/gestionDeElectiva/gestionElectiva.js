@@ -27,7 +27,7 @@ const GestionElectiva = () => {
     useState(false)
 
   const { data: electivas, mutate } = useSWR(GQLelectivas.GET_ELECTIVA, {
-    refreshInterval: 1000
+    refreshInterval: 10000
   })
 
   const HeaderCarrera = () => {

@@ -25,7 +25,7 @@ const GestionDePersonal = () => {
   const [dataEliminarPersonal, setDataEliminarPersonal] = useState(null)
 
   const { data: todoPersonal, mutate } = useSWR(GQLpersonal.GET_PERSONAL, {
-    refreshInterval: 1000
+    refreshInterval: 10000
   })
 
   const eliminarPersonal = (variables) => {

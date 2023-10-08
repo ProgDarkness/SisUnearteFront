@@ -24,7 +24,7 @@ const DialogVerOferta = ({
         : null,
       { carrera: parseInt(datosVerOferta?.id_carrera) }
     ],
-    { refreshInterval: 1000 }
+    { refreshInterval: 10000 }
   )
 
   const animation = {

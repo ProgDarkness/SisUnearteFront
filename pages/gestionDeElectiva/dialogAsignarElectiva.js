@@ -30,7 +30,7 @@ const DialogAsigElectiva = ({
 
   const { data: carreras } = useSWR(
     [GQLregOfertaAcademica.OBTENER_OFERTAS, { idStatus: 1 }],
-    { refreshInterval: 1000 }
+    { refreshInterval: 10000 }
   )
 
   const { data: electivasAsig, mutate } = useSWR(

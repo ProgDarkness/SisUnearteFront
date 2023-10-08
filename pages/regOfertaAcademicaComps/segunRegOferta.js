@@ -27,7 +27,7 @@ const RegistroOferta = ({ cambioVista }) => {
   const [activeDialogRegPerido, setActiveDialogRegPerido] = useState(false)
   const { data: ofertas, mutate } = useSWR(
     [GQLregOfertaAcademica.OBTENER_OFERTAS, { idStatus: 2 }],
-    { refreshInterval: 1000 }
+    { refreshInterval: 10000 }
   )
 
   const [datosEliminarOferta, setDatosEliminarOferta] = useState(null)

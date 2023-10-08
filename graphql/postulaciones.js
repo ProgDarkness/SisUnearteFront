@@ -1,6 +1,28 @@
 import { gql } from 'graphql-request'
 
 export default {
+  GET_DOCS_ESTUDIANTE: gql`
+    query obtenerDocsEstudiante($idEstudiante: Int!) {
+      obtenerDocsEstudiante(idEstudiante: $idEstudiante) {
+        docs {
+          cedula
+          rif
+          tituloBachiller
+          notasCertificadas
+          fondoNegro
+        }
+      }
+    }
+  `,
+  SAVE_DOCS_ESTUDIANTE: gql`
+    mutation guardarDocs($inputDocs: inputDocs!) {
+      guardarDocs(inputDocs: $inputDocs) {
+        status
+        type
+        message
+      }
+    }
+  `,
   GET_POSTULADOS: gql`
     query obtenerListadoPostuladoCarrera {
       obtenerListadoPostuladoCarrera {
