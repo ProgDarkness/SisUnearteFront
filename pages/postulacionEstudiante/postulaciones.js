@@ -65,6 +65,26 @@ const Postulaciones = ({ cambioVista }) => {
     setConfirmPostulacion(false)
   }
 
+  const bodyEstatus = (rowData) => {
+    let colorTag = ''
+    if (rowData.estatus === 'Pendiente por aprobacióno') {
+      colorTag = '#229ec3'
+    } else if (rowData.estatus === 'Rechazado') {
+      colorTag = '#c32222'
+    } else if (rowData.estatus === 'Aprobado') {
+      colorTag = '#10b142'
+    }
+
+    return (
+      <div
+        className="rounded-lg p-2 text-center"
+        style={{ backgroundColor: colorTag }}
+      >
+        {rowData.estatus}
+      </div>
+    )
+  }
+
   const accionBodyTemplate = (rowData) => {
     return (
       <div className="flex justify-center">
@@ -130,7 +150,7 @@ const Postulaciones = ({ cambioVista }) => {
             <Column field="periodo" header="Periodo" />
             <Column field="carrera" header="Carrera" />
             <Column field="sede" header="Sede" />
-            <Column field="estatus" header="Estatus" />
+            <Column field="estatus" body={bodyEstatus} header="Estatus" />
           </DataTable>
         </div>
       </div>

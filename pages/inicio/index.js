@@ -19,6 +19,7 @@ import GestionElectiva from 'pages/gestionDeElectiva/gestionElectiva'
 import RegistrarMateria from 'pages/CargaDeMaterias/registrarMateria'
 import InscripcionRegular from 'pages/inscripcionRegular/inscripcion'
 import ReportesData from 'pages/importExport/reportes'
+import GestionDeNotas from 'pages/gestionNotas/registroNotas'
 import Inicio from './inicio'
 
 const VistasContext = createContext({})
@@ -38,7 +39,8 @@ export default function index({ data }) {
     pruebasImportExport: false,
     gestionDePersonal: false,
     inicio: true,
-    gestionElectiva: false
+    gestionElectiva: false,
+    gestionDeNotas: false
   }
   const [mostrarVistas, setMostrarVistas] = useState(templateContext)
 
@@ -101,6 +103,7 @@ export default function index({ data }) {
               )}
               {mostrarVistas?.pruebasImportExport && <ReportesData />}
               {mostrarVistas?.gestionDePersonal && <GestionDePersonal />}
+              {mostrarVistas?.gestionDeNotas && <GestionDeNotas />}
             </Card>
             {/* eslint-disable-next-line react/no-unknown-property */}
             <style jsx global>{`

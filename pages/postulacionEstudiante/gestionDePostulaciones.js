@@ -111,7 +111,7 @@ const GestionDePostulaciones = () => {
 
   const bodyEstatus = (rowData) => {
     let colorTag = ''
-    if (rowData.estatus === 'Pendiente por ser revisado') {
+    if (rowData.estatus === 'Pendiente por aprobación') {
       colorTag = '#229ec3'
     } else if (rowData.estatus === 'Rechazado') {
       colorTag = '#c32222'
@@ -142,7 +142,7 @@ const GestionDePostulaciones = () => {
             setActiveDialogVerDatosEstudiantes(true)
           }}
         />
-        {rowData.estatus === 'Pendiente por ser revisado' && (
+        {rowData.estatus === 'Pendiente por aprobación' && (
           <>
             <Button
               icon="pi pi-check"

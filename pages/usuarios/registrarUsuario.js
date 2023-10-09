@@ -340,6 +340,12 @@ export default function RegistrarUsuario() {
             onClick={registra}
             disabled={submitting}
           />
+          <Button
+            label="¿Olvidó su clave?"
+            id="Regis"
+            /* onClick={recuperarClave} */
+            disabled={submitting}
+          />
         </div>
         {/* eslint-disable-next-line react/no-unknown-property */}
         <style jsx global>{`
