@@ -145,6 +145,19 @@ const InformacionDelEstudiante = () => {
             optionLabel="nombre"
             optionValue="id"
           />
+          <label htmlFor="tp_sede">Trayecto</label>
+        </span>
+        <span className="p-float-label field">
+          <Dropdown
+            className="w-full"
+            id="tp_sede"
+            showClear
+            /* value={sede}
+            onChange={(e) => setSedes(e.target.value)}
+            options={sedes?.obtenerSedes.response} */
+            optionLabel="nombre"
+            optionValue="id"
+          />
           <label htmlFor="tp_sede">Sección</label>
         </span>
       </div>
@@ -157,9 +170,9 @@ const InformacionDelEstudiante = () => {
           <Column field="cedula" header="Cédula" />
           <Column field="nombre" header="Nombre" />
           <Column field="apellido" header="Apellido" />
-          <Column body={bodymateria1} header="Materia 1" />
-          <Column body={bodymateria2} header="Materia 2" />
-          <Column body={bodymateria3} header="Materia 3" />
+          <Column body={bodymateria1} header="Evaluación 1" />
+          <Column body={bodymateria2} header="Evaluación 2" />
+          <Column body={bodymateria3} header="Evaluación 3" />
           <Column body={actionbodytemplate} />
         </DataTable>
       </div>

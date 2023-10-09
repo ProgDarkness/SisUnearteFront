@@ -4,13 +4,7 @@ import { useState, useRef } from 'react'
 import { Button } from 'primereact/button'
 import { useRouter } from 'next/router'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import {
-  faUser,
-  faKey,
-  faUserGear,
-  faAddressCard,
-  faSignature
-} from '@fortawesome/free-solid-svg-icons'
+import { faUser, faKey, faAddressCard } from '@fortawesome/free-solid-svg-icons'
 import GQLPlantilla from 'graphql/plantilla'
 import GQLConsultasGenerales from 'graphql/consultasGenerales'
 import request from 'graphql-request'
@@ -20,21 +14,18 @@ import useSWR from 'swr'
 import CryptoJS from 'crypto-js'
 import { useSesion } from 'hooks/useSesion'
 
-export default function RegistrarUsuario() {
+export default function RecuperarClave() {
   const { token } = useSesion()
   const toast = useRef()
   const [clave, setClave] = useState('')
   const [nombre, setNombre] = useState('')
   const [usuario, setUsuario] = useState('')
-  const [rol, setRol] = useState(!token ? 3 : null)
   const [apellido, setApellido] = useState('')
   const [cedula, setCedula] = useState('')
   const [nacionalidad, setNacionalidad] = useState(null)
   const router = useRouter()
   const [submitting, setSubmitting] = useState(false)
   const [errorFrom, setErrorFrom] = useState(false)
-
-  const { data } = useSWR(token ? [GQLPlantilla.GET_ROLES, {}, token] : null)
 
   const { data: nacionalidadOpcion } = useSWR(
     [GQLConsultasGenerales.GET_NACIONALIDADES, {}] || null
@@ -55,21 +46,9 @@ export default function RegistrarUsuario() {
     }
   }
 
-  const recuperaClave = () => {
-    router.push('/usuarios/recuperarClave')
-  }
-
   const registra = () => {
     setSubmitting(true)
-    if (
-      cedula &&
-      apellido &&
-      nombre &&
-      usuario &&
-      clave &&
-      rol &&
-      nacionalidad
-    ) {
+    if (cedula && apellido && nombre && usuario && clave && nacionalidad) {
       const usuarioInput = {
         cedula,
         nombre,
@@ -79,7 +58,6 @@ export default function RegistrarUsuario() {
           clave,
           process.env.NEXT_PUBLIC_SECRET_KEY
         ).toString(),
-        id_rol: rol,
         nacionalidad: parseInt(nacionalidad)
       }
       saveUsuario({ input: usuarioInput }).then(
@@ -149,7 +127,7 @@ export default function RegistrarUsuario() {
       <Toast ref={toast} />
       <div className="p-card px-8 py-4 -mt-20 bg-[#ae8e8e] shadow-2xl border-[#F9FADC] border-2">
         <h6 className="text-center text-white mb-5 text-2xl font-bold">
-          Registrar Usuario
+          Recuperar Clave
         </h6>
         <div className="grid grid-cols-2 gap-4">
           <div className="rounded-full ">
@@ -211,56 +189,6 @@ export default function RegistrarUsuario() {
             <div className="p-inputgroup">
               <span
                 className={`p-inputgroup-addon ${
-                  errorFrom && (nombre?.length < 1 || nombre === '')
-                    ? 'border-red-600 bg-red-300'
-                    : ''
-                }`}
-              >
-                <FontAwesomeIcon icon={faSignature} />
-              </span>
-              <InputText
-                value={nombre}
-                placeholder="NOMBRE"
-                onChange={({ target: { value } }) => {
-                  setNombre(value.toUpperCase())
-                }}
-                className={`${
-                  errorFrom && (nombre?.length < 1 || nombre === '')
-                    ? 'border-red-600 bg-red-300'
-                    : ''
-                }`}
-              />
-            </div>
-          </div>
-          <div className="rounded-full ">
-            <div className="p-inputgroup">
-              <span
-                className={`p-inputgroup-addon ${
-                  errorFrom && (apellido?.length < 1 || apellido === '')
-                    ? 'border-red-600 bg-red-300'
-                    : ''
-                }`}
-              >
-                <FontAwesomeIcon icon={faSignature} />
-              </span>
-              <InputText
-                value={apellido}
-                placeholder="APELLIDO"
-                onChange={({ target: { value } }) => {
-                  setApellido(value.toUpperCase())
-                }}
-                className={`${
-                  errorFrom && (apellido?.length < 1 || apellido === '')
-                    ? 'border-red-600 bg-red-300'
-                    : ''
-                }`}
-              />
-            </div>
-          </div>
-          <div className="rounded-full ">
-            <div className="p-inputgroup">
-              <span
-                className={`p-inputgroup-addon ${
                   errorFrom && (usuario?.length < 1 || usuario === '')
                     ? 'border-red-600 bg-red-300'
                     : ''
@@ -309,45 +237,11 @@ export default function RegistrarUsuario() {
               />
             </div>
           </div>
-          {token && (
-            <div className="col-span-2">
-              <div className="p-inputgroup">
-                <span
-                  className={`p-inputgroup-addon${
-                    errorFrom && rol === null ? 'border-red-600 bg-red-300' : ''
-                  }`}
-                >
-                  <FontAwesomeIcon icon={faUserGear} />
-                </span>
-                <Dropdown
-                  value={rol}
-                  options={data?.getRoles}
-                  onChange={({ target: { value } }) => {
-                    setRol(value)
-                  }}
-                  optionLabel="nb_rol"
-                  optionValue="id_rol"
-                  placeholder="Selecciona Rol"
-                  className={`${
-                    errorFrom && rol === null
-                      ? 'border-red-600 bg-red-300 '
-                      : ''
-                  }`}
-                />
-              </div>
-            </div>
-          )}
           <Button label="Volver" onClick={() => router.back()} />
           <Button
             label="Registrar"
             id="Regis"
             onClick={registra}
-            disabled={submitting}
-          />
-          <Button
-            label="¿Olvidó su clave?"
-            id="Regis"
-            onClick={recuperaClave}
             disabled={submitting}
           />
         </div>

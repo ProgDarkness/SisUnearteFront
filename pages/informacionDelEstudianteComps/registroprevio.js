@@ -606,7 +606,7 @@ const RegistroPrevio = ({ data }) => {
               }}
               optionLabel="nombre"
             />
-            <label htmlFor="sexo">Sexo</label>
+            <label htmlFor="sexo">Genero</label>
           </span>
         </div>
       </BlockUI>
