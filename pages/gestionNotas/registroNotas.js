@@ -6,7 +6,7 @@ import { InputText } from 'primereact/inputtext'
 import { useEffect, useState } from 'react'
 import DialogInformacionDelEstudiante from 'pages/informacionDelEstudianteComps/dialogInformacionDelEstudiante'
 
-const InformacionDelEstudiante = () => {
+const RegistroNotas = () => {
   const [datosEstudiantes, setDatosEstudiantes] = useState([])
   const [
     activeDialogInformacionDelEstudiante,
@@ -117,23 +117,11 @@ const InformacionDelEstudiante = () => {
           setActiveDialogInformacionDelEstudiante
         }
       />
-      <h1 className="text-3xl font-semibold text-white text-center mr-32 mb-6 -mt-3">
-        Registro de Notas
-      </h1>
+      <div className="col-span-5 flex justify-center">
+        <div />
+        <h1 className="text-3xl font-semibold text-white">Registro de Notas</h1>
+      </div>
       <div className="col-span-5 grid grid-cols-4 gap-5 pt-2">
-        <span className="p-float-label field">
-          <Dropdown
-            className="w-full"
-            id="tp_sede"
-            showClear
-            /* value={sede}
-            onChange={(e) => setSedes(e.target.value)}
-            options={sedes?.obtenerSedes.response} */
-            optionLabel="nombre"
-            optionValue="id"
-          />
-          <label htmlFor="tp_sede">Carrera</label>
-        </span>
         <span className="p-float-label field">
           <Dropdown
             className="w-full"
@@ -158,7 +146,44 @@ const InformacionDelEstudiante = () => {
             optionLabel="nombre"
             optionValue="id"
           />
+          <label htmlFor="tp_sede">Materia</label>
+        </span>
+        <span className="p-float-label field">
+          <Dropdown
+            className="w-full"
+            id="tp_sede"
+            showClear
+            /* value={sede}
+            onChange={(e) => setSedes(e.target.value)}
+            options={sedes?.obtenerSedes.response} */
+            optionLabel="nombre"
+            optionValue="id"
+          />
           <label htmlFor="tp_sede">Sección</label>
+        </span>
+        <span className="p-float-label field">
+          <Button
+            icon="pi pi-plus"
+            className="p-button-info mr-1"
+            tooltip="Guardar"
+            label="Guardar"
+            tooltipOptions={{ position: 'top' }}
+            onClick={() => {
+              setActiveDialogInformacionDelEstudiante(true)
+            }}
+          />
+        </span>
+        <span className="p-float-label field">
+          <Button
+            icon="pi pi-plus"
+            className="p-button-info mr-1"
+            tooltip="Guardar"
+            label="Hoja de Trabajo"
+            tooltipOptions={{ position: 'top' }}
+            onClick={() => {
+              setActiveDialogInformacionDelEstudiante(true)
+            }}
+          />
         </span>
       </div>
       <div>
@@ -173,11 +198,11 @@ const InformacionDelEstudiante = () => {
           <Column body={bodymateria1} header="Evaluación 1" />
           <Column body={bodymateria2} header="Evaluación 2" />
           <Column body={bodymateria3} header="Evaluación 3" />
-          <Column body={actionbodytemplate} />
+          <Column body={bodymateria3} header="Definitiva" />
         </DataTable>
       </div>
     </div>
   )
 }
 
-export default InformacionDelEstudiante
+export default RegistroNotas

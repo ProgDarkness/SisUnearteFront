@@ -298,6 +298,26 @@ export default function Index({ children, verMenu = true }) {
               Gestión de Notas
             </h1>
             <h1
+              className={`text-white font-medium text-sm rounded-md mt-2 cursor-pointer hover:bg-[#805e5e] ${
+                mostrarVistas?.gestionDeNotas ? 'bg-[#805e5e]' : 'bg-[#ae8e8e]'
+              }`}
+              onClick={() => {
+                const newVistas = {
+                  [`impresionDeNotas`]: !mostrarVistas?.impresionDeNotas
+                }
+                setMostrarVistas((prevState) => ({
+                  ...prevState,
+                  ...newVistas,
+                  ...Object.keys(prevState).reduce((acc, key) => {
+                    if (key !== 'impresionDeNotas') acc[key] = false
+                    return acc
+                  }, {})
+                }))
+              }}
+            >
+              Impresión de Notas
+            </h1>
+            <h1
               className={`text-white font-medium rounded-md mt-2 cursor-pointer hover:bg-[#805e5e] ${
                 mostrarVistas?.pruebasImportExport
                   ? 'bg-[#805e5e]'
