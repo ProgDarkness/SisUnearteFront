@@ -1,6 +1,9 @@
 import { InputText } from 'primereact/inputtext'
 import { Dropdown } from 'primereact/dropdown'
 import { Button } from 'primereact/button'
+import { FileUpload } from 'primereact/fileupload'
+import Image from 'next/image'
+import { Card } from 'primereact/card'
 import { useEffect, useRef, useState } from 'react'
 import { InputMask } from 'primereact/inputmask'
 import { ConfirmDialog } from 'primereact/confirmdialog'
@@ -12,6 +15,7 @@ import useSWR from 'swr'
 import { useSesion } from 'hooks/useSesion'
 import request from 'graphql-request'
 import { Toast } from 'primereact/toast'
+import usuario from 'public/images/usuario.png'
 
 const RegistroPrevio = ({ data }) => {
   const { nacionalidadUser, cedUsuario, nbUsuario, apUsuario, idUser } =
@@ -419,6 +423,27 @@ const RegistroPrevio = ({ data }) => {
     setConfirmRegistrar(false)
   }
 
+  const header = (
+    <Image
+      src={usuario}
+      loading="eager"
+      fill="true"
+      sizes="(max-width: 10vw) 40%"
+      priority={true}
+      className="rounded-lg"
+    />
+  )
+  const footer = (
+    <FileUpload
+      id="fileUpload"
+      name="files[]"
+      auto
+      customUpload
+      /* uploadHandler={(e) => cargarArchivo(e)} */
+      maxFileSize={1000000}
+    />
+  )
+
   return (
     <div className="m-2 -mt-2">
       <Toast ref={toast} />
@@ -438,193 +463,264 @@ const RegistroPrevio = ({ data }) => {
         }
         className="rounded-lg"
       >
-        <div className="grid grid-cols-5 gap-4 mt-4 p-4">
-          <span className="p-float-label field">
-            <Dropdown
-              className="w-full"
-              id="nacionalidad"
-              options={data?.nacionalidades.obtenerNacionalidades.response}
-              value={nacionalidad}
-              onChange={(e) => {
-                setNacionalidad(e.value)
-              }}
-              optionLabel="codigo"
-            />
-            <label htmlFor="nacionalidad">Nacionalidad</label>
-          </span>
-          <span className="p-float-label field">
-            <InputText
-              keyfilter={'num'}
-              maxLength={9}
-              className="w-full"
-              id="cedula"
-              value={cedula}
-              onChange={(e) => setCedula(e.target.value)}
-              autoComplete="off"
-            />
-            <label htmlFor="cedula">Cédula</label>
-          </span>
-          <span className="p-float-label field">
-            <InputText
-              className="w-full"
-              id="nombre"
-              value={nombre}
-              onChange={(e) => setNombre(e.target.value.toUpperCase())}
-              autoComplete="off"
-            />
-            <label htmlFor="nombre">Nombre</label>
-          </span>
-          <span className="p-float-label field">
-            <InputText
-              className="w-full"
-              id="apellido"
-              value={apellido}
-              onChange={(e) => setApellido(e.target.value.toUpperCase())}
-              autoComplete="off"
-            />
-            <label htmlFor="apellido">Apellido</label>
-          </span>
-          <span className="p-float-label field">
-            <InputText
-              className="w-full"
-              id="segundo_Nombre"
-              value={segundo_Nombre}
-              onChange={(e) => setSegundo_Nombre(e.target.value.toUpperCase())}
-              autoComplete="off"
-            />
-            <label htmlFor="segundo_Nombre">Segundo Nombre</label>
-          </span>
-          <span className="p-float-label field">
-            <InputText
-              className="w-full"
-              id="segundo_Apellido"
-              value={segundo_Apellido}
-              onChange={(e) =>
-                setSegundo_Apellido(e.target.value.toUpperCase())
-              }
-              autoComplete="off"
-            />
-            <label htmlFor="segundo_Apellido">Segundo Apellido</label>
-          </span>
-          <span className="p-float-label field">
-            <InputText
-              className="w-full"
-              id="correoElectronico"
-              value={correoElectronico}
-              onChange={(e) => setCorreoElectronico(e.target.value)}
-              autoComplete="off"
-            />
-            <label htmlFor="correoElectronico">Correo Electronico</label>
-          </span>
-          <span className="p-float-label field">
-            <InputMask
-              mask="99/99/9999"
-              className="w-full"
-              id="fechanaci"
-              value={fechanaci}
-              onChange={(e) => {
-                setFechaNaci(e.value)
-              }}
-              autoComplete="off"
-              onBlur={() => validateDate(fechanaci)}
-            />
-            <label htmlFor="fechanaci">Fecha de nacimiento</label>
-          </span>
-          <span className="p-float-label field">
-            <Dropdown
-              className="w-full"
-              id="paisNacimiento"
-              options={data?.paises.obtenerPaises.response}
-              value={paisNacimiento}
-              onChange={(e) => {
-                setPaisNacimiento(e.value)
-              }}
-              filter
-              filterBy="nombre"
-              optionLabel="nombre"
-            />
-            <label htmlFor="paisNacimiento">Pais de Nacimiento</label>
-          </span>
+        <div className="flex flex-col">
+          <div>
+            <div className="flex flex-row">
+              <div className="tab-content justify-center rounded-lg w-5/6 h-96 pr-3 pl-3">
+                <h1 className="text-3xl font-semibold text-white text-left mr-32 mb-6 -mt-3">
+                  Datos Personales
+                </h1>
+                <Divider className="col-span-5" />
+                <div className="text-white -mt-2">
+                  <div className="flex">
+                    <div className="grid grid-cols-4 gap-4 mt-4 p-4">
+                      <span className="p-float-label field">
+                        <Dropdown
+                          className="w-full"
+                          id="nacionalidad"
+                          options={
+                            data?.nacionalidades.obtenerNacionalidades.response
+                          }
+                          value={nacionalidad}
+                          onChange={(e) => {
+                            setNacionalidad(e.value)
+                          }}
+                          optionLabel="codigo"
+                        />
+                        <label htmlFor="nacionalidad">Nacionalidad</label>
+                      </span>
+                      <span className="p-float-label field">
+                        <InputText
+                          keyfilter={'num'}
+                          maxLength={9}
+                          className="w-full"
+                          id="cedula"
+                          value={cedula}
+                          onChange={(e) => setCedula(e.target.value)}
+                          autoComplete="off"
+                        />
+                        <label htmlFor="cedula">Cédula</label>
+                      </span>
+                      <span className="p-float-label field">
+                        <InputText
+                          className="w-full"
+                          id="nombre"
+                          value={nombre}
+                          onChange={(e) =>
+                            setNombre(e.target.value.toUpperCase())
+                          }
+                          autoComplete="off"
+                        />
+                        <label htmlFor="nombre">Nombre</label>
+                      </span>
+                      <span className="p-float-label field">
+                        <InputText
+                          className="w-full"
+                          id="apellido"
+                          value={apellido}
+                          onChange={(e) =>
+                            setApellido(e.target.value.toUpperCase())
+                          }
+                          autoComplete="off"
+                        />
+                        <label htmlFor="apellido">Apellido</label>
+                      </span>
+                      <span className="p-float-label field">
+                        <InputText
+                          className="w-full"
+                          id="segundo_Nombre"
+                          value={segundo_Nombre}
+                          onChange={(e) =>
+                            setSegundo_Nombre(e.target.value.toUpperCase())
+                          }
+                          autoComplete="off"
+                        />
+                        <label htmlFor="segundo_Nombre">Segundo Nombre</label>
+                      </span>
+                      <span className="p-float-label field">
+                        <InputText
+                          className="w-full"
+                          id="segundo_Apellido"
+                          value={segundo_Apellido}
+                          onChange={(e) =>
+                            setSegundo_Apellido(e.target.value.toUpperCase())
+                          }
+                          autoComplete="off"
+                        />
+                        <label htmlFor="segundo_Apellido">
+                          Segundo Apellido
+                        </label>
+                      </span>
+                      <span className="p-float-label field">
+                        <InputText
+                          className="w-full"
+                          id="correoElectronico"
+                          value={correoElectronico}
+                          onChange={(e) => setCorreoElectronico(e.target.value)}
+                          autoComplete="off"
+                        />
+                        <label htmlFor="correoElectronico">
+                          Correo Electronico
+                        </label>
+                      </span>
+                      <span className="p-float-label field">
+                        <InputMask
+                          mask="99/99/9999"
+                          className="w-full"
+                          id="fechanaci"
+                          value={fechanaci}
+                          onChange={(e) => {
+                            setFechaNaci(e.value)
+                          }}
+                          autoComplete="off"
+                          onBlur={() => validateDate(fechanaci)}
+                        />
+                        <label htmlFor="fechanaci">Fecha de nacimiento</label>
+                      </span>
+                      <span className="p-float-label field">
+                        <Dropdown
+                          className="w-full"
+                          id="paisNacimiento"
+                          options={data?.paises.obtenerPaises.response}
+                          value={paisNacimiento}
+                          onChange={(e) => {
+                            setPaisNacimiento(e.value)
+                          }}
+                          filter
+                          filterBy="nombre"
+                          optionLabel="nombre"
+                        />
+                        <label htmlFor="paisNacimiento">
+                          Pais de Nacimiento
+                        </label>
+                      </span>
 
-          <span className="p-float-label field">
-            <Dropdown
-              className="w-full"
-              id="estadoNacimiento"
-              options={estadosPorPaisNac?.obtenerEstadosPorPais.response}
-              value={estadoNacimiento}
-              onChange={(e) => {
-                setEstadoNacimiento(e.value)
-              }}
-              filter
-              filterBy="nombre"
-              optionLabel="nombre"
-              emptyMessage="Seleccione un pais de nacimiento"
-            />
-            <label htmlFor="estadoNacimiento">Estado de Nacimiento</label>
-          </span>
-          {paisNacimiento === null || parseInt(paisNacimiento?.id) === 239 ? (
-            <span className="p-float-label field">
-              <Dropdown
-                className="w-full"
-                id="estadoNacimiento"
-                options={
-                  ciudadesPorEstadoNac?.obtenerCiudadesPorEstado.response
-                }
-                value={ciudadNacimiento}
-                onChange={(e) => {
-                  setCiudadNacimiento(e.value)
-                }}
-                filter
-                filterBy="nombre"
-                optionLabel="nombre"
-                emptyMessage="Seleccione un estado de nacimiento"
-              />
-              <label htmlFor="estadoNacimiento">Ciudad de Nacimiento</label>
-            </span>
-          ) : (
-            ''
-          )}
-          <span className="p-float-label field">
-            <Dropdown
-              className="w-full"
-              id="discapacidad"
-              options={data?.discapacidades.obtenerDiscapacidades.response}
-              value={discapacidad}
-              onChange={(e) => setDiscapacidad(e.target.value)}
-              optionLabel="nombre"
-            />
-            <label htmlFor="discapacidad">Discapacidad</label>
-          </span>
-          <span className="p-float-label field">
-            <Dropdown
-              className="w-full"
-              id="sexo"
-              options={data?.sexos.obtenerSexos.response}
-              value={sexo}
-              onChange={(e) => {
-                setSexo(e.value)
-              }}
-              optionLabel="nombre"
-            />
-            <label htmlFor="sexo">Genero</label>
-          </span>
+                      <span className="p-float-label field">
+                        <Dropdown
+                          className="w-full"
+                          id="estadoNacimiento"
+                          options={
+                            estadosPorPaisNac?.obtenerEstadosPorPais.response
+                          }
+                          value={estadoNacimiento}
+                          onChange={(e) => {
+                            setEstadoNacimiento(e.value)
+                          }}
+                          filter
+                          filterBy="nombre"
+                          optionLabel="nombre"
+                          emptyMessage="Seleccione un pais de nacimiento"
+                        />
+                        <label htmlFor="estadoNacimiento">
+                          Estado de Nacimiento
+                        </label>
+                      </span>
+                      {paisNacimiento === null ||
+                      parseInt(paisNacimiento?.id) === 239 ? (
+                        <span className="p-float-label field">
+                          <Dropdown
+                            className="w-full"
+                            id="estadoNacimiento"
+                            options={
+                              ciudadesPorEstadoNac?.obtenerCiudadesPorEstado
+                                .response
+                            }
+                            value={ciudadNacimiento}
+                            onChange={(e) => {
+                              setCiudadNacimiento(e.value)
+                            }}
+                            filter
+                            filterBy="nombre"
+                            optionLabel="nombre"
+                            emptyMessage="Seleccione un estado de nacimiento"
+                          />
+                          <label htmlFor="estadoNacimiento">
+                            Ciudad de Nacimiento
+                          </label>
+                        </span>
+                      ) : (
+                        ''
+                      )}
+                      <span className="p-float-label field">
+                        <Dropdown
+                          className="w-full"
+                          id="discapacidad"
+                          options={
+                            data?.discapacidades.obtenerDiscapacidades.response
+                          }
+                          value={discapacidad}
+                          onChange={(e) => setDiscapacidad(e.target.value)}
+                          optionLabel="nombre"
+                        />
+                        <label htmlFor="discapacidad">Discapacidad</label>
+                      </span>
+                      <span className="p-float-label field">
+                        <Dropdown
+                          className="w-full"
+                          id="sexo"
+                          options={data?.sexos.obtenerSexos.response}
+                          value={sexo}
+                          onChange={(e) => {
+                            setSexo(e.value)
+                          }}
+                          optionLabel="nombre"
+                        />
+                        <label htmlFor="sexo">Genero</label>
+                      </span>
+                      <span className="p-float-label field">
+                        <Dropdown
+                          className="w-full"
+                          id="estadoCivil"
+                          options={
+                            data?.estados_civiles.obtenerEstadoCivil.response
+                          }
+                          value={estadoCivil}
+                          onChange={(e) => {
+                            setEstadoCivil(e.value)
+                          }}
+                          optionLabel="nombre"
+                        />
+                        <label htmlFor="estadoCivil">Estado Civil</label>
+                      </span>
+                      {pais === null || parseInt(pais?.id) === 239 ? (
+                        <span className="p-float-label field">
+                          <Dropdown
+                            className="w-full"
+                            id="etnia"
+                            options={tiposEtnias?.obtenerEtnia.response}
+                            value={etnia}
+                            onChange={(e) => {
+                              setEtnia(e.target.value)
+                            }}
+                            optionLabel="nombre"
+                            emptyMessage="Seleccione un estado"
+                          />
+                          <label htmlFor="etnia">Etnia</label>
+                        </span>
+                      ) : (
+                        ''
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="justify-center py-1 px-3 w-1/4 h-80">
+                <Card
+                  style={{ width: '15em' }}
+                  footer={footer}
+                  header={header}
+                ></Card>
+              </div>
+            </div>
+          </div>
         </div>
       </BlockUI>
+      <h1 className="text-3xl font-semibold text-white text-left mr-32 mb-6 -mt-3">
+        Dirección de Habitación
+      </h1>
+      <Divider className="col-span-5" />
       <div className="grid grid-cols-5 gap-4">
-        <Divider className="col-span-5" />
-        <span className="p-float-label field">
-          <Dropdown
-            className="w-full"
-            id="estadoCivil"
-            options={data?.estados_civiles.obtenerEstadoCivil.response}
-            value={estadoCivil}
-            onChange={(e) => {
-              setEstadoCivil(e.value)
-            }}
-            optionLabel="nombre"
-          />
-          <label htmlFor="estadoCivil">Estado Civil</label>
-        </span>
         <span className="p-float-label field">
           <Dropdown
             className="w-full"
@@ -667,24 +763,6 @@ const RegistroPrevio = ({ data }) => {
           <span className="p-float-label field">
             <Dropdown
               className="w-full"
-              id="etnia"
-              options={tiposEtnias?.obtenerEtnia.response}
-              value={etnia}
-              onChange={(e) => {
-                setEtnia(e.target.value)
-              }}
-              optionLabel="nombre"
-              emptyMessage="Seleccione un estado"
-            />
-            <label htmlFor="etnia">Etnia</label>
-          </span>
-        ) : (
-          ''
-        )}
-        {pais === null || parseInt(pais?.id) === 239 ? (
-          <span className="p-float-label field">
-            <Dropdown
-              className="w-full"
               id="municipio"
               options={municipiosPorEstado?.obtenerMunicipiosPorEstado.response}
               value={municipio}
@@ -718,6 +796,222 @@ const RegistroPrevio = ({ data }) => {
               emptyMessage="Seleccione un estado"
             />
             <label htmlFor="ciudad">Ciudad</label>
+          </span>
+        ) : (
+          ''
+        )}
+        {pais === null || parseInt(pais?.id) === 239 ? (
+          <span className="p-float-label field">
+            <Dropdown
+              className="w-full"
+              id="parroquia"
+              options={
+                parroquiasPorMunicipio?.obtenerParrquiasPorMunicipio.response
+              }
+              value={parroquia}
+              onChange={(e) => {
+                setParroquia(e.target.value)
+                setNombreDeZona(null)
+              }}
+              optionLabel="nombre"
+              emptyMessage="Seleccione un municipio"
+            />
+            <label htmlFor="parroquia">Parroquia</label>
+          </span>
+        ) : (
+          ''
+        )}
+        <span className="p-float-label field">
+          <Dropdown
+            className="w-full"
+            id="tipoDeZona"
+            options={data?.tipos_zona.obtenerTipoZona.response}
+            value={tipoDeZona}
+            onChange={(e) => setTipoDeZona(e.target.value)}
+            optionLabel="nombre"
+          />
+          <label htmlFor="tipoDeZona">Tipo De Zona</label>
+        </span>
+        {pais === null || parseInt(pais?.id) === 239 ? (
+          <span className="p-float-label field">
+            <Dropdown
+              className="w-full"
+              id="nombreDeZona"
+              options={zonasPorParroquias?.obtenerZonasPorParroquias.response}
+              value={nombreDeZona}
+              onChange={(e) => setNombreDeZona(e.target.value)}
+              optionLabel="nombre"
+              emptyMessage="Seleccione una parroquia"
+            />
+            <label htmlFor="nombreDeZona">Nombre de Zona</label>
+          </span>
+        ) : (
+          ''
+        )}
+        {pais === null || parseInt(pais?.id) === 239 ? (
+          <span className="p-float-label field">
+            <InputText
+              className="w-full"
+              id="zonaPostal"
+              value={nombreDeZona?.codigo_postal || ''}
+              autoComplete="off"
+            />
+            <label htmlFor="zonaPostal">Zona Postal</label>
+          </span>
+        ) : (
+          ''
+        )}
+        <span className="p-float-label field">
+          <Dropdown
+            className="w-full"
+            id="tipoDeVia"
+            options={data?.tipos_via.obtenerTipoVia.response}
+            value={tipoDeVia}
+            onChange={(e) => setTipoDeVia(e.target.value)}
+            optionLabel="nombre"
+          />
+          <label htmlFor="tipoDeVia">Tipo de via</label>
+        </span>
+        <span className="p-float-label field">
+          <InputText
+            className="w-full"
+            id="nombreDeVia"
+            value={nombreDeVia}
+            onChange={(e) => setNombreDeVia(e.target.value.toUpperCase())}
+            autoComplete="off"
+          />
+          <label htmlFor="nombreDeVia">Nombre De Via</label>
+        </span>
+        <span className="p-float-label field">
+          <Dropdown
+            className="w-full"
+            id="tipoDeVivienda"
+            options={data?.tipos_vivienda.obtenerTipoVivienda.response}
+            value={tipoDeVivienda}
+            onChange={(e) => setTipoDeVivienda(e.target.value)}
+            optionLabel="nombre"
+          />
+          <label htmlFor="tipoDeVivienda">Tipo De Vivienda</label>
+        </span>
+        <span className="p-float-label field">
+          <InputText
+            className="w-full"
+            id="numeroDeVivienda"
+            value={numeroDeVivienda}
+            keyfilter="pint"
+            maxLength={4}
+            onChange={(e) => setNumeroDeVivienda(e.target.value)}
+            autoComplete="off"
+          />
+          <label htmlFor="numeroDeVivienda">Numero De Vivienda</label>
+        </span>
+
+        <ConfirmDialog
+          draggable={false}
+          resizable={false}
+          className="bg-[#805e5e]"
+          visible={confirmRegistrar}
+          acceptLabel="Si"
+          rejectLabel="No"
+          onHide={() => setConfirmRegistrar(false)}
+          message="Estas seguro que deseas confirmar la información ingresada?"
+          header="Confirmar"
+          icon="pi pi-exclamation-triangle"
+          accept={accept}
+          reject={reject}
+        />
+
+        <Button
+          icon="pi pi-check"
+          label={
+            infoUser?.getInfoUsuario.response?.bl_registro
+              ? 'Guardar'
+              : 'Registrarse'
+          }
+          onClick={() => setConfirmRegistrar(true)}
+          disabled={evalToFormForPais}
+        />
+      </div>
+      <h1 className="text-3xl font-semibold text-white text-left mr-32 mb-6 -mt-3">
+        Dirección de Trabajo
+      </h1>
+      <Divider className="col-span-5" />
+      <div className="grid grid-cols-5 gap-4 mt-5">
+        <span className="p-float-label field">
+          <Dropdown
+            className="w-full"
+            id="pais"
+            options={data?.paises.obtenerPaises.response}
+            value={pais}
+            onChange={(e) => {
+              setPais(e.value)
+              setEstado(null)
+              setMunicipio(null)
+              setCiudad(null)
+              setParroquia(null)
+              setNombreDeZona(null)
+            }}
+            filter
+            filterBy="nombre"
+            optionLabel="nombre"
+          />
+          <label htmlFor="pais">Pais</label>
+        </span>
+        <span className="p-float-label field">
+          <Dropdown
+            className="w-full"
+            id="estado"
+            options={estadosPorPais?.obtenerEstadosPorPais.response}
+            value={estado}
+            onChange={(e) => {
+              setEstado(e.target.value)
+              setMunicipio(null)
+              setCiudad(null)
+              setParroquia(null)
+              setNombreDeZona(null)
+            }}
+            optionLabel="nombre"
+            emptyMessage="Seleccione un pais"
+          />
+          <label htmlFor="estado">Estado</label>
+        </span>
+        {pais === null || parseInt(pais?.id) === 239 ? (
+          <span className="p-float-label field">
+            <Dropdown
+              className="w-full"
+              id="ciudad"
+              options={ciudadesPorEstado?.obtenerCiudadesPorEstado.response}
+              value={ciudad}
+              onChange={(e) => {
+                setCiudad(e.target.value)
+                setParroquia(null)
+                setNombreDeZona(null)
+              }}
+              optionLabel="nombre"
+              emptyMessage="Seleccione un estado"
+            />
+            <label htmlFor="ciudad">Ciudad</label>
+          </span>
+        ) : (
+          ''
+        )}
+        {pais === null || parseInt(pais?.id) === 239 ? (
+          <span className="p-float-label field">
+            <Dropdown
+              className="w-full"
+              id="municipio"
+              options={municipiosPorEstado?.obtenerMunicipiosPorEstado.response}
+              value={municipio}
+              onChange={(e) => {
+                setMunicipio(e.target.value)
+                setCiudad(null)
+                setParroquia(null)
+                setNombreDeZona(null)
+              }}
+              optionLabel="nombre"
+              emptyMessage="Seleccione un estado"
+            />
+            <label htmlFor="municipio">Municipio</label>
           </span>
         ) : (
           ''
