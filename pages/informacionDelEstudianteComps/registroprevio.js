@@ -464,7 +464,7 @@ const RegistroPrevio = ({ data }) => {
   )
   const footer = (
     <>
-    <FileUpload
+      <FileUpload
         id="fileUpload"
         accept=".xlsx"
         name="files[]"
@@ -475,18 +475,18 @@ const RegistroPrevio = ({ data }) => {
         maxFileSize={1000000}
       />
       <Button
-          icon="pi pi-paperclip"
-          label="Adjuntar"
-          tooltipOptions={{ position: 'top' }}
-          onClick={() => adjuntarArchivo()}
-        />
-        <Button
-          icon="pi pi-minus-circle"
-          className="p-button-danger"
-          label="Eliminar"
-          tooltipOptions={{ position: 'top' }}
-          onClick={() => adjuntarArchivo()}
-        />
+        icon="pi pi-paperclip"
+        label="Adjuntar"
+        tooltipOptions={{ position: 'top' }}
+        onClick={() => adjuntarArchivo()}
+      />
+      <Button
+        icon="pi pi-minus-circle"
+        className="p-button-danger"
+        label="Eliminar"
+        tooltipOptions={{ position: 'top' }}
+        onClick={() => adjuntarArchivo()}
+      />
     </>
   )
 
@@ -963,22 +963,6 @@ const RegistroPrevio = ({ data }) => {
           />
           <label htmlFor="numeroDeVivienda">Numero De Vivienda</label>
         </span>
-
-        <ConfirmDialog
-          draggable={false}
-          resizable={false}
-          className="bg-[#805e5e]"
-          visible={confirmRegistrar}
-          acceptLabel="Si"
-          rejectLabel="No"
-          onHide={() => setConfirmRegistrar(false)}
-          message="Estas seguro que deseas confirmar la información ingresada?"
-          header="Confirmar"
-          icon="pi pi-exclamation-triangle"
-          accept={accept}
-          reject={reject}
-        />
-       
       </div>
       <h1 className="text-3xl font-semibold text-white text-left mr-32 mb-6 -mt-3 pt-5">
         Dirección de Trabajo
@@ -1141,7 +1125,9 @@ const RegistroPrevio = ({ data }) => {
             className="w-full"
             id="nombreDeViaLaboral"
             value={nombreDeViaLaboral}
-            onChange={(e) => setNombreDeViaLaboral(e.target.value.toUpperCase())}
+            onChange={(e) =>
+              setNombreDeViaLaboral(e.target.value.toUpperCase())
+            }
             autoComplete="off"
           />
           <label htmlFor="nombreDeViaLaboral">Nombre De Via</label>

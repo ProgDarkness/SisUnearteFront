@@ -1,6 +1,11 @@
 import { Button } from 'primereact/button'
 import { InputText } from 'primereact/inputtext'
 import { Dropdown } from 'primereact/dropdown'
+import Image from 'next/image'
+import { Card } from 'primereact/card'
+import { FileUpload } from 'primereact/fileupload'
+import { Divider } from 'primereact/divider'
+import usuario from 'public/images/usuario.png'
 import GQLconsultasGenerales from 'graphql/consultasGenerales'
 import GQLpersonal from 'graphql/personal'
 import useSWR from 'swr'
@@ -122,6 +127,48 @@ const DialogRegPersonal = ({
     )
   }
 
+  const adjuntarArchivo = () => {
+    document.querySelector('#fileUpload input').click()
+  }
+
+  const header = (
+    <Image
+      src={usuario}
+      loading="eager"
+      fill="true"
+      sizes="(max-width: 10vw) 40%"
+      priority={true}
+      className="rounded-lg"
+    />
+  )
+  const footer = (
+    <>
+      <FileUpload
+        id="fileUpload"
+        accept=".xlsx"
+        name="files[]"
+        auto
+        customUpload
+        /* uploadHandler={(e) => cargarArchivo(e)} */
+        style={{ display: 'none' }}
+        maxFileSize={1000000}
+      />
+      <Button
+        icon="pi pi-paperclip"
+        label="Adjuntar"
+        tooltipOptions={{ position: 'top' }}
+        onClick={() => adjuntarArchivo()}
+      />
+      <Button
+        icon="pi pi-minus-circle"
+        className="p-button-danger"
+        label="Eliminar"
+        tooltipOptions={{ position: 'top' }}
+        onClick={() => adjuntarArchivo()}
+      />
+    </>
+  )
+
   return (
     <>
       <Toast ref={toast} />
@@ -129,190 +176,220 @@ const DialogRegPersonal = ({
         header="Registrar Personal"
         visible={activeDialogRegPersonal}
         onHide={() => setActiveDialogRegPersonal(false)}
-        style={{ width: '60%' }}
+        style={{ width: '80%' }}
       >
-        <div className="grid grid-cols-4 gap-4 pt-2">
-          <span className="p-float-label field">
-            <Dropdown
-              className="w-full"
-              id="nacionalidad"
-              value={tpNacionalidad}
-              options={tiposNacionalidad?.obtenerNacionalidades.response}
-              onChange={(e) => setTpNacionalidad(e.value)}
-              optionLabel="nombre"
-              optionValue="id"
-            />
-            <label htmlFor="nacionalidad">Nacionalidad</label>
-          </span>
-          <span className="p-float-label field">
-            <InputText
-              className="w-full"
-              id="cedula"
-              value={cedulaPersonal}
-              onChange={(e) => setCedulaPersonal(e.target.value)}
-              autoComplete="off"
-              maxLength={8}
-              keyfilter="pint"
-            />
-            <label htmlFor="cedula">Cédula de Identidad</label>
-          </span>
-          <span className="p-float-label field">
-            <InputText
-              className="w-full"
-              id="nombre"
-              value={nombrePersonal}
-              onChange={(e) => setNombrePersonal(e.target.value.toUpperCase())}
-              autoComplete="off"
-            />
-            <label htmlFor="nombre">Nombre</label>
-          </span>
-          <span className="p-float-label field">
-            <InputText
-              className="w-full"
-              id="apellido"
-              value={apellidoPersonal}
-              onChange={(e) =>
-                setApellidoPersonal(e.target.value.toUpperCase())
-              }
-              autoComplete="off"
-            />
-            <label htmlFor="apellido">Apellido</label>
-          </span>
-          <span className="p-float-label field">
-            <Dropdown
-              className="w-full"
-              id="sexo"
-              value={tpSexo}
-              options={tiposSexo?.obtenerSexos.response}
-              onChange={(e) => setTpSexo(e.value)}
-              optionLabel="nombre"
-              optionValue="id"
-            />
-            <label htmlFor="sexo">Sexo</label>
-          </span>
-          <span className="p-float-label field">
-            <Dropdown
-              className="w-full"
-              id="civil"
-              value={tpCivil}
-              options={tiposCivil?.obtenerEstadoCivil.response}
-              onChange={(e) => setTpCivil(e.value)}
-              optionLabel="nombre"
-              optionValue="id"
-            />
-            <label htmlFor="civil">Estado Civil</label>
-          </span>
-          <span className="p-float-label field">
-            <InputText
-              className="w-full"
-              id="tlffijo"
-              value={tlffijoPersonal}
-              onChange={(e) => setTlffijoPersonal(e.target.value)}
-              keyfilter="pint"
-              maxLength={11}
-            />
-            <label htmlFor="tlffijo">Teléfono Fijo</label>
-          </span>
-          <span className="p-float-label field">
-            <InputText
-              className="w-full"
-              id="tlfmovil"
-              value={tlfmovilPersonal}
-              onChange={(e) => setTlfmovilPersonal(e.target.value)}
-              keyfilter="pint"
-              maxLength={11}
-            />
-            <label htmlFor="tlfmovil">Teléfono Móvil</label>
-          </span>
-          <span className="p-float-label field">
-            <InputText
-              className="w-full"
-              id="correo"
-              value={correoPersonal}
-              onChange={(e) => setCorreoPersonal(e.target.value)}
-              onBlur={() => validate(correoPersonal)}
-            />
-            <label htmlFor="correo">Correo Electrónico</label>
-          </span>
-          <span className="p-float-label field">
-            <Dropdown
-              className="w-full"
-              id="tipo"
-              value={tpPersonal}
-              options={tiposPersonal?.obtenerTipoPersonal.response}
-              onChange={(e) => setTpPersonal(e.value)}
-              optionLabel="nombre"
-              optionValue="id"
-            />
-            <label htmlFor="tipo">Tipo de Personal</label>
-          </span>
-          <span className="p-float-label field col-span-2">
-            <Dropdown
-              className="w-full"
-              id="profesion"
-              value={tpProfesion}
-              options={tiposProfesiones?.obtenerProfesion.response}
-              onChange={(e) => setProfesiones(e.value)}
-              optionLabel="nombre"
-              optionValue="id"
-            />
-            <label htmlFor="profesion">Profesión</label>
-          </span>
-          <span className="p-float-label field">
-            <InputText
-              className="w-full"
-              id="cargahoraria"
-              value={cargaPersonal}
-              onChange={(e) => setCargaPersonal(e.target.value)}
-              keyfilter="pint"
-            />
-            <label htmlFor="cargahoraria">Carga Horaria</label>
-          </span>
-          <span className="p-float-label field">
-            <Dropdown
-              className="w-full"
-              id="departamento"
-              value={tpDepartamento}
-              options={tiposDepartamento?.obtenerTipoDepartamento.response}
-              onChange={(e) => setTpDepartamento(e.value)}
-              optionLabel="nombre"
-              optionValue="id"
-            />
-            <label htmlFor="departamento">Departamento</label>
-          </span>
-          <span className="p-float-label field">
-            <Dropdown
-              className="w-full"
-              id="tpRol"
-              value={tpRol}
-              options={tiposRol?.obtenerRoles.response}
-              onChange={(e) => setTpRol(e.value)}
-              optionLabel="nombre"
-              optionValue="id"
-            />
-            <label htmlFor="tpRol">Rol</label>
-          </span>
-          <div className="flex my-auto col-span-4 justify-center">
-            <Button
-              label="Registrar"
-              icon="pi pi-plus"
-              onClick={() => registrarPersonal()}
-              disabled={
-                !tpNacionalidad ||
-                !cedulaPersonal ||
-                !nombrePersonal ||
-                !apellidoPersonal ||
-                !tpSexo ||
-                !tpCivil ||
-                !tlffijoPersonal ||
-                !tlfmovilPersonal ||
-                !correoPersonal ||
-                !tpPersonal ||
-                !tpProfesion ||
-                !cargaPersonal ||
-                !tpDepartamento
-              }
-            />
+        <div className="flex flex-col">
+          <div>
+            <div className="flex flex-row">
+              <div className="tab-content justify-center rounded-lg w-5/6 h-96 pr-3 pl-3 pt-4">
+                <h1 className="text-3xl font-semibold text-white text-left mr-32 mb-6 -mt-3">
+                  Datos Personales
+                </h1>
+                <Divider className="col-span-5" />
+                <div className="text-white -mt-2">
+                  <div className="flex">
+                    <div className="grid grid-cols-4 gap-4 mt-4 p-4">
+                      <span className="p-float-label field">
+                        <Dropdown
+                          className="w-full"
+                          id="nacionalidad"
+                          value={tpNacionalidad}
+                          options={
+                            tiposNacionalidad?.obtenerNacionalidades.response
+                          }
+                          onChange={(e) => setTpNacionalidad(e.value)}
+                          optionLabel="nombre"
+                          optionValue="id"
+                        />
+                        <label htmlFor="nacionalidad">Nacionalidad</label>
+                      </span>
+                      <span className="p-float-label field">
+                        <InputText
+                          className="w-full"
+                          id="cedula"
+                          value={cedulaPersonal}
+                          onChange={(e) => setCedulaPersonal(e.target.value)}
+                          autoComplete="off"
+                          maxLength={8}
+                          keyfilter="pint"
+                        />
+                        <label htmlFor="cedula">Cédula de Identidad</label>
+                      </span>
+                      <span className="p-float-label field">
+                        <InputText
+                          className="w-full"
+                          id="nombre"
+                          value={nombrePersonal}
+                          onChange={(e) =>
+                            setNombrePersonal(e.target.value.toUpperCase())
+                          }
+                          autoComplete="off"
+                        />
+                        <label htmlFor="nombre">Nombre</label>
+                      </span>
+                      <span className="p-float-label field">
+                        <InputText
+                          className="w-full"
+                          id="apellido"
+                          value={apellidoPersonal}
+                          onChange={(e) =>
+                            setApellidoPersonal(e.target.value.toUpperCase())
+                          }
+                          autoComplete="off"
+                        />
+                        <label htmlFor="apellido">Apellido</label>
+                      </span>
+                      <span className="p-float-label field">
+                        <Dropdown
+                          className="w-full"
+                          id="sexo"
+                          value={tpSexo}
+                          options={tiposSexo?.obtenerSexos.response}
+                          onChange={(e) => setTpSexo(e.value)}
+                          optionLabel="nombre"
+                          optionValue="id"
+                        />
+                        <label htmlFor="sexo">Sexo</label>
+                      </span>
+                      <span className="p-float-label field">
+                        <Dropdown
+                          className="w-full"
+                          id="civil"
+                          value={tpCivil}
+                          options={tiposCivil?.obtenerEstadoCivil.response}
+                          onChange={(e) => setTpCivil(e.value)}
+                          optionLabel="nombre"
+                          optionValue="id"
+                        />
+                        <label htmlFor="civil">Estado Civil</label>
+                      </span>
+                      <span className="p-float-label field">
+                        <InputText
+                          className="w-full"
+                          id="tlffijo"
+                          value={tlffijoPersonal}
+                          onChange={(e) => setTlffijoPersonal(e.target.value)}
+                          keyfilter="pint"
+                          maxLength={11}
+                        />
+                        <label htmlFor="tlffijo">Teléfono Fijo</label>
+                      </span>
+                      <span className="p-float-label field">
+                        <InputText
+                          className="w-full"
+                          id="tlfmovil"
+                          value={tlfmovilPersonal}
+                          onChange={(e) => setTlfmovilPersonal(e.target.value)}
+                          keyfilter="pint"
+                          maxLength={11}
+                        />
+                        <label htmlFor="tlfmovil">Teléfono Móvil</label>
+                      </span>
+                      <span className="p-float-label field">
+                        <InputText
+                          className="w-full"
+                          id="correo"
+                          value={correoPersonal}
+                          onChange={(e) => setCorreoPersonal(e.target.value)}
+                          onBlur={() => validate(correoPersonal)}
+                        />
+                        <label htmlFor="correo">Correo Electrónico</label>
+                      </span>
+                      <span className="p-float-label field">
+                        <Dropdown
+                          className="w-full"
+                          id="tipo"
+                          value={tpPersonal}
+                          options={tiposPersonal?.obtenerTipoPersonal.response}
+                          onChange={(e) => setTpPersonal(e.value)}
+                          optionLabel="nombre"
+                          optionValue="id"
+                        />
+                        <label htmlFor="tipo">Tipo de Personal</label>
+                      </span>
+                      <span className="p-float-label field col-span-2">
+                        <Dropdown
+                          className="w-full"
+                          id="profesion"
+                          value={tpProfesion}
+                          options={tiposProfesiones?.obtenerProfesion.response}
+                          onChange={(e) => setProfesiones(e.value)}
+                          optionLabel="nombre"
+                          optionValue="id"
+                        />
+                        <label htmlFor="profesion">Profesión</label>
+                      </span>
+                      <span className="p-float-label field">
+                        <InputText
+                          className="w-full"
+                          id="cargahoraria"
+                          value={cargaPersonal}
+                          onChange={(e) => setCargaPersonal(e.target.value)}
+                          keyfilter="pint"
+                        />
+                        <label htmlFor="cargahoraria">Carga Horaria</label>
+                      </span>
+                      <span className="p-float-label field">
+                        <Dropdown
+                          className="w-full"
+                          id="departamento"
+                          value={tpDepartamento}
+                          options={
+                            tiposDepartamento?.obtenerTipoDepartamento.response
+                          }
+                          onChange={(e) => setTpDepartamento(e.value)}
+                          optionLabel="nombre"
+                          optionValue="id"
+                        />
+                        <label htmlFor="departamento">Departamento</label>
+                      </span>
+                      <span className="p-float-label field">
+                        <Dropdown
+                          className="w-full"
+                          id="tpRol"
+                          value={tpRol}
+                          options={tiposRol?.obtenerRoles.response}
+                          onChange={(e) => setTpRol(e.value)}
+                          optionLabel="nombre"
+                          optionValue="id"
+                        />
+                        <label htmlFor="tpRol">Rol</label>
+                      </span>
+                      <div className="flex my-auto col-span-4 justify-center">
+                        <Button
+                          label="Registrar"
+                          icon="pi pi-plus"
+                          onClick={() => registrarPersonal()}
+                          disabled={
+                            !tpNacionalidad ||
+                            !cedulaPersonal ||
+                            !nombrePersonal ||
+                            !apellidoPersonal ||
+                            !tpSexo ||
+                            !tpCivil ||
+                            !tlffijoPersonal ||
+                            !tlfmovilPersonal ||
+                            !correoPersonal ||
+                            !tpPersonal ||
+                            !tpProfesion ||
+                            !cargaPersonal ||
+                            !tpDepartamento
+                          }
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="justify-center py-1 px-3 w-1/4 h-80">
+                <Card
+                  style={{ width: '15em' }}
+                  footer={footer}
+                  header={header}
+                ></Card>
+              </div>
+            </div>
           </div>
         </div>
       </Dialog>
