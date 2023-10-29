@@ -60,6 +60,8 @@ const RegistroPrevio = ({ data }) => {
   const [nombreDeViaLaboral, setNombreDeViaLaboral] = useState('')
   const [tipoDeViviendaLaboral, setTipoDeViviendaLaboral] = useState(null)
   const [numeroDeViviendaLaboral, setNumeroDeViviendaLaboral] = useState('')
+  /* const [correoLaboral, setCorreoElectronicoLaboral] = useState('')
+  const [telefonoLaboral, setCorreoElectronicoLaboral] = useState('') */
 
   const [confirmRegistrar, setConfirmRegistrar] = useState(false)
   const [blockedPanel, setBlockedPanel] = useState(false)
@@ -421,6 +423,72 @@ const RegistroPrevio = ({ data }) => {
           {
             InputParroquia: {
               parroquia: parseInt(parroquia.id)
+            }
+          }
+        ]
+      : null
+  )
+
+  /* DIRECCION UBICACION LABORAL */
+  const { data: estadosPorPaisLaboral } = useSWR(
+    paisLaboral
+      ? [
+          GQLConsultasGenerales.GET_ESTADOS_POR_PAIS,
+          {
+            InputPais: {
+              pais: parseInt(paisLaboral.id)
+            }
+          }
+        ]
+      : null
+  )
+
+  const { data: ciudadesPorEstadoLaboral } = useSWR(
+    estadoLaboral
+      ? [
+          GQLConsultasGenerales.GET_CIUDADES_POR_ESTADO,
+          {
+            InputEstado: {
+              estado: parseInt(estadoLaboral.id)
+            }
+          }
+        ]
+      : null
+  )
+
+  const { data: municipiosPorEstadoLaboral } = useSWR(
+    estadoLaboral
+      ? [
+          GQLConsultasGenerales.GET_MUNICIPIOS_POR_ESTADO,
+          {
+            InputEstado: {
+              estado: parseInt(estadoLaboral.id)
+            }
+          }
+        ]
+      : null
+  )
+
+  const { data: parroquiasPorMunicipioLaboral } = useSWR(
+    municipioLaboral
+      ? [
+          GQLConsultasGenerales.GET_PARROQUIAS_POR_MUNICIPIO,
+          {
+            InputMunicipio: {
+              municipio: parseInt(municipioLaboral.id)
+            }
+          }
+        ]
+      : null
+  )
+
+  const { data: zonasPorParroquiasLaboral } = useSWR(
+    parroquiaLaboral
+      ? [
+          GQLConsultasGenerales.GET_ZONAS_POR_PARROQUIA,
+          {
+            InputParroquia: {
+              parroquia: parseInt(parroquiaLaboral.id)
             }
           }
         ]
@@ -842,26 +910,6 @@ const RegistroPrevio = ({ data }) => {
           <span className="p-float-label field">
             <Dropdown
               className="w-full"
-              id="ciudad"
-              options={ciudadesPorEstado?.obtenerCiudadesPorEstado.response}
-              value={ciudad}
-              onChange={(e) => {
-                setCiudad(e.target.value)
-                setParroquia(null)
-                setNombreDeZona(null)
-              }}
-              optionLabel="nombre"
-              emptyMessage="Seleccione un estado"
-            />
-            <label htmlFor="ciudad">Ciudad</label>
-          </span>
-        ) : (
-          ''
-        )}
-        {pais === null || parseInt(pais?.id) === 239 ? (
-          <span className="p-float-label field">
-            <Dropdown
-              className="w-full"
               id="parroquia"
               options={
                 parroquiasPorMunicipio?.obtenerParrquiasPorMunicipio.response
@@ -963,6 +1011,26 @@ const RegistroPrevio = ({ data }) => {
           />
           <label htmlFor="numeroDeVivienda">Numero De Vivienda</label>
         </span>
+        {pais === null || parseInt(pais?.id) === 239 ? (
+          <span className="p-float-label field">
+            <Dropdown
+              className="w-full"
+              id="ciudad"
+              options={ciudadesPorEstado?.obtenerCiudadesPorEstado.response}
+              value={ciudad}
+              onChange={(e) => {
+                setCiudad(e.target.value)
+                setParroquia(null)
+                setNombreDeZona(null)
+              }}
+              optionLabel="nombre"
+              emptyMessage="Seleccione un estado"
+            />
+            <label htmlFor="ciudad">Ciudad</label>
+          </span>
+        ) : (
+          ''
+        )}
       </div>
       <h1 className="text-3xl font-semibold text-white text-left mr-32 mb-6 -mt-3 pt-5">
         Dirección de Trabajo
@@ -993,7 +1061,7 @@ const RegistroPrevio = ({ data }) => {
           <Dropdown
             className="w-full"
             id="estadoLaboral"
-            options={estadosPorPais?.obtenerEstadosPorPais.response}
+            options={estadosPorPaisLaboral?.obtenerEstadosPorPais.response}
             value={estadoLaboral}
             onChange={(e) => {
               setEstadoLaboral(e.target.value)
@@ -1011,28 +1079,10 @@ const RegistroPrevio = ({ data }) => {
           <span className="p-float-label field">
             <Dropdown
               className="w-full"
-              id="ciudadLaboral"
-              options={ciudadesPorEstado?.obtenerCiudadesPorEstado.response}
-              value={ciudadLaboral}
-              onChange={(e) => {
-                setCiudadLaboral(e.target.value)
-                setParroquiaLaboral(null)
-                setNombreDeZonaLaboral(null)
-              }}
-              optionLabel="nombre"
-              emptyMessage="Seleccione un estado"
-            />
-            <label htmlFor="ciudadLaboral">Ciudad</label>
-          </span>
-        ) : (
-          ''
-        )}
-        {paisLaboral === null || parseInt(paisLaboral?.id) === 239 ? (
-          <span className="p-float-label field">
-            <Dropdown
-              className="w-full"
               id="municipioLaboral"
-              options={municipiosPorEstado?.obtenerMunicipiosPorEstado.response}
+              options={
+                municipiosPorEstadoLaboral?.obtenerMunicipiosPorEstado.response
+              }
               value={municipioLaboral}
               onChange={(e) => {
                 setMunicipioLaboral(e.target.value)
@@ -1054,7 +1104,8 @@ const RegistroPrevio = ({ data }) => {
               className="w-full"
               id="parroquiaLaboral"
               options={
-                parroquiasPorMunicipio?.obtenerParrquiasPorMunicipio.response
+                parroquiasPorMunicipioLaboral?.obtenerParrquiasPorMunicipio
+                  .response
               }
               value={parroquiaLaboral}
               onChange={(e) => {
@@ -1085,11 +1136,13 @@ const RegistroPrevio = ({ data }) => {
             <Dropdown
               className="w-full"
               id="nombreDeZonaLaboral"
-              options={zonasPorParroquias?.obtenerZonasPorParroquias.response}
+              options={
+                zonasPorParroquiasLaboral?.obtenerZonasPorParroquias.response
+              }
               value={nombreDeZonaLaboral}
               onChange={(e) => setNombreDeZonaLaboral(e.target.value)}
               optionLabel="nombre"
-              emptyMessage="Seleccione una parroquia"
+              emptyMessage="Seleccione una zona"
             />
             <label htmlFor="nombreDeZonaLaboral">Nombre de Zona</label>
           </span>
@@ -1157,13 +1210,22 @@ const RegistroPrevio = ({ data }) => {
         </span>
         {paisLaboral === null || parseInt(paisLaboral?.id) === 239 ? (
           <span className="p-float-label field">
-            <InputText
+            <Dropdown
               className="w-full"
-              id="zonaPostal"
-              value={nombreDeZonaLaboral?.codigo_postal || ''}
-              autoComplete="off"
+              id="ciudadLaboral"
+              options={
+                ciudadesPorEstadoLaboral?.obtenerCiudadesPorEstado.response
+              }
+              value={ciudadLaboral}
+              onChange={(e) => {
+                setCiudadLaboral(e.target.value)
+                setParroquiaLaboral(null)
+                setNombreDeZonaLaboral(null)
+              }}
+              optionLabel="nombre"
+              emptyMessage="Seleccione un estado"
             />
-            <label htmlFor="zonaPostal">Correo Electrónico</label>
+            <label htmlFor="ciudadLaboral">Ciudad</label>
           </span>
         ) : (
           ''
@@ -1172,11 +1234,24 @@ const RegistroPrevio = ({ data }) => {
           <span className="p-float-label field">
             <InputText
               className="w-full"
-              id="zonaPostal"
-              value={nombreDeZonaLaboral?.codigo_postal || ''}
+              id="correoLaboral"
+              /* value={nombreDeZonaLaboral?.codigo_postal || ''} */
               autoComplete="off"
             />
-            <label htmlFor="zonaPostal">Teléfono</label>
+            <label htmlFor="correoLaboral">Correo Electrónico</label>
+          </span>
+        ) : (
+          ''
+        )}
+        {paisLaboral === null || parseInt(paisLaboral?.id) === 239 ? (
+          <span className="p-float-label field">
+            <InputText
+              className="w-full"
+              id="telefonoLaboral"
+              /* value={nombreDeZonaLaboral?.codigo_postal || ''} */
+              autoComplete="off"
+            />
+            <label htmlFor="telefonoLaboral">Teléfono</label>
           </span>
         ) : (
           ''
