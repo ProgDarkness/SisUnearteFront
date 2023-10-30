@@ -17,7 +17,6 @@ import request from 'graphql-request'
 import { Dropdown } from 'primereact/dropdown'
 import { Toast } from 'primereact/toast'
 import useSWR from 'swr'
-import CryptoJS from 'crypto-js'
 import { useSesion } from 'hooks/useSesion'
 
 export default function RegistrarUsuario() {
@@ -80,7 +79,7 @@ export default function RegistrarUsuario() {
         nacionalidad: parseInt(nacionalidad),
         origin: window.location.origin
       }
-      
+
       saveUsuario({ input: usuarioInput }).then(
         ({ saveUsuario: { status, message, type } }) => {
           if (status === 200) {

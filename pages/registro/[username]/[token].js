@@ -1,6 +1,5 @@
 import AppLayout from 'components/AppLayout'
 import { Button } from 'primereact/button'
-import { InputText } from 'primereact/inputtext'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faKey } from '@fortawesome/free-solid-svg-icons'
 import CryptoJS from 'crypto-js'
