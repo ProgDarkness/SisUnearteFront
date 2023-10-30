@@ -1,6 +1,15 @@
 import { gql } from 'graphql-request'
 
 export default {
+  CREAR_CLAVE: gql`
+    mutation CrearClave($input: InputCrearClave!) {
+      crearClave(input: $input) {
+        status
+        message
+        type
+      }
+    }
+  `,
   SAVE_PERFIL_USER: gql`
     mutation actualizarusuario(
       $InputActualizarUsuario: InputActualizarUsuario!

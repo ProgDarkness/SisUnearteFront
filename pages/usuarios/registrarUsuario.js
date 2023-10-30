@@ -23,7 +23,7 @@ import { useSesion } from 'hooks/useSesion'
 export default function RegistrarUsuario() {
   const { token } = useSesion()
   const toast = useRef()
-  const [clave, setClave] = useState('')
+  const [correo, setCorreo] = useState('')
   const [nombre, setNombre] = useState('')
   const [usuario, setUsuario] = useState('')
   const [rol, setRol] = useState(!token ? 3 : null)
@@ -66,7 +66,7 @@ export default function RegistrarUsuario() {
       apellido &&
       nombre &&
       usuario &&
-      clave &&
+      correo &&
       rol &&
       nacionalidad
     ) {
@@ -75,13 +75,12 @@ export default function RegistrarUsuario() {
         nombre,
         apellido,
         usuario,
-        clave: CryptoJS.AES.encrypt(
-          clave,
-          process.env.NEXT_PUBLIC_SECRET_KEY
-        ).toString(),
+        correo,
         id_rol: rol,
-        nacionalidad: parseInt(nacionalidad)
+        nacionalidad: parseInt(nacionalidad),
+        origin: window.location.origin
       }
+      
       saveUsuario({ input: usuarioInput }).then(
         ({ saveUsuario: { status, message, type } }) => {
           if (status === 200) {
@@ -91,7 +90,7 @@ export default function RegistrarUsuario() {
               detail: message,
               life: 3000
             })
-            setClave('')
+            setCorreo('')
             setNombre('')
             setUsuario('')
             setApellido('')
@@ -286,7 +285,7 @@ export default function RegistrarUsuario() {
             <div className="p-inputgroup">
               <span
                 className={`p-inputgroup-addon ${
-                  errorFrom && (clave?.length < 1 || clave === '')
+                  errorFrom && (correo?.length < 1 || correo === '')
                     ? 'border-red-600 bg-red-300'
                     : ''
                 }`}
@@ -294,14 +293,13 @@ export default function RegistrarUsuario() {
                 <FontAwesomeIcon icon={faKey} />
               </span>
               <InputText
-                value={clave}
-                placeholder="CONTRASEÑA"
+                value={correo}
+                placeholder="CORREO"
                 onChange={({ target: { value } }) => {
-                  setClave(value)
+                  setCorreo(value)
                 }}
-                type="password"
                 className={`${
-                  errorFrom && (clave?.length < 1 || clave === '')
+                  errorFrom && (correo?.length < 1 || correo === '')
                     ? 'border-red-600 bg-red-300 '
                     : ''
                 }`}
