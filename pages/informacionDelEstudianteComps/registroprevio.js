@@ -7,6 +7,7 @@ import { Card } from 'primereact/card'
 import { useEffect, useRef, useState } from 'react'
 import { InputMask } from 'primereact/inputmask'
 import { ConfirmDialog } from 'primereact/confirmdialog'
+import { InputSwitch } from 'primereact/inputswitch'
 import { BlockUI } from 'primereact/blockui'
 import { Divider } from 'primereact/divider'
 import GQLConsultasGenerales from 'graphql/consultasGenerales'
@@ -62,6 +63,7 @@ const RegistroPrevio = ({ data }) => {
   const [numeroDeViviendaLaboral, setNumeroDeViviendaLaboral] = useState('')
   /* const [correoLaboral, setCorreoElectronicoLaboral] = useState('')
   const [telefonoLaboral, setCorreoElectronicoLaboral] = useState('') */
+  const [checked1, setChecked1] = useState(false)
 
   const [confirmRegistrar, setConfirmRegistrar] = useState(false)
   const [blockedPanel, setBlockedPanel] = useState(false)
@@ -1037,6 +1039,13 @@ const RegistroPrevio = ({ data }) => {
       </h1>
       <Divider className="col-span-5" />
       <div className="grid grid-cols-5 gap-4">
+        <span className="p-float-label field">
+          <label htmlFor="paisLaboral">¿Indicar si trabaja?</label>
+          <InputSwitch
+            checked={checked1}
+            onChange={(e) => setChecked1(e.value)}
+          />
+        </span>
         <span className="p-float-label field">
           <Dropdown
             className="w-full"

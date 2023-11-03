@@ -5,6 +5,7 @@ import { Column } from 'primereact/column'
 import { Toast } from 'primereact/toast'
 import { Divider } from 'primereact/divider'
 import DialogVerInfoPostulacion from 'pages/postulacionEstudiante/dialogVerInfoPostulacion'
+import DialogCargarDocumentos from './dialogCargaDocumentos'
 import GQLpostulaciones from 'graphql/postulaciones'
 import { useSesion } from 'hooks/useSesion'
 import { ConfirmDialog } from 'primereact/confirmdialog'
@@ -13,6 +14,8 @@ import request from 'graphql-request'
 
 const Postulaciones = ({ cambioVista }) => {
   const [activeDialogVerMalla, setActiveDialogVerMalla] = useState(false)
+  const [activeDialogCargarDocumentos, setActiveDialogCargarDocumentos] =
+    useState(false)
   const [datosVerMalla, setDatosVerMalla] = useState(null)
   const [datosPostularse, setDatosPostularse] = useState(null)
   const [confirmPostulacion, setConfirmPostulacion] = useState(false)
@@ -109,12 +112,27 @@ const Postulaciones = ({ cambioVista }) => {
             }}
           />
         )}
+        {rolUser === 3 && (
+          <Button
+            icon="pi pi-pencil"
+            className="p-button-help mr-1"
+            tooltip="Cargar Documentos"
+            onClick={() => {
+              setActiveDialogCargarDocumentos(true)
+            }}
+            tooltipOptions={{ position: 'top' }}
+          />
+        )}
       </div>
     )
   }
   return (
     <div className="flex flex-col">
       <Toast ref={toast} />
+      <DialogCargarDocumentos
+        activeDialogCargarDocumentos={activeDialogCargarDocumentos}
+        setActiveDialogCargarDocumentos={setActiveDialogCargarDocumentos}
+      />
       <ConfirmDialog
         draggable={false}
         resizable={false}

@@ -36,6 +36,17 @@ const DialogRegPersonal = ({
   const [tpCivil, setTpCivil] = useState(null)
   const [tpDepartamento, setTpDepartamento] = useState(null)
   const [tpRol, setTpRol] = useState(null)
+  const [pais, setPais] = useState(null)
+  const [estado, setEstado] = useState(null)
+  const [municipio, setMunicipio] = useState(null)
+  const [ciudad, setCiudad] = useState(null)
+  const [parroquia, setParroquia] = useState(null)
+  const [tipoDeZona, setTipoDeZona] = useState(null)
+  const [nombreDeZona, setNombreDeZona] = useState('')
+  const [tipoDeVia, setTipoDeVia] = useState(null)
+  const [nombreDeVia, setNombreDeVia] = useState('')
+  const [tipoDeVivienda, setTipoDeVivienda] = useState(null)
+  const [numeroDeVivienda, setNumeroDeVivienda] = useState('')
 
   const { data: tiposNacionalidad } = useSWR(
     GQLconsultasGenerales.GET_NACIONALIDADES
@@ -126,6 +137,72 @@ const DialogRegPersonal = ({
       }
     )
   }
+
+  // DIRECCION DE HABITACION
+  const { data: estadosPorPais } = useSWR(
+    pais
+      ? [
+          GQLconsultasGenerales.GET_ESTADOS_POR_PAIS,
+          {
+            InputPais: {
+              pais: parseInt(pais.id)
+            }
+          }
+        ]
+      : null
+  )
+
+  const { data: municipiosPorEstado } = useSWR(
+    estado
+      ? [
+          GQLconsultasGenerales.GET_MUNICIPIOS_POR_ESTADO,
+          {
+            InputEstado: {
+              estado: parseInt(estado.id)
+            }
+          }
+        ]
+      : null
+  )
+
+  const { data: ciudadesPorEstado } = useSWR(
+    estado
+      ? [
+          GQLconsultasGenerales.GET_CIUDADES_POR_ESTADO,
+          {
+            InputEstado: {
+              estado: parseInt(estado.id)
+            }
+          }
+        ]
+      : null
+  )
+
+  const { data: parroquiasPorMunicipio } = useSWR(
+    municipio
+      ? [
+          GQLconsultasGenerales.GET_PARROQUIAS_POR_MUNICIPIO,
+          {
+            InputMunicipio: {
+              municipio: parseInt(municipio.id)
+            }
+          }
+        ]
+      : null
+  )
+
+  const { data: zonasPorParroquias } = useSWR(
+    parroquia
+      ? [
+          GQLconsultasGenerales.GET_ZONAS_POR_PARROQUIA,
+          {
+            InputParroquia: {
+              parroquia: parseInt(parroquia.id)
+            }
+          }
+        ]
+      : null
+  )
 
   const adjuntarArchivo = () => {
     document.querySelector('#fileUpload input').click()
@@ -307,18 +384,6 @@ const DialogRegPersonal = ({
                         />
                         <label htmlFor="tipo">Tipo de Personal</label>
                       </span>
-                      <span className="p-float-label field col-span-2">
-                        <Dropdown
-                          className="w-full"
-                          id="profesion"
-                          value={tpProfesion}
-                          options={tiposProfesiones?.obtenerProfesion.response}
-                          onChange={(e) => setProfesiones(e.value)}
-                          optionLabel="nombre"
-                          optionValue="id"
-                        />
-                        <label htmlFor="profesion">Profesión</label>
-                      </span>
                       <span className="p-float-label field">
                         <InputText
                           className="w-full"
@@ -355,28 +420,6 @@ const DialogRegPersonal = ({
                         />
                         <label htmlFor="tpRol">Rol</label>
                       </span>
-                      <div className="flex my-auto col-span-4 justify-center">
-                        <Button
-                          label="Registrar"
-                          icon="pi pi-plus"
-                          onClick={() => registrarPersonal()}
-                          disabled={
-                            !tpNacionalidad ||
-                            !cedulaPersonal ||
-                            !nombrePersonal ||
-                            !apellidoPersonal ||
-                            !tpSexo ||
-                            !tpCivil ||
-                            !tlffijoPersonal ||
-                            !tlfmovilPersonal ||
-                            !correoPersonal ||
-                            !tpPersonal ||
-                            !tpProfesion ||
-                            !cargaPersonal ||
-                            !tpDepartamento
-                          }
-                        />
-                      </div>
                     </div>
                   </div>
                 </div>
@@ -391,6 +434,240 @@ const DialogRegPersonal = ({
               </div>
             </div>
           </div>
+        </div>
+
+        <h1 className="text-3xl font-semibold text-white text-left mr-32 mb-6 -mt-3">
+          Datos Académicos
+        </h1>
+        <Divider className="col-span-5" />
+        <div className="grid grid-cols-5 gap-4">
+          <span className="p-float-label field col-span-2">
+            <Dropdown
+              className="w-full"
+              id="profesion"
+              value={tpProfesion}
+              options={tiposProfesiones?.obtenerProfesion.response}
+              onChange={(e) => setProfesiones(e.value)}
+              optionLabel="nombre"
+              optionValue="id"
+            />
+            <label htmlFor="profesion">Profesión</label>
+          </span>
+        </div>
+
+        <h1 className="text-3xl font-semibold text-white text-left mr-32 mb-6 mt-3">
+          Dirección de Habitación
+        </h1>
+        <Divider className="col-span-5" />
+        <div className="grid grid-cols-5 gap-4">
+          <span className="p-float-label field">
+            <Dropdown
+              className="w-full"
+              id="pais"
+              /* options={data?.paises.obtenerPaises.response} */
+              value={pais}
+              onChange={(e) => {
+                setPais(e.value)
+                setEstado(null)
+                setMunicipio(null)
+                setCiudad(null)
+                setParroquia(null)
+                setNombreDeZona(null)
+              }}
+              filter
+              filterBy="nombre"
+              optionLabel="nombre"
+            />
+            <label htmlFor="pais">Pais</label>
+          </span>
+          <span className="p-float-label field">
+            <Dropdown
+              className="w-full"
+              id="estado"
+              options={estadosPorPais?.obtenerEstadosPorPais.response}
+              value={estado}
+              onChange={(e) => {
+                setEstado(e.target.value)
+                setMunicipio(null)
+                setCiudad(null)
+                setParroquia(null)
+                setNombreDeZona(null)
+              }}
+              optionLabel="nombre"
+              emptyMessage="Seleccione un pais"
+            />
+            <label htmlFor="estado">Estado</label>
+          </span>
+          {pais === null || parseInt(pais?.id) === 239 ? (
+            <span className="p-float-label field">
+              <Dropdown
+                className="w-full"
+                id="municipio"
+                options={
+                  municipiosPorEstado?.obtenerMunicipiosPorEstado.response
+                }
+                value={municipio}
+                onChange={(e) => {
+                  setMunicipio(e.target.value)
+                  setCiudad(null)
+                  setParroquia(null)
+                  setNombreDeZona(null)
+                }}
+                optionLabel="nombre"
+                emptyMessage="Seleccione un estado"
+              />
+              <label htmlFor="municipio">Municipio</label>
+            </span>
+          ) : (
+            ''
+          )}
+          {pais === null || parseInt(pais?.id) === 239 ? (
+            <span className="p-float-label field">
+              <Dropdown
+                className="w-full"
+                id="parroquia"
+                options={
+                  parroquiasPorMunicipio?.obtenerParrquiasPorMunicipio.response
+                }
+                value={parroquia}
+                onChange={(e) => {
+                  setParroquia(e.target.value)
+                  setNombreDeZona(null)
+                }}
+                optionLabel="nombre"
+                emptyMessage="Seleccione un municipio"
+              />
+              <label htmlFor="parroquia">Parroquia</label>
+            </span>
+          ) : (
+            ''
+          )}
+          <span className="p-float-label field">
+            <Dropdown
+              className="w-full"
+              id="tipoDeZona"
+              /* options={data?.tipos_zona.obtenerTipoZona.response} */
+              value={tipoDeZona}
+              onChange={(e) => setTipoDeZona(e.target.value)}
+              optionLabel="nombre"
+            />
+            <label htmlFor="tipoDeZona">Tipo De Zona</label>
+          </span>
+          {pais === null || parseInt(pais?.id) === 239 ? (
+            <span className="p-float-label field">
+              <Dropdown
+                className="w-full"
+                id="nombreDeZona"
+                options={zonasPorParroquias?.obtenerZonasPorParroquias.response}
+                value={nombreDeZona}
+                onChange={(e) => setNombreDeZona(e.target.value)}
+                optionLabel="nombre"
+                emptyMessage="Seleccione una parroquia"
+              />
+              <label htmlFor="nombreDeZona">Nombre de Zona</label>
+            </span>
+          ) : (
+            ''
+          )}
+          {pais === null || parseInt(pais?.id) === 239 ? (
+            <span className="p-float-label field">
+              <InputText
+                className="w-full"
+                id="zonaPostal"
+                value={nombreDeZona?.codigo_postal || ''}
+                autoComplete="off"
+              />
+              <label htmlFor="zonaPostal">Zona Postal</label>
+            </span>
+          ) : (
+            ''
+          )}
+          <span className="p-float-label field">
+            <Dropdown
+              className="w-full"
+              id="tipoDeVia"
+              /* options={data?.tipos_via.obtenerTipoVia.response} */
+              value={tipoDeVia}
+              onChange={(e) => setTipoDeVia(e.target.value)}
+              optionLabel="nombre"
+            />
+            <label htmlFor="tipoDeVia">Tipo de via</label>
+          </span>
+          <span className="p-float-label field">
+            <InputText
+              className="w-full"
+              id="nombreDeVia"
+              value={nombreDeVia}
+              onChange={(e) => setNombreDeVia(e.target.value.toUpperCase())}
+              autoComplete="off"
+            />
+            <label htmlFor="nombreDeVia">Nombre De Via</label>
+          </span>
+          <span className="p-float-label field">
+            <Dropdown
+              className="w-full"
+              id="tipoDeVivienda"
+              /* options={data?.tipos_vivienda.obtenerTipoVivienda.response} */
+              value={tipoDeVivienda}
+              onChange={(e) => setTipoDeVivienda(e.target.value)}
+              optionLabel="nombre"
+            />
+            <label htmlFor="tipoDeVivienda">Tipo De Vivienda</label>
+          </span>
+          <span className="p-float-label field">
+            <InputText
+              className="w-full"
+              id="numeroDeVivienda"
+              value={numeroDeVivienda}
+              keyfilter="pint"
+              maxLength={4}
+              onChange={(e) => setNumeroDeVivienda(e.target.value)}
+              autoComplete="off"
+            />
+            <label htmlFor="numeroDeVivienda">Numero De Vivienda</label>
+          </span>
+          {pais === null || parseInt(pais?.id) === 239 ? (
+            <span className="p-float-label field">
+              <Dropdown
+                className="w-full"
+                id="ciudad"
+                options={ciudadesPorEstado?.obtenerCiudadesPorEstado.response}
+                value={ciudad}
+                onChange={(e) => {
+                  setCiudad(e.target.value)
+                  setParroquia(null)
+                  setNombreDeZona(null)
+                }}
+                optionLabel="nombre"
+                emptyMessage="Seleccione un estado"
+              />
+              <label htmlFor="ciudad">Ciudad</label>
+            </span>
+          ) : (
+            ''
+          )}
+          <span className="p-float-label field">
+            <Button
+              label="Registrar"
+              icon="pi pi-plus"
+              onClick={() => registrarPersonal()}
+              disabled={
+                !tpNacionalidad ||
+                !cedulaPersonal ||
+                !nombrePersonal ||
+                !apellidoPersonal ||
+                !tpSexo ||
+                !tpCivil ||
+                !tlffijoPersonal ||
+                !tlfmovilPersonal ||
+                !correoPersonal ||
+                !tpPersonal ||
+                !tpProfesion ||
+                !cargaPersonal ||
+                !tpDepartamento
+              }
+            />
+          </span>
         </div>
       </Dialog>
     </>
