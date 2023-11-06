@@ -74,9 +74,10 @@ const DialogCargarDocumentos = ({
 
   useEffect(() => {
     setDatosEstudiantes([
-      {
-        codigoCarrera: 'PARTIDA DE NACIMIENTO'
-      }
+      { tipoDocumento: 'PARTIDA DE NACIMIENTO' },
+      { tipoDocumento: 'ANVERSO NOTAS CERITIFCADAS' },
+      { tipoDocumento: 'REVERSO NOTAS CERITIFCADAS' },
+      { tipoDocumento: 'TITULO BACHILLERATO' }
     ])
   }, [])
 
@@ -139,8 +140,8 @@ const DialogCargarDocumentos = ({
                   value={datosEstudiantes}
                   emptyMessage="No hay estudiantes registrados."
                 >
-                  <Column field="codigoCarrera" header="Tipo de Documento" />
-                  <Column body={accionBodyTemplate} />
+                  <Column field="tipoDocumento" header="Tipo de Documento" />
+                  <Column body={accionBodyTemplate} header="Acción" />
                 </DataTable>
               </div>
             </div>
