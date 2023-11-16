@@ -125,5 +125,16 @@ export default {
         }
       }
     }
+  `,
+  CREAR_DOCUMENTO_POSTULACION: gql`
+    mutation crearDocumentoPostulacion(
+      $InputDocPostulacion: InputDocPostulacion!
+    ) {
+      crearDocumentoPostulacion(input: $InputDocPostulacion) {
+        message
+        status
+        type
+      }
+    }
   `
 }

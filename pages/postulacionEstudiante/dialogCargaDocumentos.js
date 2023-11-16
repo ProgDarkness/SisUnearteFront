@@ -2,6 +2,8 @@ import { DataTable } from 'primereact/datatable'
 import { Column } from 'primereact/column'
 import { Button } from 'primereact/button'
 import { FileUpload } from 'primereact/fileupload'
+import Image from 'next/image'
+import usuario from 'public/images/usuario.png'
 import { Divider } from 'primereact/divider'
 import { useEffect, useRef, useState } from 'react'
 import request from 'graphql-request'
@@ -17,6 +19,8 @@ const DialogCargarDocumentos = ({
   const [datosEstudiantes, setDatosEstudiantes] = useState([])
   const toast = useRef(null)
   const [itemsDatos, setItemsDatos] = useState(null)
+  const [imagen, setImagen] = useState(null)
+  const [base64Data, setBase64Data] = useState(null)
 
   const insertEstudiante = (variables) => {
     return request(
@@ -27,7 +31,7 @@ const DialogCargarDocumentos = ({
   }
 
   const adjuntarArchivo = () => {
-    document.querySelector('#fileUpload input').click()
+    document.querySelector('#file input').click()
   }
 
   /* const HeaderPersonal = () => {
@@ -42,31 +46,59 @@ const DialogCargarDocumentos = ({
     )
   } */
 
+  const onChange = (e) => {
+    console.log('file uploaded: ', e.target.files[0])
+    const file = e.target.files[0]
+
+    if (file) {
+      const reader = new FileReader()
+      reader.onload = handleReaderLoaded.bind(this)
+      reader.readAsBinaryString(file)
+    }
+  }
+
+  const handleReaderLoaded = (e) => {
+    console.log('file uploaded 2: ', e)
+    const binaryString = e.target.result
+    setImagen(btoa(binaryString))
+    console.log(imagen)
+  }
+
   const accionBodyTemplate = (rowData) => {
     return (
       <div className="flex justify-center">
         <FileUpload
-          id="fileUpload"
-          accept=".xlsx"
+          id="file"
+          accept=".jpg, .jpeg, .png"
           name="files[]"
-          auto
           customUpload
           /* uploadHandler={(e) => cargarArchivo(e)} */
+          onChange={(e) => onChange(e)}
           style={{ display: 'none' }}
           maxFileSize={1000000}
         />
         <Button
           icon="pi pi-paperclip"
-          label="Adjuntar"
+          tooltip="Adjuntar"
           tooltipOptions={{ position: 'top' }}
           onClick={() => adjuntarArchivo()}
         />
         <Button
           icon="pi pi-minus-circle"
           className="p-button-danger"
-          label="Eliminar"
+          tooltip="Eliminar"
           tooltipOptions={{ position: 'top' }}
           onClick={() => adjuntarArchivo()}
+        />
+        <Button
+          icon="pi pi-search"
+          className="p-button-info mr-1"
+          tooltip="Ver"
+          tooltipOptions={{ position: 'top' }}
+          /* onClick={() => {
+            setDatosVerMalla(rowData)
+            setActiveDialogVerMalla(true)
+          }} */
         />
       </div>
     )
@@ -74,10 +106,10 @@ const DialogCargarDocumentos = ({
 
   useEffect(() => {
     setDatosEstudiantes([
-      { tipoDocumento: 'PARTIDA DE NACIMIENTO' },
-      { tipoDocumento: 'ANVERSO NOTAS CERITIFCADAS' },
-      { tipoDocumento: 'REVERSO NOTAS CERITIFCADAS' },
-      { tipoDocumento: 'TITULO BACHILLERATO' }
+      { tipoDocumento: 'PARTIDA DE NACIMIENTO', estatus: 'Cargado' },
+      { tipoDocumento: 'ANVERSO NOTAS CERITIFCADAS', estatus: 'Aprobado' },
+      { tipoDocumento: 'REVERSO NOTAS CERITIFCADAS', estatus: 'Rechazado' },
+      { tipoDocumento: 'TITULO BACHILLERATO', estatus: 'Cargado' }
     ])
   }, [])
 
@@ -112,6 +144,14 @@ const DialogCargarDocumentos = ({
           <div className="flex flex-row">
             <div className="tab-content justify-center rounded-lg w-5/6 h-96 pr-3 pl-3 pt-4">
               <Divider className="col-span-5" />
+              {/* <Image
+                src={usuario}
+                loading="eager"
+                fill="true"
+                sizes="(max-width: 5vw) 5%"
+                priority={true}
+                className="rounded-lg"
+              /> */}
               <div className="col-span-5">
                 {/* <HeaderPersonal /> */}
                 {/* <DataTable
@@ -141,12 +181,23 @@ const DialogCargarDocumentos = ({
                   emptyMessage="No hay estudiantes registrados."
                 >
                   <Column field="tipoDocumento" header="Tipo de Documento" />
+                  <Column field="estatus" header="Estatus" />
                   <Column body={accionBodyTemplate} header="Acción" />
                 </DataTable>
               </div>
             </div>
           </div>
         </div>
+        <input
+          type="file"
+          name="image"
+          id="file"
+          accept=".jpg, .jpeg, .png"
+          onChange={(e) => onChange(e)}
+        />
+        <p>base64 string: {imagen}</p>
+        <br />
+        {imagen != null && <img src={`data:image;base64,${imagen}`} />}
         <span className="p-float-label field">
           <Button
             icon="pi pi-cloud-upload"
