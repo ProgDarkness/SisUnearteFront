@@ -69,10 +69,10 @@ const RegistroPrevio = ({ data }) => {
   const [confirmRegistrar, setConfirmRegistrar] = useState(false)
   const [blockedPanel, setBlockedPanel] = useState(false)
   const [evalToFormForPais, setEvalToFormForPais] = useState(true)
-  const [imagen, setImagen] = useState(null)
+  /* const [imagen, setImagen] = useState(null) */
   const [imagenPerfil, setImagenPerfil] = useState(null)
   const [idImagenPerfil, setIdImagenPerfil] = useState(null)
-  const [extension, setExtension] = useState(null)
+  /* const [extension, setExtension] = useState(null) */
   const [dataEliminarFotoPerfil, setDataEliminarFotoPerfil] = useState(null)
   const [dialogConfirmEliminarFotoPerfil, setDialogConfirmEliminarFotoPerfil] =
     useState(false)
@@ -507,6 +507,10 @@ const RegistroPrevio = ({ data }) => {
 
   const { data: tiposEtnias } = useSWR(GQLConsultasGenerales.GET_ETNIAS)
 
+  const { data: fotoPerfil, mutate: mutateImage } = useSWR(
+    idUser ? [GQLdocumentoFoto.GET_FOTO, { idUser }] : null
+  )
+
   const eliminarFotoEstudiante = (variables) => {
     return request(
       process.env.NEXT_PUBLIC_URL_BACKEND,
@@ -519,6 +523,7 @@ const RegistroPrevio = ({ data }) => {
     const InputEliminarFotoPerfilUsuario = {
       idFotoEstudiante: parseInt(idImagenPerfil)
     }
+
     eliminarFotoEstudiante({ InputEliminarFotoPerfilUsuario }).then(
       ({ eliminarFotoEstudiante: { message } }) => {
         setDataEliminarFotoPerfil(null)
@@ -527,6 +532,11 @@ const RegistroPrevio = ({ data }) => {
           summary: '¡ Atención !',
           detail: message
         })
+
+        setImagenPerfil(null)
+        setTimeout(() => {
+          mutateImage()
+        }, 1000)
       }
     )
   }
@@ -534,10 +544,6 @@ const RegistroPrevio = ({ data }) => {
   const rejectEliminarFotoPerfil = () => {
     setDialogConfirmEliminarFotoPerfil(false)
   }
-
-  const { data: fotoPerfil } = useSWR(
-    idUser ? [GQLdocumentoFoto.GET_FOTO, { idUser }] : null
-  )
 
   useEffect(() => {
     if (fotoPerfil?.obtenerFotoPerfilUsuario.response) {
@@ -567,9 +573,6 @@ const RegistroPrevio = ({ data }) => {
   const reject = () => {
     setConfirmRegistrar(false)
   }
-  const adjuntarArchivo = () => {
-    document.querySelector('#fileUpload input').click()
-  }
 
   const onChange = (e) => {
     const file = e.target.files[0]
@@ -582,18 +585,17 @@ const RegistroPrevio = ({ data }) => {
 
   const handleReaderLoaded = (e) => {
     const binaryString = e.target.result
-    if (binaryString) {
-      setImagen(btoa(binaryString))
-      /* setExtension(binaryString.type) */
-      registraFoto()
-    }
+    const transImage = btoa(binaryString)
+    /* setExtension(binaryString.type) */
+    registraFoto(transImage)
   }
 
-  function registraFoto() {
+  function registraFoto(imagen) {
     const InputFotoEstudiante = {
       archivo: imagen,
       idUsuario: idUser
     }
+
     saveFotoPerfilUser({ InputFotoEstudiante }).then(
       ({ crearFotoEstudiante: { status, message, type } }) => {
         toast.current.show({
@@ -601,6 +603,9 @@ const RegistroPrevio = ({ data }) => {
           summary: '¡ Atención !',
           detail: message
         })
+        setTimeout(() => {
+          mutateImage()
+        }, 1000)
       }
     )
   }
@@ -632,22 +637,6 @@ const RegistroPrevio = ({ data }) => {
   )
   const footer = (
     <>
-      {/* <FileUpload
-        id="fileUpload"
-        accept=".xlsx"
-        name="files[]"
-        auto
-        customUpload
-        uploadHandler={(e) => cargarArchivo(e)}
-        style={{ display: 'none' }}
-        maxFileSize={1000000}
-      />
-      <Button
-        icon="pi pi-paperclip"
-        label="Adjuntar"
-        tooltipOptions={{ position: 'top' }}
-        onClick={() => adjuntarArchivo()}
-      /> */}
       <input
         type="file"
         name="image"
