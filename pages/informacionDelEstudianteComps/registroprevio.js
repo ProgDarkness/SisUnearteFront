@@ -1,7 +1,7 @@
 import { InputText } from 'primereact/inputtext'
 import { Dropdown } from 'primereact/dropdown'
 import { Button } from 'primereact/button'
-import { FileUpload } from 'primereact/fileupload'
+/* import { FileUpload } from 'primereact/fileupload' */
 import Image from 'next/image'
 import { Card } from 'primereact/card'
 import { useEffect, useRef, useState } from 'react'
@@ -12,6 +12,7 @@ import { BlockUI } from 'primereact/blockui'
 import { Divider } from 'primereact/divider'
 import GQLConsultasGenerales from 'graphql/consultasGenerales'
 import GQLUsuarios from 'graphql/usuarios'
+import GQLdocumentoFoto from 'graphql/documentoFoto'
 import useSWR from 'swr'
 import { useSesion } from 'hooks/useSesion'
 import request from 'graphql-request'
@@ -68,6 +69,13 @@ const RegistroPrevio = ({ data }) => {
   const [confirmRegistrar, setConfirmRegistrar] = useState(false)
   const [blockedPanel, setBlockedPanel] = useState(false)
   const [evalToFormForPais, setEvalToFormForPais] = useState(true)
+  const [imagen, setImagen] = useState(null)
+  const [imagenPerfil, setImagenPerfil] = useState(null)
+  const [idImagenPerfil, setIdImagenPerfil] = useState(null)
+  const [extension, setExtension] = useState(null)
+  const [dataEliminarFotoPerfil, setDataEliminarFotoPerfil] = useState(null)
+  const [dialogConfirmEliminarFotoPerfil, setDialogConfirmEliminarFotoPerfil] =
+    useState(false)
 
   const { data: infoUser } = useSWR(
     idUser ? [GQLUsuarios.GET_INFO_USER_REG, { id_usuario: idUser }] : null
@@ -499,6 +507,47 @@ const RegistroPrevio = ({ data }) => {
 
   const { data: tiposEtnias } = useSWR(GQLConsultasGenerales.GET_ETNIAS)
 
+  const eliminarFotoEstudiante = (variables) => {
+    return request(
+      process.env.NEXT_PUBLIC_URL_BACKEND,
+      GQLdocumentoFoto.ELIMINAR_FOTO,
+      variables
+    )
+  }
+
+  const acceptEliminarFotoPerfil = () => {
+    const InputEliminarFotoPerfilUsuario = {
+      idFotoEstudiante: parseInt(idImagenPerfil)
+    }
+    eliminarFotoEstudiante({ InputEliminarFotoPerfilUsuario }).then(
+      ({ eliminarFotoEstudiante: { message } }) => {
+        setDataEliminarFotoPerfil(null)
+        toast.current.show({
+          severity: 'error',
+          summary: '¡ Atención !',
+          detail: message
+        })
+      }
+    )
+  }
+
+  const rejectEliminarFotoPerfil = () => {
+    setDialogConfirmEliminarFotoPerfil(false)
+  }
+
+  const { data: fotoPerfil } = useSWR(
+    idUser ? [GQLdocumentoFoto.GET_FOTO, { idUser }] : null
+  )
+
+  useEffect(() => {
+    if (fotoPerfil?.obtenerFotoPerfilUsuario.response) {
+      setImagenPerfil(fotoPerfil?.obtenerFotoPerfilUsuario.response.archivo)
+      setIdImagenPerfil(fotoPerfil?.obtenerFotoPerfilUsuario.response.id)
+    }
+  }, [fotoPerfil])
+
+  /* console.log(fotoPerfil?.obtenerFotoPerfilUsuario.response.id) */
+
   const accept = () => {
     const evaluEmail = validateEmail(correoElectronico)
 
@@ -522,25 +571,74 @@ const RegistroPrevio = ({ data }) => {
     document.querySelector('#fileUpload input').click()
   }
 
+  const onChange = (e) => {
+    const file = e.target.files[0]
+    if (file) {
+      const reader = new FileReader()
+      reader.onload = handleReaderLoaded.bind(this)
+      reader.readAsBinaryString(file)
+    }
+  }
+
+  const handleReaderLoaded = (e) => {
+    const binaryString = e.target.result
+    if (binaryString) {
+      setImagen(btoa(binaryString))
+      /* setExtension(binaryString.type) */
+      registraFoto()
+    }
+  }
+
+  function registraFoto() {
+    const InputFotoEstudiante = {
+      archivo: imagen,
+      idUsuario: idUser
+    }
+    saveFotoPerfilUser({ InputFotoEstudiante }).then(
+      ({ crearFotoEstudiante: { status, message, type } }) => {
+        toast.current.show({
+          severity: type,
+          summary: '¡ Atención !',
+          detail: message
+        })
+      }
+    )
+  }
+
+  const saveFotoPerfilUser = (imagen) => {
+    return request(
+      process.env.NEXT_PUBLIC_URL_BACKEND,
+      GQLdocumentoFoto.SAVE_FOTO,
+      imagen,
+      idUser
+    )
+  }
+
   const header = (
-    <Image
-      src={usuario}
-      loading="eager"
-      fill="true"
-      sizes="(max-width: 10vw) 40%"
-      priority={true}
-      className="rounded-lg"
-    />
+    <>
+      {imagenPerfil ? (
+        <img src={`data:image/png;base64,${imagenPerfil}`} />
+      ) : (
+        <Image
+          src={usuario}
+          loading="eager"
+          fill="true"
+          sizes="(max-width: 10vw) 40%"
+          priority={true}
+          className="rounded-lg"
+        />
+      )}
+    </>
   )
   const footer = (
     <>
-      <FileUpload
+      {/* <FileUpload
         id="fileUpload"
         accept=".xlsx"
         name="files[]"
         auto
         customUpload
-        /* uploadHandler={(e) => cargarArchivo(e)} */
+        uploadHandler={(e) => cargarArchivo(e)}
         style={{ display: 'none' }}
         maxFileSize={1000000}
       />
@@ -549,13 +647,22 @@ const RegistroPrevio = ({ data }) => {
         label="Adjuntar"
         tooltipOptions={{ position: 'top' }}
         onClick={() => adjuntarArchivo()}
+      /> */}
+      <input
+        type="file"
+        name="image"
+        id="file"
+        accept=".jpg, .jpeg, .png"
+        onChange={(e) => onChange(e)}
       />
       <Button
         icon="pi pi-minus-circle"
         className="p-button-danger"
-        label="Eliminar"
         tooltipOptions={{ position: 'top' }}
-        onClick={() => adjuntarArchivo()}
+        onClick={() => {
+          setDialogConfirmEliminarFotoPerfil(true)
+          setDataEliminarFotoPerfil(idImagenPerfil)
+        }}
       />
     </>
   )
@@ -563,6 +670,17 @@ const RegistroPrevio = ({ data }) => {
   return (
     <div className="m-2 -mt-2">
       <Toast ref={toast} />
+      <ConfirmDialog
+        visible={dialogConfirmEliminarFotoPerfil}
+        onHide={() => setDialogConfirmEliminarFotoPerfil(false)}
+        message="¿Esta seguro que desea eliminar la foto?"
+        header="Confirmación"
+        icon="pi pi-exclamation-triangle"
+        accept={acceptEliminarFotoPerfil}
+        reject={rejectEliminarFotoPerfil}
+        acceptLabel="SI"
+        rejectLabel="NO"
+      />
       <div className="w-full text-center">
         <h1 className="text-3xl font-semibold text-white text-center mr-32 mb-6 -mt-3">
           Registro Previo

@@ -20,7 +20,6 @@ const DialogCargarDocumentos = ({
   const toast = useRef(null)
   const [itemsDatos, setItemsDatos] = useState(null)
   const [imagen, setImagen] = useState(null)
-  const [base64Data, setBase64Data] = useState(null)
 
   const insertEstudiante = (variables) => {
     return request(
