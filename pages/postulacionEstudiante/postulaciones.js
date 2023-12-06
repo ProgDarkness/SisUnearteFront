@@ -108,19 +108,8 @@ const Postulaciones = ({ cambioVista }) => {
             className="p-button-success"
             onClick={() => {
               setDatosPostularse(rowData)
-              setConfirmPostulacion(true)
-            }}
-          />
-        )}
-        {rolUser === 3 && (
-          <Button
-            icon="pi pi-pencil"
-            className="p-button-help mr-1"
-            tooltip="Cargar Documentos"
-            onClick={() => {
               setActiveDialogCargarDocumentos(true)
             }}
-            tooltipOptions={{ position: 'top' }}
           />
         )}
       </div>
@@ -132,6 +121,8 @@ const Postulaciones = ({ cambioVista }) => {
       <DialogCargarDocumentos
         activeDialogCargarDocumentos={activeDialogCargarDocumentos}
         setActiveDialogCargarDocumentos={setActiveDialogCargarDocumentos}
+        datosPostularse={datosPostularse}
+        mutatePostu={mutate}
       />
       <ConfirmDialog
         draggable={false}
