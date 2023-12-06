@@ -622,7 +622,11 @@ const RegistroPrevio = ({ data }) => {
   const header = (
     <>
       {imagenPerfil ? (
-        <img src={`data:image/png;base64,${imagenPerfil}`} />
+        <img
+          src={`data:image/png;base64,${imagenPerfil}`}
+          width={40}
+          height={50}
+        />
       ) : (
         <Image
           src={usuario}
@@ -637,22 +641,29 @@ const RegistroPrevio = ({ data }) => {
   )
   const footer = (
     <>
-      <input
-        type="file"
-        name="image"
-        id="file"
-        accept=".jpg, .jpeg, .png"
-        onChange={(e) => onChange(e)}
-      />
-      <Button
-        icon="pi pi-minus-circle"
-        className="p-button-danger"
-        tooltipOptions={{ position: 'top' }}
-        onClick={() => {
-          setDialogConfirmEliminarFotoPerfil(true)
-          setDataEliminarFotoPerfil(idImagenPerfil)
-        }}
-      />
+      <div
+        className="inline-flex rounded-md shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
+        role="group"
+      >
+        <Button
+          icon="pi pi-minus-circle"
+          className="p-button-danger"
+          tooltipOptions={{ position: 'top' }}
+          onClick={() => {
+            setDialogConfirmEliminarFotoPerfil(true)
+            setDataEliminarFotoPerfil(idImagenPerfil)
+          }}
+        />
+        <input
+          type="file"
+          name="image"
+          id="file"
+          accept=".jpg, .jpeg, .png"
+          onChange={(e) => onChange(e)}
+          className="custom-file-input"
+          /* style={{ display: 'none' }} */
+        />
+      </div>
     </>
   )
 
@@ -1142,7 +1153,7 @@ const RegistroPrevio = ({ data }) => {
         )}
       </div>
       <h1 className="text-3xl font-semibold text-white text-left mr-32 mb-6 -mt-3 pt-5">
-        Dirección de Trabajo
+        Información de Trabajo
       </h1>
       <Divider className="col-span-5" />
       <div className="grid grid-cols-5 gap-4">
@@ -1153,226 +1164,235 @@ const RegistroPrevio = ({ data }) => {
             onChange={(e) => setChecked1(e.value)}
           />
         </span>
-        <span className="p-float-label field">
-          <Dropdown
-            className="w-full"
-            id="paisLaboral"
-            options={data?.paises.obtenerPaises.response}
-            value={paisLaboral}
-            onChange={(e) => {
-              setPaisLaboral(e.value)
-              setEstadoLaboral(null)
-              setMunicipioLaboral(null)
-              setCiudadLaboral(null)
-              setParroquiaLaboral(null)
-              setNombreDeZonaLaboral(null)
-            }}
-            filter
-            filterBy="nombre"
-            optionLabel="nombre"
-          />
-          <label htmlFor="paisLaboral">Pais</label>
-        </span>
-        <span className="p-float-label field">
-          <Dropdown
-            className="w-full"
-            id="estadoLaboral"
-            options={estadosPorPaisLaboral?.obtenerEstadosPorPais.response}
-            value={estadoLaboral}
-            onChange={(e) => {
-              setEstadoLaboral(e.target.value)
-              setMunicipioLaboral(null)
-              setCiudadLaboral(null)
-              setParroquiaLaboral(null)
-              setNombreDeZonaLaboral(null)
-            }}
-            optionLabel="nombre"
-            emptyMessage="Seleccione un pais"
-          />
-          <label htmlFor="estadoLaboral">Estado</label>
-        </span>
-        {paisLaboral === null || parseInt(paisLaboral?.id) === 239 ? (
-          <span className="p-float-label field">
-            <Dropdown
-              className="w-full"
-              id="municipioLaboral"
-              options={
-                municipiosPorEstadoLaboral?.obtenerMunicipiosPorEstado.response
-              }
-              value={municipioLaboral}
-              onChange={(e) => {
-                setMunicipioLaboral(e.target.value)
-                setCiudadLaboral(null)
-                setParroquiaLaboral(null)
-                setNombreDeZonaLaboral(null)
-              }}
-              optionLabel="nombre"
-              emptyMessage="Seleccione un estado"
-            />
-            <label htmlFor="municipioLaboral">Municipio</label>
-          </span>
+        {checked1 === true ? (
+          <>
+            <span className="p-float-label field">
+              <Dropdown
+                className="w-full"
+                id="paisLaboral"
+                options={data?.paises.obtenerPaises.response}
+                value={paisLaboral}
+                onChange={(e) => {
+                  setPaisLaboral(e.value)
+                  setEstadoLaboral(null)
+                  setMunicipioLaboral(null)
+                  setCiudadLaboral(null)
+                  setParroquiaLaboral(null)
+                  setNombreDeZonaLaboral(null)
+                }}
+                filter
+                filterBy="nombre"
+                optionLabel="nombre"
+              />
+              <label htmlFor="paisLaboral">Pais</label>
+            </span>
+            <span className="p-float-label field">
+              <Dropdown
+                className="w-full"
+                id="estadoLaboral"
+                options={estadosPorPaisLaboral?.obtenerEstadosPorPais.response}
+                value={estadoLaboral}
+                onChange={(e) => {
+                  setEstadoLaboral(e.target.value)
+                  setMunicipioLaboral(null)
+                  setCiudadLaboral(null)
+                  setParroquiaLaboral(null)
+                  setNombreDeZonaLaboral(null)
+                }}
+                optionLabel="nombre"
+                emptyMessage="Seleccione un pais"
+              />
+              <label htmlFor="estadoLaboral">Estado</label>
+            </span>
+            {paisLaboral === null || parseInt(paisLaboral?.id) === 239 ? (
+              <span className="p-float-label field">
+                <Dropdown
+                  className="w-full"
+                  id="municipioLaboral"
+                  options={
+                    municipiosPorEstadoLaboral?.obtenerMunicipiosPorEstado
+                      .response
+                  }
+                  value={municipioLaboral}
+                  onChange={(e) => {
+                    setMunicipioLaboral(e.target.value)
+                    setCiudadLaboral(null)
+                    setParroquiaLaboral(null)
+                    setNombreDeZonaLaboral(null)
+                  }}
+                  optionLabel="nombre"
+                  emptyMessage="Seleccione un estado"
+                />
+                <label htmlFor="municipioLaboral">Municipio</label>
+              </span>
+            ) : (
+              ''
+            )}
+            {paisLaboral === null || parseInt(paisLaboral?.id) === 239 ? (
+              <span className="p-float-label field">
+                <Dropdown
+                  className="w-full"
+                  id="parroquiaLaboral"
+                  options={
+                    parroquiasPorMunicipioLaboral?.obtenerParrquiasPorMunicipio
+                      .response
+                  }
+                  value={parroquiaLaboral}
+                  onChange={(e) => {
+                    setParroquiaLaboral(e.target.value)
+                    setNombreDeZonaLaboral(null)
+                  }}
+                  optionLabel="nombre"
+                  emptyMessage="Seleccione un municipio"
+                />
+                <label htmlFor="parroquiaLaboral">Parroquia</label>
+              </span>
+            ) : (
+              ''
+            )}
+            <span className="p-float-label field">
+              <Dropdown
+                className="w-full"
+                id="tipoDeZonaLaboral"
+                options={data?.tipos_zona.obtenerTipoZona.response}
+                value={tipoDeZonaLaboral}
+                onChange={(e) => setTipoDeZonaLaboral(e.target.value)}
+                optionLabel="nombre"
+              />
+              <label htmlFor="tipoDeZonaLaboral">Tipo De Zona</label>
+            </span>
+            {paisLaboral === null || parseInt(paisLaboral?.id) === 239 ? (
+              <span className="p-float-label field">
+                <Dropdown
+                  className="w-full"
+                  id="nombreDeZonaLaboral"
+                  options={
+                    zonasPorParroquiasLaboral?.obtenerZonasPorParroquias
+                      .response
+                  }
+                  value={nombreDeZonaLaboral}
+                  onChange={(e) => setNombreDeZonaLaboral(e.target.value)}
+                  optionLabel="nombre"
+                  emptyMessage="Seleccione una zona"
+                />
+                <label htmlFor="nombreDeZonaLaboral">Nombre de Zona</label>
+              </span>
+            ) : (
+              ''
+            )}
+            {paisLaboral === null || parseInt(paisLaboral?.id) === 239 ? (
+              <span className="p-float-label field">
+                <InputText
+                  className="w-full"
+                  id="zonaPostal"
+                  value={nombreDeZonaLaboral?.codigo_postal || ''}
+                  autoComplete="off"
+                />
+                <label htmlFor="zonaPostal">Zona Postal</label>
+              </span>
+            ) : (
+              ''
+            )}
+            <span className="p-float-label field">
+              <Dropdown
+                className="w-full"
+                id="tipoDeViaLaboral"
+                options={data?.tipos_via.obtenerTipoVia.response}
+                value={tipoDeViaLaboral}
+                onChange={(e) => setTipoDeViaLaboral(e.target.value)}
+                optionLabel="nombre"
+              />
+              <label htmlFor="tipoDeViaLaboral">Tipo de via</label>
+            </span>
+            <span className="p-float-label field">
+              <InputText
+                className="w-full"
+                id="nombreDeViaLaboral"
+                value={nombreDeViaLaboral}
+                onChange={(e) =>
+                  setNombreDeViaLaboral(e.target.value.toUpperCase())
+                }
+                autoComplete="off"
+              />
+              <label htmlFor="nombreDeViaLaboral">Nombre De Via</label>
+            </span>
+            <span className="p-float-label field">
+              <Dropdown
+                className="w-full"
+                id="tipoDeViviendaLaboral"
+                options={data?.tipos_vivienda.obtenerTipoVivienda.response}
+                value={tipoDeViviendaLaboral}
+                onChange={(e) => setTipoDeViviendaLaboral(e.target.value)}
+                optionLabel="nombre"
+              />
+              <label htmlFor="tipoDeViviendaLaboral">Tipo De Vivienda</label>
+            </span>
+            <span className="p-float-label field">
+              <InputText
+                className="w-full"
+                id="numeroDeViviendaLaboral"
+                value={numeroDeViviendaLaboral}
+                keyfilter="pint"
+                maxLength={4}
+                onChange={(e) => setNumeroDeViviendaLaboral(e.target.value)}
+                autoComplete="off"
+              />
+              <label htmlFor="numeroDeViviendaLaboral">
+                Numero De Vivienda
+              </label>
+            </span>
+            {paisLaboral === null || parseInt(paisLaboral?.id) === 239 ? (
+              <span className="p-float-label field">
+                <Dropdown
+                  className="w-full"
+                  id="ciudadLaboral"
+                  options={
+                    ciudadesPorEstadoLaboral?.obtenerCiudadesPorEstado.response
+                  }
+                  value={ciudadLaboral}
+                  onChange={(e) => {
+                    setCiudadLaboral(e.target.value)
+                    setParroquiaLaboral(null)
+                    setNombreDeZonaLaboral(null)
+                  }}
+                  optionLabel="nombre"
+                  emptyMessage="Seleccione un estado"
+                />
+                <label htmlFor="ciudadLaboral">Ciudad</label>
+              </span>
+            ) : (
+              ''
+            )}
+            {paisLaboral === null || parseInt(paisLaboral?.id) === 239 ? (
+              <span className="p-float-label field">
+                <InputText
+                  className="w-full"
+                  id="correoLaboral"
+                  /* value={nombreDeZonaLaboral?.codigo_postal || ''} */
+                  autoComplete="off"
+                />
+                <label htmlFor="correoLaboral">Correo Electrónico</label>
+              </span>
+            ) : (
+              ''
+            )}
+            {paisLaboral === null || parseInt(paisLaboral?.id) === 239 ? (
+              <span className="p-float-label field">
+                <InputText
+                  className="w-full"
+                  id="telefonoLaboral"
+                  /* value={nombreDeZonaLaboral?.codigo_postal || ''} */
+                  autoComplete="off"
+                />
+                <label htmlFor="telefonoLaboral">Teléfono</label>
+              </span>
+            ) : (
+              ''
+            )}
+          </>
         ) : (
           ''
         )}
-        {paisLaboral === null || parseInt(paisLaboral?.id) === 239 ? (
-          <span className="p-float-label field">
-            <Dropdown
-              className="w-full"
-              id="parroquiaLaboral"
-              options={
-                parroquiasPorMunicipioLaboral?.obtenerParrquiasPorMunicipio
-                  .response
-              }
-              value={parroquiaLaboral}
-              onChange={(e) => {
-                setParroquiaLaboral(e.target.value)
-                setNombreDeZonaLaboral(null)
-              }}
-              optionLabel="nombre"
-              emptyMessage="Seleccione un municipio"
-            />
-            <label htmlFor="parroquiaLaboral">Parroquia</label>
-          </span>
-        ) : (
-          ''
-        )}
-        <span className="p-float-label field">
-          <Dropdown
-            className="w-full"
-            id="tipoDeZonaLaboral"
-            options={data?.tipos_zona.obtenerTipoZona.response}
-            value={tipoDeZonaLaboral}
-            onChange={(e) => setTipoDeZonaLaboral(e.target.value)}
-            optionLabel="nombre"
-          />
-          <label htmlFor="tipoDeZonaLaboral">Tipo De Zona</label>
-        </span>
-        {paisLaboral === null || parseInt(paisLaboral?.id) === 239 ? (
-          <span className="p-float-label field">
-            <Dropdown
-              className="w-full"
-              id="nombreDeZonaLaboral"
-              options={
-                zonasPorParroquiasLaboral?.obtenerZonasPorParroquias.response
-              }
-              value={nombreDeZonaLaboral}
-              onChange={(e) => setNombreDeZonaLaboral(e.target.value)}
-              optionLabel="nombre"
-              emptyMessage="Seleccione una zona"
-            />
-            <label htmlFor="nombreDeZonaLaboral">Nombre de Zona</label>
-          </span>
-        ) : (
-          ''
-        )}
-        {paisLaboral === null || parseInt(paisLaboral?.id) === 239 ? (
-          <span className="p-float-label field">
-            <InputText
-              className="w-full"
-              id="zonaPostal"
-              value={nombreDeZonaLaboral?.codigo_postal || ''}
-              autoComplete="off"
-            />
-            <label htmlFor="zonaPostal">Zona Postal</label>
-          </span>
-        ) : (
-          ''
-        )}
-        <span className="p-float-label field">
-          <Dropdown
-            className="w-full"
-            id="tipoDeViaLaboral"
-            options={data?.tipos_via.obtenerTipoVia.response}
-            value={tipoDeViaLaboral}
-            onChange={(e) => setTipoDeViaLaboral(e.target.value)}
-            optionLabel="nombre"
-          />
-          <label htmlFor="tipoDeViaLaboral">Tipo de via</label>
-        </span>
-        <span className="p-float-label field">
-          <InputText
-            className="w-full"
-            id="nombreDeViaLaboral"
-            value={nombreDeViaLaboral}
-            onChange={(e) =>
-              setNombreDeViaLaboral(e.target.value.toUpperCase())
-            }
-            autoComplete="off"
-          />
-          <label htmlFor="nombreDeViaLaboral">Nombre De Via</label>
-        </span>
-        <span className="p-float-label field">
-          <Dropdown
-            className="w-full"
-            id="tipoDeViviendaLaboral"
-            options={data?.tipos_vivienda.obtenerTipoVivienda.response}
-            value={tipoDeViviendaLaboral}
-            onChange={(e) => setTipoDeViviendaLaboral(e.target.value)}
-            optionLabel="nombre"
-          />
-          <label htmlFor="tipoDeViviendaLaboral">Tipo De Vivienda</label>
-        </span>
-        <span className="p-float-label field">
-          <InputText
-            className="w-full"
-            id="numeroDeViviendaLaboral"
-            value={numeroDeViviendaLaboral}
-            keyfilter="pint"
-            maxLength={4}
-            onChange={(e) => setNumeroDeViviendaLaboral(e.target.value)}
-            autoComplete="off"
-          />
-          <label htmlFor="numeroDeViviendaLaboral">Numero De Vivienda</label>
-        </span>
-        {paisLaboral === null || parseInt(paisLaboral?.id) === 239 ? (
-          <span className="p-float-label field">
-            <Dropdown
-              className="w-full"
-              id="ciudadLaboral"
-              options={
-                ciudadesPorEstadoLaboral?.obtenerCiudadesPorEstado.response
-              }
-              value={ciudadLaboral}
-              onChange={(e) => {
-                setCiudadLaboral(e.target.value)
-                setParroquiaLaboral(null)
-                setNombreDeZonaLaboral(null)
-              }}
-              optionLabel="nombre"
-              emptyMessage="Seleccione un estado"
-            />
-            <label htmlFor="ciudadLaboral">Ciudad</label>
-          </span>
-        ) : (
-          ''
-        )}
-        {paisLaboral === null || parseInt(paisLaboral?.id) === 239 ? (
-          <span className="p-float-label field">
-            <InputText
-              className="w-full"
-              id="correoLaboral"
-              /* value={nombreDeZonaLaboral?.codigo_postal || ''} */
-              autoComplete="off"
-            />
-            <label htmlFor="correoLaboral">Correo Electrónico</label>
-          </span>
-        ) : (
-          ''
-        )}
-        {paisLaboral === null || parseInt(paisLaboral?.id) === 239 ? (
-          <span className="p-float-label field">
-            <InputText
-              className="w-full"
-              id="telefonoLaboral"
-              /* value={nombreDeZonaLaboral?.codigo_postal || ''} */
-              autoComplete="off"
-            />
-            <label htmlFor="telefonoLaboral">Teléfono</label>
-          </span>
-        ) : (
-          ''
-        )}
-
         <ConfirmDialog
           draggable={false}
           resizable={false}
