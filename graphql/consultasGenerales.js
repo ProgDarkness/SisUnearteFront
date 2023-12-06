@@ -323,5 +323,16 @@ export default {
         }
       }
     }
+  `,
+  GET_TIPO_DOCUMENTO: gql`
+  query obtenerTipoDocumento {
+    obtenerTipoDocumento {
+      response {
+        id
+        nombre
+        tipocarrera
+      }
+    }
+  }
   `
 }
