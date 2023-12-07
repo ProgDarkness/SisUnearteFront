@@ -16,6 +16,7 @@ import useSWR from 'swr'
 import { useSesion } from 'hooks/useSesion'
 import request from 'graphql-request'
 import { Toast } from 'primereact/toast'
+import { FileUpload } from 'primereact/fileupload'
 import usuario from 'public/images/usuario.png'
 
 const RegistroPrevio = ({ data }) => {
@@ -65,7 +66,7 @@ const RegistroPrevio = ({ data }) => {
   const [evalToFormForPais, setEvalToFormForPais] = useState(true)
   const [imagenPerfil, setImagenPerfil] = useState(null)
   const [idImagenPerfil, setIdImagenPerfil] = useState(null)
-    /* const [imagen, setImagen] = useState(null) */
+  /* const [imagen, setImagen] = useState(null) */
   /* const [extension, setExtension] = useState(null) */
   const [dataEliminarFotoPerfil, setDataEliminarFotoPerfil] = useState(null)
   const [dialogConfirmEliminarFotoPerfil, setDialogConfirmEliminarFotoPerfil] =
@@ -623,6 +624,11 @@ const RegistroPrevio = ({ data }) => {
       )}
     </>
   )
+
+  const adjuntarArchivo = () => {
+    document.querySelector('#file').click()
+  }
+
   const footer = (
     <>
       <div
@@ -638,14 +644,20 @@ const RegistroPrevio = ({ data }) => {
             setDataEliminarFotoPerfil(idImagenPerfil)
           }}
         />
+        <Button
+          icon="pi pi-paperclip"
+          tooltip="Adjuntar"
+          tooltipOptions={{ position: 'top' }}
+          onClick={() => adjuntarArchivo()}
+          className='ml-2'
+        />
         <input
           type="file"
           name="image"
           id="file"
           accept=".jpg, .jpeg, .png"
           onChange={(e) => onChange(e)}
-          className="custom-file-input"
-          /* style={{ display: 'none' }} */
+          style={{ display: 'none' }}
         />
       </div>
     </>
