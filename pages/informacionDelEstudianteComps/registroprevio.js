@@ -1,7 +1,6 @@
 import { InputText } from 'primereact/inputtext'
 import { Dropdown } from 'primereact/dropdown'
 import { Button } from 'primereact/button'
-/* import { FileUpload } from 'primereact/fileupload' */
 import Image from 'next/image'
 import { Card } from 'primereact/card'
 import { useEffect, useRef, useState } from 'react'
@@ -56,14 +55,8 @@ const RegistroPrevio = ({ data }) => {
   const [municipioLaboral, setMunicipioLaboral] = useState(null)
   const [ciudadLaboral, setCiudadLaboral] = useState(null)
   const [parroquiaLaboral, setParroquiaLaboral] = useState(null)
-  const [tipoDeZonaLaboral, setTipoDeZonaLaboral] = useState(null)
-  const [nombreDeZonaLaboral, setNombreDeZonaLaboral] = useState('')
-  const [tipoDeViaLaboral, setTipoDeViaLaboral] = useState(null)
-  const [nombreDeViaLaboral, setNombreDeViaLaboral] = useState('')
-  const [tipoDeViviendaLaboral, setTipoDeViviendaLaboral] = useState(null)
-  const [numeroDeViviendaLaboral, setNumeroDeViviendaLaboral] = useState('')
-  /* const [correoLaboral, setCorreoElectronicoLaboral] = useState('')
-  const [telefonoLaboral, setCorreoElectronicoLaboral] = useState('') */
+  const [direccionLaboral, setdireccionLaboral] = useState('')
+  const [telefonoLaboral, settelefonoLaboral] = useState('')
   const [checked1, setChecked1] = useState(false)
 
   const [confirmRegistrar, setConfirmRegistrar] = useState(false)
@@ -152,12 +145,6 @@ const RegistroPrevio = ({ data }) => {
       setMunicipioLaboral(infoUser?.getInfoUsuario.response.municipio)
       setCiudadLaboral(infoUser?.getInfoUsuario.response.ciudad)
       setParroquiaLaboral(infoUser?.getInfoUsuario.response.parroquia)
-      setTipoDeZonaLaboral(infoUser?.getInfoUsuario.response.tpZona)
-      setTipoDeViaLaboral(infoUser?.getInfoUsuario.response.tpVia)
-      setNombreDeViaLaboral(infoUser?.getInfoUsuario.response.nb_via)
-      setNombreDeZonaLaboral(infoUser?.getInfoUsuario.response.nombZona)
-      setTipoDeViviendaLaboral(infoUser?.getInfoUsuario.response.tpVivienda)
-      setNumeroDeViviendaLaboral(infoUser?.getInfoUsuario.response.nu_vivienda)
 
       setDiscapacidad(infoUser?.getInfoUsuario.response.discapacidad)
       setBlockedPanel(infoUser?.getInfoUsuario.response.bl_registro)
@@ -492,19 +479,6 @@ const RegistroPrevio = ({ data }) => {
       : null
   )
 
-  const { data: zonasPorParroquiasLaboral } = useSWR(
-    parroquiaLaboral
-      ? [
-          GQLConsultasGenerales.GET_ZONAS_POR_PARROQUIA,
-          {
-            InputParroquia: {
-              parroquia: parseInt(parroquiaLaboral.id)
-            }
-          }
-        ]
-      : null
-  )
-
   const { data: tiposEtnias } = useSWR(GQLConsultasGenerales.GET_ETNIAS)
 
   const { data: fotoPerfil, mutate: mutateImage } = useSWR(
@@ -551,8 +525,6 @@ const RegistroPrevio = ({ data }) => {
       setIdImagenPerfil(fotoPerfil?.obtenerFotoPerfilUsuario.response.id)
     }
   }, [fotoPerfil])
-
-  /* console.log(fotoPerfil?.obtenerFotoPerfilUsuario.response.id) */
 
   const accept = () => {
     const evaluEmail = validateEmail(correoElectronico)
@@ -1151,21 +1123,23 @@ const RegistroPrevio = ({ data }) => {
         ) : (
           ''
         )}
+
+        <label className="font-semibold text-white text-left" htmlFor="trabaja">
+          ¿Trabaja actualmente?
+        </label>
+        <InputSwitch
+          inputId="trabaja"
+          checked={checked1}
+          onChange={(e) => setChecked1(e.value)}
+        />
       </div>
-      <h1 className="text-3xl font-semibold text-white text-left mr-32 mb-6 -mt-3 pt-5">
-        Información de Trabajo
-      </h1>
-      <Divider className="col-span-5" />
       <div className="grid grid-cols-5 gap-4">
-        <span className="p-float-label field">
-          <label htmlFor="paisLaboral">¿Indicar si trabaja?</label>
-          <InputSwitch
-            checked={checked1}
-            onChange={(e) => setChecked1(e.value)}
-          />
-        </span>
         {checked1 === true ? (
           <>
+            <h1 className="text-3xl font-semibold text-white text-left mr-32 mb-6 -mt-3 pt-5 col-span-5">
+              Información de Trabajo
+            </h1>
+            <Divider className="col-span-5" />
             <span className="p-float-label field">
               <Dropdown
                 className="w-full"
@@ -1250,97 +1224,6 @@ const RegistroPrevio = ({ data }) => {
             ) : (
               ''
             )}
-            <span className="p-float-label field">
-              <Dropdown
-                className="w-full"
-                id="tipoDeZonaLaboral"
-                options={data?.tipos_zona.obtenerTipoZona.response}
-                value={tipoDeZonaLaboral}
-                onChange={(e) => setTipoDeZonaLaboral(e.target.value)}
-                optionLabel="nombre"
-              />
-              <label htmlFor="tipoDeZonaLaboral">Tipo De Zona</label>
-            </span>
-            {paisLaboral === null || parseInt(paisLaboral?.id) === 239 ? (
-              <span className="p-float-label field">
-                <Dropdown
-                  className="w-full"
-                  id="nombreDeZonaLaboral"
-                  options={
-                    zonasPorParroquiasLaboral?.obtenerZonasPorParroquias
-                      .response
-                  }
-                  value={nombreDeZonaLaboral}
-                  onChange={(e) => setNombreDeZonaLaboral(e.target.value)}
-                  optionLabel="nombre"
-                  emptyMessage="Seleccione una zona"
-                />
-                <label htmlFor="nombreDeZonaLaboral">Nombre de Zona</label>
-              </span>
-            ) : (
-              ''
-            )}
-            {paisLaboral === null || parseInt(paisLaboral?.id) === 239 ? (
-              <span className="p-float-label field">
-                <InputText
-                  className="w-full"
-                  id="zonaPostal"
-                  value={nombreDeZonaLaboral?.codigo_postal || ''}
-                  autoComplete="off"
-                />
-                <label htmlFor="zonaPostal">Zona Postal</label>
-              </span>
-            ) : (
-              ''
-            )}
-            <span className="p-float-label field">
-              <Dropdown
-                className="w-full"
-                id="tipoDeViaLaboral"
-                options={data?.tipos_via.obtenerTipoVia.response}
-                value={tipoDeViaLaboral}
-                onChange={(e) => setTipoDeViaLaboral(e.target.value)}
-                optionLabel="nombre"
-              />
-              <label htmlFor="tipoDeViaLaboral">Tipo de via</label>
-            </span>
-            <span className="p-float-label field">
-              <InputText
-                className="w-full"
-                id="nombreDeViaLaboral"
-                value={nombreDeViaLaboral}
-                onChange={(e) =>
-                  setNombreDeViaLaboral(e.target.value.toUpperCase())
-                }
-                autoComplete="off"
-              />
-              <label htmlFor="nombreDeViaLaboral">Nombre De Via</label>
-            </span>
-            <span className="p-float-label field">
-              <Dropdown
-                className="w-full"
-                id="tipoDeViviendaLaboral"
-                options={data?.tipos_vivienda.obtenerTipoVivienda.response}
-                value={tipoDeViviendaLaboral}
-                onChange={(e) => setTipoDeViviendaLaboral(e.target.value)}
-                optionLabel="nombre"
-              />
-              <label htmlFor="tipoDeViviendaLaboral">Tipo De Vivienda</label>
-            </span>
-            <span className="p-float-label field">
-              <InputText
-                className="w-full"
-                id="numeroDeViviendaLaboral"
-                value={numeroDeViviendaLaboral}
-                keyfilter="pint"
-                maxLength={4}
-                onChange={(e) => setNumeroDeViviendaLaboral(e.target.value)}
-                autoComplete="off"
-              />
-              <label htmlFor="numeroDeViviendaLaboral">
-                Numero De Vivienda
-              </label>
-            </span>
             {paisLaboral === null || parseInt(paisLaboral?.id) === 239 ? (
               <span className="p-float-label field">
                 <Dropdown
@@ -1363,25 +1246,26 @@ const RegistroPrevio = ({ data }) => {
             ) : (
               ''
             )}
-            {paisLaboral === null || parseInt(paisLaboral?.id) === 239 ? (
-              <span className="p-float-label field">
-                <InputText
-                  className="w-full"
-                  id="correoLaboral"
-                  /* value={nombreDeZonaLaboral?.codigo_postal || ''} */
-                  autoComplete="off"
-                />
-                <label htmlFor="correoLaboral">Correo Electrónico</label>
-              </span>
-            ) : (
-              ''
-            )}
+            <span className="p-float-label field col-span-3">
+              <InputText
+                className="w-full"
+                id="direccionLaboral"
+                value={direccionLaboral}
+                maxLength={60}
+                onChange={(e) => setdireccionLaboral(e.target.value)}
+                autoComplete="off"
+              />
+              <label htmlFor="direccionLaboral">Dirección</label>
+            </span>
             {paisLaboral === null || parseInt(paisLaboral?.id) === 239 ? (
               <span className="p-float-label field">
                 <InputText
                   className="w-full"
                   id="telefonoLaboral"
-                  /* value={nombreDeZonaLaboral?.codigo_postal || ''} */
+                  keyfilter="pint"
+                  maxLength={11}
+                  value={telefonoLaboral}
+                  onChange={(e) => settelefonoLaboral(e.target.value)}
                   autoComplete="off"
                 />
                 <label htmlFor="telefonoLaboral">Teléfono</label>
@@ -1407,7 +1291,8 @@ const RegistroPrevio = ({ data }) => {
           accept={accept}
           reject={reject}
         />
-
+      </div>
+      <div className="w-full flex justify-center mt-5">
         <Button
           icon="pi pi-check"
           label={
