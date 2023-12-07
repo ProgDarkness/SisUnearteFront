@@ -108,6 +108,9 @@ export default {
             id
             nombre
           }
+          dir_trabajo,
+          telefono_trabajo,
+          bl_trabajo
         }
       }
     }

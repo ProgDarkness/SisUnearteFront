@@ -57,14 +57,15 @@ const RegistroPrevio = ({ data }) => {
   const [parroquiaLaboral, setParroquiaLaboral] = useState(null)
   const [direccionLaboral, setdireccionLaboral] = useState('')
   const [telefonoLaboral, settelefonoLaboral] = useState('')
+  const [Laboral, setLaboral] = useState('')
   const [checked1, setChecked1] = useState(false)
 
   const [confirmRegistrar, setConfirmRegistrar] = useState(false)
   const [blockedPanel, setBlockedPanel] = useState(false)
   const [evalToFormForPais, setEvalToFormForPais] = useState(true)
-  /* const [imagen, setImagen] = useState(null) */
   const [imagenPerfil, setImagenPerfil] = useState(null)
   const [idImagenPerfil, setIdImagenPerfil] = useState(null)
+    /* const [imagen, setImagen] = useState(null) */
   /* const [extension, setExtension] = useState(null) */
   const [dataEliminarFotoPerfil, setDataEliminarFotoPerfil] = useState(null)
   const [dialogConfirmEliminarFotoPerfil, setDialogConfirmEliminarFotoPerfil] =
@@ -145,6 +146,9 @@ const RegistroPrevio = ({ data }) => {
       setMunicipioLaboral(infoUser?.getInfoUsuario.response.municipio)
       setCiudadLaboral(infoUser?.getInfoUsuario.response.ciudad)
       setParroquiaLaboral(infoUser?.getInfoUsuario.response.parroquia)
+      setdireccionLaboral(infoUser?.getInfoUsuario.response.dir_trabajo)
+      settelefonoLaboral(infoUser?.getInfoUsuario.response.telefono_trabajo)
+      setChecked1(infoUser?.getInfoUsuario.response.bl_trabajo)
 
       setDiscapacidad(infoUser?.getInfoUsuario.response.discapacidad)
       setBlockedPanel(infoUser?.getInfoUsuario.response.bl_registro)
@@ -320,7 +324,15 @@ const RegistroPrevio = ({ data }) => {
       idDiscapacidad: parseInt(discapacidad?.id),
       idEtnia: parseInt(etnia?.id) || null,
       idEstadoNac: parseInt(estadoNacimiento?.id),
-      idCiudadNac: parseInt(ciudadNacimiento?.id) || null
+      idCiudadNac: parseInt(ciudadNacimiento?.id) || null,
+      idPaisTrabajo: parseInt(paisLaboral?.id) || null,
+      idEstadoTrabajo: parseInt(estadoLaboral?.id) || null,
+      idMunicipioTrabajo: parseInt(municipioLaboral?.id) || null,
+      idParroquiaTrabajo: parseInt(parroquiaLaboral?.id) || null,
+      idCiudadTrabajo: parseInt(ciudadLaboral?.id) || null,
+      dirTrabjo: direccionLaboral,
+      tlfTrabjo: parseInt(telefonoLaboral) || null,
+      bl_trabajo: checked1
     }
 
     setConfirmRegistrar(true)
@@ -1130,13 +1142,14 @@ const RegistroPrevio = ({ data }) => {
         <InputSwitch
           inputId="trabaja"
           checked={checked1}
-          onChange={(e) => setChecked1(e.value)}
+          value={checked1}
+          onChange={(e) => setChecked1(e.target.value)}
         />
       </div>
       <div className="grid grid-cols-5 gap-4">
         {checked1 === true ? (
           <>
-            <h1 className="text-3xl font-semibold text-white text-left mr-32 mb-6 -mt-3 pt-5 col-span-5">
+            <h1 className="text-3xl font-semibold text-white text-left mr-32 mb-1 mt-3 col-span-5">
               Información de Trabajo
             </h1>
             <Divider className="col-span-5" />
@@ -1152,7 +1165,6 @@ const RegistroPrevio = ({ data }) => {
                   setMunicipioLaboral(null)
                   setCiudadLaboral(null)
                   setParroquiaLaboral(null)
-                  setNombreDeZonaLaboral(null)
                 }}
                 filter
                 filterBy="nombre"
@@ -1171,7 +1183,6 @@ const RegistroPrevio = ({ data }) => {
                   setMunicipioLaboral(null)
                   setCiudadLaboral(null)
                   setParroquiaLaboral(null)
-                  setNombreDeZonaLaboral(null)
                 }}
                 optionLabel="nombre"
                 emptyMessage="Seleccione un pais"
@@ -1192,7 +1203,6 @@ const RegistroPrevio = ({ data }) => {
                     setMunicipioLaboral(e.target.value)
                     setCiudadLaboral(null)
                     setParroquiaLaboral(null)
-                    setNombreDeZonaLaboral(null)
                   }}
                   optionLabel="nombre"
                   emptyMessage="Seleccione un estado"
@@ -1214,7 +1224,6 @@ const RegistroPrevio = ({ data }) => {
                   value={parroquiaLaboral}
                   onChange={(e) => {
                     setParroquiaLaboral(e.target.value)
-                    setNombreDeZonaLaboral(null)
                   }}
                   optionLabel="nombre"
                   emptyMessage="Seleccione un municipio"
@@ -1236,7 +1245,6 @@ const RegistroPrevio = ({ data }) => {
                   onChange={(e) => {
                     setCiudadLaboral(e.target.value)
                     setParroquiaLaboral(null)
-                    setNombreDeZonaLaboral(null)
                   }}
                   optionLabel="nombre"
                   emptyMessage="Seleccione un estado"
