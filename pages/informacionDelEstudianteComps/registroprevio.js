@@ -16,7 +16,6 @@ import useSWR from 'swr'
 import { useSesion } from 'hooks/useSesion'
 import request from 'graphql-request'
 import { Toast } from 'primereact/toast'
-import { FileUpload } from 'primereact/fileupload'
 import usuario from 'public/images/usuario.png'
 
 const RegistroPrevio = ({ data }) => {
@@ -31,6 +30,7 @@ const RegistroPrevio = ({ data }) => {
   const [segundo_Nombre, setSegundo_Nombre] = useState('')
   const [segundo_Apellido, setSegundo_Apellido] = useState('')
   const [correoElectronico, setCorreoElectronico] = useState('')
+  const [tlfCelular, setTlfCelular] = useState('')
   const [fechanaci, setFechaNaci] = useState(null)
   const [paisNacimiento, setPaisNacimiento] = useState(null)
   const [estadoNacimiento, setEstadoNacimiento] = useState(null)
@@ -58,7 +58,6 @@ const RegistroPrevio = ({ data }) => {
   const [parroquiaLaboral, setParroquiaLaboral] = useState(null)
   const [direccionLaboral, setdireccionLaboral] = useState('')
   const [telefonoLaboral, settelefonoLaboral] = useState('')
-  const [Laboral, setLaboral] = useState('')
   const [checked1, setChecked1] = useState(false)
 
   const [confirmRegistrar, setConfirmRegistrar] = useState(false)
@@ -68,7 +67,6 @@ const RegistroPrevio = ({ data }) => {
   const [idImagenPerfil, setIdImagenPerfil] = useState(null)
   /* const [imagen, setImagen] = useState(null) */
   /* const [extension, setExtension] = useState(null) */
-  const [dataEliminarFotoPerfil, setDataEliminarFotoPerfil] = useState(null)
   const [dialogConfirmEliminarFotoPerfil, setDialogConfirmEliminarFotoPerfil] =
     useState(false)
 
@@ -150,6 +148,7 @@ const RegistroPrevio = ({ data }) => {
       setdireccionLaboral(infoUser?.getInfoUsuario.response.dir_trabajo)
       settelefonoLaboral(infoUser?.getInfoUsuario.response.telefono_trabajo)
       setChecked1(infoUser?.getInfoUsuario.response.bl_trabajo)
+      setTlfCelular(infoUser?.getInfoUsuario.response.telefono_usuario)
 
       setDiscapacidad(infoUser?.getInfoUsuario.response.discapacidad)
       setBlockedPanel(infoUser?.getInfoUsuario.response.bl_registro)
@@ -333,7 +332,8 @@ const RegistroPrevio = ({ data }) => {
       idCiudadTrabajo: parseInt(ciudadLaboral?.id) || null,
       dirTrabjo: direccionLaboral,
       tlfTrabjo: parseInt(telefonoLaboral) || null,
-      bl_trabajo: checked1
+      bl_trabajo: checked1,
+      telefono: parseInt(tlfCelular) || null
     }
 
     setConfirmRegistrar(true)
@@ -513,7 +513,7 @@ const RegistroPrevio = ({ data }) => {
 
     eliminarFotoEstudiante({ InputEliminarFotoPerfilUsuario }).then(
       ({ eliminarFotoEstudiante: { message } }) => {
-        setDataEliminarFotoPerfil(null)
+        setIdImagenPerfil(null)
         toast.current.show({
           severity: 'error',
           summary: '¡ Atención !',
@@ -641,7 +641,7 @@ const RegistroPrevio = ({ data }) => {
           tooltipOptions={{ position: 'top' }}
           onClick={() => {
             setDialogConfirmEliminarFotoPerfil(true)
-            setDataEliminarFotoPerfil(idImagenPerfil)
+            setIdImagenPerfil(idImagenPerfil)
           }}
         />
         <Button
@@ -649,7 +649,7 @@ const RegistroPrevio = ({ data }) => {
           tooltip="Adjuntar"
           tooltipOptions={{ position: 'top' }}
           onClick={() => adjuntarArchivo()}
-          className='ml-2'
+          className="ml-2"
         />
         <input
           type="file"
@@ -796,14 +796,12 @@ const RegistroPrevio = ({ data }) => {
                       <span className="p-float-label field">
                         <InputText
                           className="w-full"
-                          id="correoElectronico"
-                          value={correoElectronico}
-                          onChange={(e) => setCorreoElectronico(e.target.value)}
+                          id="tlfCelular"
+                          value={tlfCelular}
+                          onChange={(e) => setTlfCelular(e.target.value)}
                           autoComplete="off"
                         />
-                        <label htmlFor="correoElectronico">
-                          Teléfono Celular
-                        </label>
+                        <label htmlFor="tlfCelular">Teléfono Celular</label>
                       </span>
                       <span className="p-float-label field">
                         <InputMask
@@ -946,7 +944,6 @@ const RegistroPrevio = ({ data }) => {
                   </div>
                 </div>
               </div>
-
               <div className="justify-center py-1 px-3 w-1/4 h-80">
                 <Card
                   style={{ width: '15em' }}
@@ -1184,23 +1181,29 @@ const RegistroPrevio = ({ data }) => {
               />
               <label htmlFor="paisLaboral">Pais</label>
             </span>
-            <span className="p-float-label field">
-              <Dropdown
-                className="w-full"
-                id="estadoLaboral"
-                options={estadosPorPaisLaboral?.obtenerEstadosPorPais.response}
-                value={estadoLaboral}
-                onChange={(e) => {
-                  setEstadoLaboral(e.target.value)
-                  setMunicipioLaboral(null)
-                  setCiudadLaboral(null)
-                  setParroquiaLaboral(null)
-                }}
-                optionLabel="nombre"
-                emptyMessage="Seleccione un pais"
-              />
-              <label htmlFor="estadoLaboral">Estado</label>
-            </span>
+            {paisLaboral === null || parseInt(paisLaboral?.id) === 239 ? (
+              <span className="p-float-label field">
+                <Dropdown
+                  className="w-full"
+                  id="estadoLaboral"
+                  options={
+                    estadosPorPaisLaboral?.obtenerEstadosPorPais.response
+                  }
+                  value={estadoLaboral}
+                  onChange={(e) => {
+                    setEstadoLaboral(e.target.value)
+                    setMunicipioLaboral(null)
+                    setCiudadLaboral(null)
+                    setParroquiaLaboral(null)
+                  }}
+                  optionLabel="nombre"
+                  emptyMessage="Seleccione un pais"
+                />
+                <label htmlFor="estadoLaboral">Estado</label>
+              </span>
+            ) : (
+              ''
+            )}
             {paisLaboral === null || parseInt(paisLaboral?.id) === 239 ? (
               <span className="p-float-label field">
                 <Dropdown

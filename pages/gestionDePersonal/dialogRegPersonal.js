@@ -1,18 +1,20 @@
 import { Button } from 'primereact/button'
 import { InputText } from 'primereact/inputtext'
 import { Dropdown } from 'primereact/dropdown'
+import { ConfirmDialog } from 'primereact/confirmdialog'
 import Image from 'next/image'
 import { Card } from 'primereact/card'
-import { FileUpload } from 'primereact/fileupload'
 import { Divider } from 'primereact/divider'
 import usuario from 'public/images/usuario.png'
 import GQLconsultasGenerales from 'graphql/consultasGenerales'
 import GQLpersonal from 'graphql/personal'
 import useSWR from 'swr'
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import request from 'graphql-request'
 import { Toast } from 'primereact/toast'
 import CryptoJS from 'crypto-js'
+import GQLdocumentoFoto from 'graphql/documentoFoto'
+import { useSesion } from 'hooks/useSesion'
 
 const { Dialog } = require('primereact/dialog')
 
@@ -22,6 +24,7 @@ const DialogRegPersonal = ({
   mutatePersonal
 }) => {
   const toast = useRef(null)
+  const { idUser } = useSesion()
   const [tpNacionalidad, setTpNacionalidad] = useState(null)
   const [cedulaPersonal, setCedulaPersonal] = useState('')
   const [nombrePersonal, setNombrePersonal] = useState('')
@@ -47,6 +50,10 @@ const DialogRegPersonal = ({
   const [nombreDeVia, setNombreDeVia] = useState('')
   const [tipoDeVivienda, setTipoDeVivienda] = useState(null)
   const [numeroDeVivienda, setNumeroDeVivienda] = useState('')
+  const [imagenPerfil, setImagenPerfil] = useState(null)
+  const [idImagenPerfil, setIdImagenPerfil] = useState(null)
+  const [dialogConfirmEliminarFotoPerfil, setDialogConfirmEliminarFotoPerfil] =
+    useState(false)
 
   const { data: tiposNacionalidad } = useSWR(
     GQLconsultasGenerales.GET_NACIONALIDADES
@@ -204,45 +211,152 @@ const DialogRegPersonal = ({
       : null
   )
 
-  const adjuntarArchivo = () => {
-    document.querySelector('#fileUpload input').click()
+  const { data: fotoPerfil, mutate: mutateImage } = useSWR(
+    idUser ? [GQLdocumentoFoto.GET_FOTO, { idUser }] : null
+  )
+
+  const eliminarFotoEstudiante = (variables) => {
+    return request(
+      process.env.NEXT_PUBLIC_URL_BACKEND,
+      GQLdocumentoFoto.ELIMINAR_FOTO,
+      variables
+    )
+  }
+
+  const acceptEliminarFotoPerfil = () => {
+    const InputEliminarFotoPerfilUsuario = {
+      idFotoEstudiante: parseInt(idImagenPerfil)
+    }
+
+    eliminarFotoEstudiante({ InputEliminarFotoPerfilUsuario }).then(
+      ({ eliminarFotoEstudiante: { message } }) => {
+        setIdImagenPerfil(null)
+        toast.current.show({
+          severity: 'error',
+          summary: '¡ Atención !',
+          detail: message
+        })
+
+        setImagenPerfil(null)
+        setTimeout(() => {
+          mutateImage()
+        }, 1000)
+      }
+    )
+  }
+
+  const rejectEliminarFotoPerfil = () => {
+    setDialogConfirmEliminarFotoPerfil(false)
+  }
+
+  useEffect(() => {
+    if (fotoPerfil?.obtenerFotoPerfilUsuario.response) {
+      setImagenPerfil(fotoPerfil?.obtenerFotoPerfilUsuario.response.archivo)
+      setIdImagenPerfil(fotoPerfil?.obtenerFotoPerfilUsuario.response.id)
+    }
+  }, [fotoPerfil])
+
+  const onChange = (e) => {
+    const file = e.target.files[0]
+    if (file) {
+      const reader = new FileReader()
+      reader.onload = handleReaderLoaded.bind(this)
+      reader.readAsBinaryString(file)
+    }
+  }
+
+  const handleReaderLoaded = (e) => {
+    const binaryString = e.target.result
+    const transImage = btoa(binaryString)
+    /* setExtension(binaryString.type) */
+    registraFoto(transImage)
+  }
+
+  function registraFoto(imagen) {
+    const InputFotoEstudiante = {
+      archivo: imagen,
+      idUsuario: idUser
+    }
+
+    saveFotoPerfilUser({ InputFotoEstudiante }).then(
+      ({ crearFotoEstudiante: { status, message, type } }) => {
+        toast.current.show({
+          severity: type,
+          summary: '¡ Atención !',
+          detail: message
+        })
+        setTimeout(() => {
+          mutateImage()
+        }, 1000)
+      }
+    )
+  }
+
+  const saveFotoPerfilUser = (imagen) => {
+    return request(
+      process.env.NEXT_PUBLIC_URL_BACKEND,
+      GQLdocumentoFoto.SAVE_FOTO,
+      imagen,
+      idUser
+    )
   }
 
   const header = (
-    <Image
-      src={usuario}
-      loading="eager"
-      fill="true"
-      sizes="(max-width: 10vw) 40%"
-      priority={true}
-      className="rounded-lg"
-    />
+    <>
+      {imagenPerfil ? (
+        <img
+          src={`data:image/png;base64,${imagenPerfil}`}
+          width={40}
+          height={50}
+        />
+      ) : (
+        <Image
+          src={usuario}
+          loading="eager"
+          fill="true"
+          sizes="(max-width: 10vw) 40%"
+          priority={true}
+          className="rounded-lg"
+        />
+      )}
+    </>
   )
+
+  const adjuntarArchivo = () => {
+    document.querySelector('#file').click()
+  }
+
   const footer = (
     <>
-      <FileUpload
-        id="fileUpload"
-        accept=".xlsx"
-        name="files[]"
-        auto
-        customUpload
-        /* uploadHandler={(e) => cargarArchivo(e)} */
-        style={{ display: 'none' }}
-        maxFileSize={1000000}
-      />
-      <Button
-        icon="pi pi-paperclip"
-        label="Adjuntar"
-        tooltipOptions={{ position: 'top' }}
-        onClick={() => adjuntarArchivo()}
-      />
-      <Button
-        icon="pi pi-minus-circle"
-        className="p-button-danger"
-        label="Eliminar"
-        tooltipOptions={{ position: 'top' }}
-        onClick={() => adjuntarArchivo()}
-      />
+      <div
+        className="inline-flex rounded-md shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
+        role="group"
+      >
+        <Button
+          icon="pi pi-minus-circle"
+          className="p-button-danger"
+          tooltipOptions={{ position: 'top' }}
+          onClick={() => {
+            setDialogConfirmEliminarFotoPerfil(true)
+            setIdImagenPerfil(idImagenPerfil)
+          }}
+        />
+        <Button
+          icon="pi pi-paperclip"
+          tooltip="Adjuntar"
+          tooltipOptions={{ position: 'top' }}
+          onClick={() => adjuntarArchivo()}
+          className="ml-2"
+        />
+        <input
+          type="file"
+          name="image"
+          id="file"
+          accept=".jpg, .jpeg, .png"
+          onChange={(e) => onChange(e)}
+          style={{ display: 'none' }}
+        />
+      </div>
     </>
   )
 
@@ -255,6 +369,17 @@ const DialogRegPersonal = ({
         onHide={() => setActiveDialogRegPersonal(false)}
         style={{ width: '80%' }}
       >
+        <ConfirmDialog
+          visible={dialogConfirmEliminarFotoPerfil}
+          onHide={() => setDialogConfirmEliminarFotoPerfil(false)}
+          message="¿Esta seguro que desea eliminar la foto?"
+          header="Confirmación"
+          icon="pi pi-exclamation-triangle"
+          accept={acceptEliminarFotoPerfil}
+          reject={rejectEliminarFotoPerfil}
+          acceptLabel="SI"
+          rejectLabel="NO"
+        />
         <div className="flex flex-col">
           <div>
             <div className="flex flex-row">

@@ -2,13 +2,13 @@ import { InputText } from 'primereact/inputtext'
 import { Dropdown } from 'primereact/dropdown'
 import Image from 'next/image'
 import { Card } from 'primereact/card'
-import { Button } from 'primereact/button'
-import { FileUpload } from 'primereact/fileupload'
 import { Divider } from 'primereact/divider'
 import usuario from 'public/images/usuario.png'
 import { useEffect, useState } from 'react'
 import GQLconsultasGenerales from 'graphql/consultasGenerales'
+import GQLdocumentoFoto from 'graphql/documentoFoto'
 import useSWR from 'swr'
+import { useSesion } from 'hooks/useSesion'
 
 const { Dialog } = require('primereact/dialog')
 
@@ -17,6 +17,7 @@ const DialogVerDatosPersonal = ({
   setActiveDialogVerDatosPersonal,
   datosVerPersonal
 }) => {
+  const { idUser } = useSesion()
   const [tpNacionalidad, setTpNacionalidad] = useState(null)
   const [cedulaPersonal, setCedulaPersonal] = useState('')
   const [nombrePersonal, setNombrePersonal] = useState('')
@@ -29,6 +30,8 @@ const DialogVerDatosPersonal = ({
   const [tpPersonal, setTpPersonal] = useState(null)
   const [tpSexo, setTpSexo] = useState(null)
   const [tpCivil, setTpCivil] = useState(null)
+  const [idPersonal, setIdPersonal] = useState(null)
+  const [imagenPerfil, setImagenPerfil] = useState(null)
 
   const { data: tiposNacionalidad } = useSWR(
     GQLconsultasGenerales.GET_NACIONALIDADES
@@ -56,47 +59,37 @@ const DialogVerDatosPersonal = ({
     setTpPersonal(datosVerPersonal?.idtipo.toString())
     setProfesiones(datosVerPersonal?.idprofesion.toString())
     setCargaPersonal(datosVerPersonal?.cargahoraria)
+    setIdPersonal(parseInt(datosVerPersonal?.id_personal))
   }, [datosVerPersonal])
 
-  const adjuntarArchivo = () => {
-    document.querySelector('#fileUpload input').click()
-  }
+  const { data: fotoPerfil } = useSWR(
+    idUser ? [GQLdocumentoFoto.GET_FOTO, { idPersonal }] : null
+  )
+
+  useEffect(() => {
+    if (fotoPerfil?.obtenerFotoPerfilUsuario.response) {
+      setImagenPerfil(fotoPerfil?.obtenerFotoPerfilUsuario.response.archivo)
+    }
+  }, [fotoPerfil])
 
   const header = (
-    <Image
-      src={usuario}
-      loading="eager"
-      fill="true"
-      sizes="(max-width: 10vw) 40%"
-      priority={true}
-      className="rounded-lg"
-    />
-  )
-  const footer = (
     <>
-      <FileUpload
-        id="fileUpload"
-        accept=".xlsx"
-        name="files[]"
-        auto
-        customUpload
-        /* uploadHandler={(e) => cargarArchivo(e)} */
-        style={{ display: 'none' }}
-        maxFileSize={1000000}
-      />
-      <Button
-        icon="pi pi-paperclip"
-        label="Adjuntar"
-        tooltipOptions={{ position: 'top' }}
-        onClick={() => adjuntarArchivo()}
-      />
-      <Button
-        icon="pi pi-minus-circle"
-        className="p-button-danger"
-        label="Eliminar"
-        tooltipOptions={{ position: 'top' }}
-        onClick={() => adjuntarArchivo()}
-      />
+      {imagenPerfil ? (
+        <img
+          src={`data:image/png;base64,${imagenPerfil}`}
+          width={40}
+          height={50}
+        />
+      ) : (
+        <Image
+          src={usuario}
+          loading="eager"
+          fill="true"
+          sizes="(max-width: 10vw) 40%"
+          priority={true}
+          className="rounded-lg"
+        />
+      )}
     </>
   )
 
@@ -267,11 +260,7 @@ const DialogVerDatosPersonal = ({
             </div>
 
             <div className="justify-center py-1 px-3 w-1/4 h-80">
-              <Card
-                style={{ width: '15em' }}
-                footer={footer}
-                header={header}
-              ></Card>
+              <Card style={{ width: '15em' }} header={header}></Card>
             </div>
           </div>
         </div>
