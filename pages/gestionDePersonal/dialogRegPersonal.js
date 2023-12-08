@@ -14,7 +14,6 @@ import request from 'graphql-request'
 import { Toast } from 'primereact/toast'
 import CryptoJS from 'crypto-js'
 import GQLdocumentoFoto from 'graphql/documentoFoto'
-import { useSesion } from 'hooks/useSesion'
 
 const { Dialog } = require('primereact/dialog')
 
@@ -24,9 +23,8 @@ const DialogRegPersonal = ({
   mutatePersonal
 }) => {
   const toast = useRef(null)
-  const { idUser } = useSesion()
   const [disabledLoadImage, setDisabledLoadImage] = useState(true)
-  const [idUserPesonal, setIdUserPesonal] = useState(null)
+  const [idUser, setIdUserPesonal] = useState(null)
   const [tpNacionalidad, setTpNacionalidad] = useState(null)
   const [cedulaPersonal, setCedulaPersonal] = useState('')
   const [nombrePersonal, setNombrePersonal] = useState('')
@@ -77,7 +75,9 @@ const DialogRegPersonal = ({
 
   const { data: tiposVias } = useSWR(GQLconsultasGenerales.GET_TIPO_VIAS)
 
-  const { data: tiposViviendas } = useSWR(GQLconsultasGenerales.GET_TIPO_VIVIENDA)
+  const { data: tiposViviendas } = useSWR(
+    GQLconsultasGenerales.GET_TIPO_VIVIENDA
+  )
 
   const crearPersonal = (variables) => {
     return request(
@@ -165,13 +165,14 @@ const DialogRegPersonal = ({
           toast.current.show({
             severity: 'warn',
             summary: '¡ Atención !',
-            detail: 'Debe Cargar la imagen del personal para finalizar el registro'
+            detail:
+              'Debe Cargar la imagen del personal para finalizar el registro'
           })
           setTimeout(() => {
             setDisabledLoadImage(false)
             adjuntarArchivo()
-          }, 1000);
-        }, 1000);
+          }, 1000)
+        }, 1000)
         mutatePersonal()
       }
     )
@@ -249,6 +250,13 @@ const DialogRegPersonal = ({
     idUser ? [GQLdocumentoFoto.GET_FOTO, { idUser }] : null
   )
 
+  useEffect(() => {
+    if (fotoPerfil?.obtenerFotoPerfilUsuario.response) {
+      setImagenPerfil(fotoPerfil?.obtenerFotoPerfilUsuario.response.archivo)
+      setIdImagenPerfil(fotoPerfil?.obtenerFotoPerfilUsuario.response.id)
+    }
+  }, [fotoPerfil])
+
   const eliminarFotoEstudiante = (variables) => {
     return request(
       process.env.NEXT_PUBLIC_URL_BACKEND,
@@ -283,13 +291,6 @@ const DialogRegPersonal = ({
     setDialogConfirmEliminarFotoPerfil(false)
   }
 
-  useEffect(() => {
-    if (fotoPerfil?.obtenerFotoPerfilUsuario.response) {
-      setImagenPerfil(fotoPerfil?.obtenerFotoPerfilUsuario.response.archivo)
-      setIdImagenPerfil(fotoPerfil?.obtenerFotoPerfilUsuario.response.id)
-    }
-  }, [fotoPerfil])
-
   const onChange = (e) => {
     const file = e.target.files[0]
     if (file) {
@@ -320,6 +321,7 @@ const DialogRegPersonal = ({
           detail: message
         })
         setTimeout(() => {
+          setActiveDialogRegPersonal(false)
           mutateImage()
         }, 1000)
       }

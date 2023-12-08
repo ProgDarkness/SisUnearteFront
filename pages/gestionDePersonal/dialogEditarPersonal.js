@@ -13,7 +13,6 @@ import useSWR from 'swr'
 import { Toast } from 'primereact/toast'
 import request from 'graphql-request'
 import usuario from 'public/images/usuario.png'
-import { useSesion } from 'hooks/useSesion'
 
 const { Dialog } = require('primereact/dialog')
 
@@ -68,7 +67,7 @@ const DialogEditarPersonal = ({
     setTpPersonal(datosEditarPersonal?.idtipo.toString())
     setProfesiones(datosEditarPersonal?.idprofesion.toString())
     setCargaPersonal(datosEditarPersonal?.cargahoraria)
-    setIdPersonal(parseInt(datosEditarPersonal?.id_personal))
+    setIdPersonal(datosEditarPersonal?.id_usuario)
   }, [datosEditarPersonal])
 
   const actualizarPersonal = (variables) => {
@@ -139,6 +138,8 @@ const DialogEditarPersonal = ({
       }
     )
   }
+
+  console.log(idUser)
 
   const { data: fotoPerfil, mutate: mutateImage } = useSWR(
     idUser ? [GQLdocumentoFoto.GET_FOTO, { idUser }] : null

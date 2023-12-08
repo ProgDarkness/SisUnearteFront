@@ -55,6 +55,7 @@ export default {
           cargahoraria
           idprofesion
           profesion
+          id_usuario
         }
       }
     }

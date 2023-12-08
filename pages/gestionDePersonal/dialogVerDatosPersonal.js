@@ -8,7 +8,6 @@ import { useEffect, useState } from 'react'
 import GQLconsultasGenerales from 'graphql/consultasGenerales'
 import GQLdocumentoFoto from 'graphql/documentoFoto'
 import useSWR from 'swr'
-import { useSesion } from 'hooks/useSesion'
 
 const { Dialog } = require('primereact/dialog')
 
@@ -58,7 +57,7 @@ const DialogVerDatosPersonal = ({
     setTpPersonal(datosVerPersonal?.idtipo.toString())
     setProfesiones(datosVerPersonal?.idprofesion.toString())
     setCargaPersonal(datosVerPersonal?.cargahoraria)
-    setIdPersonal(parseInt(datosVerPersonal?.id_personal))
+    setIdPersonal(parseInt(datosVerPersonal?.id_usuario))
   }, [datosVerPersonal])
 
   const { data: fotoPerfil } = useSWR(
