@@ -17,7 +17,6 @@ const DialogVerDatosPersonal = ({
   setActiveDialogVerDatosPersonal,
   datosVerPersonal
 }) => {
-  const { idUser } = useSesion()
   const [tpNacionalidad, setTpNacionalidad] = useState(null)
   const [cedulaPersonal, setCedulaPersonal] = useState('')
   const [nombrePersonal, setNombrePersonal] = useState('')
@@ -30,7 +29,7 @@ const DialogVerDatosPersonal = ({
   const [tpPersonal, setTpPersonal] = useState(null)
   const [tpSexo, setTpSexo] = useState(null)
   const [tpCivil, setTpCivil] = useState(null)
-  const [idPersonal, setIdPersonal] = useState(null)
+  const [idUser, setIdPersonal] = useState(null)
   const [imagenPerfil, setImagenPerfil] = useState(null)
 
   const { data: tiposNacionalidad } = useSWR(
@@ -63,7 +62,7 @@ const DialogVerDatosPersonal = ({
   }, [datosVerPersonal])
 
   const { data: fotoPerfil } = useSWR(
-    idUser ? [GQLdocumentoFoto.GET_FOTO, { idPersonal }] : null
+    idUser ? [GQLdocumentoFoto.GET_FOTO, { idUser }] : null
   )
 
   useEffect(() => {

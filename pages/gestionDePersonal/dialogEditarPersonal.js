@@ -24,7 +24,6 @@ const DialogEditarPersonal = ({
   mutatePersonal
 }) => {
   const toast = useRef(null)
-  const { idUser } = useSesion()
   const [tpNacionalidad, setTpNacionalidad] = useState(null)
   const [cedulaPersonal, setCedulaPersonal] = useState('')
   const [nombrePersonal, setNombrePersonal] = useState('')
@@ -37,7 +36,7 @@ const DialogEditarPersonal = ({
   const [tpPersonal, setTpPersonal] = useState(null)
   const [tpSexo, setTpSexo] = useState(null)
   const [tpCivil, setTpCivil] = useState(null)
-  const [idPersonal, setIdPersonal] = useState(null)
+  const [idUser, setIdPersonal] = useState(null)
   const [imagenPerfil, setImagenPerfil] = useState(null)
   const [idImagenPerfil, setIdImagenPerfil] = useState(null)
   const [dialogConfirmEliminarFotoPerfil, setDialogConfirmEliminarFotoPerfil] =
@@ -142,8 +141,15 @@ const DialogEditarPersonal = ({
   }
 
   const { data: fotoPerfil, mutate: mutateImage } = useSWR(
-    idUser ? [GQLdocumentoFoto.GET_FOTO, { idPersonal }] : null
+    idUser ? [GQLdocumentoFoto.GET_FOTO, { idUser }] : null
   )
+
+  useEffect(() => {
+    if (fotoPerfil?.obtenerFotoPerfilUsuario.response) {
+      setImagenPerfil(fotoPerfil?.obtenerFotoPerfilUsuario.response.archivo)
+      setIdImagenPerfil(fotoPerfil?.obtenerFotoPerfilUsuario.response.id)
+    }
+  }, [fotoPerfil])
 
   const eliminarFotoEstudiante = (variables) => {
     return request(
@@ -179,13 +185,6 @@ const DialogEditarPersonal = ({
     setDialogConfirmEliminarFotoPerfil(false)
   }
 
-  useEffect(() => {
-    if (fotoPerfil?.obtenerFotoPerfilUsuario.response) {
-      setImagenPerfil(fotoPerfil?.obtenerFotoPerfilUsuario.response.archivo)
-      setIdImagenPerfil(fotoPerfil?.obtenerFotoPerfilUsuario.response.id)
-    }
-  }, [fotoPerfil])
-
   const onChange = (e) => {
     const file = e.target.files[0]
     if (file) {
@@ -205,7 +204,7 @@ const DialogEditarPersonal = ({
   function registraFoto(imagen) {
     const InputFotoEstudiante = {
       archivo: imagen,
-      idUsuario: idPersonal
+      idUsuario: idUser
     }
 
     saveFotoPerfilUser({ InputFotoEstudiante }).then(
@@ -227,7 +226,7 @@ const DialogEditarPersonal = ({
       process.env.NEXT_PUBLIC_URL_BACKEND,
       GQLdocumentoFoto.SAVE_FOTO,
       imagen,
-      idPersonal
+      idUser
     )
   }
 

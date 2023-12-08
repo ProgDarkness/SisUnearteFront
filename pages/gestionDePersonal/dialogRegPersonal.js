@@ -25,6 +25,8 @@ const DialogRegPersonal = ({
 }) => {
   const toast = useRef(null)
   const { idUser } = useSesion()
+  const [disabledLoadImage, setDisabledLoadImage] = useState(true)
+  const [idUserPesonal, setIdUserPesonal] = useState(null)
   const [tpNacionalidad, setTpNacionalidad] = useState(null)
   const [cedulaPersonal, setCedulaPersonal] = useState('')
   const [nombrePersonal, setNombrePersonal] = useState('')
@@ -70,6 +72,12 @@ const DialogRegPersonal = ({
     GQLconsultasGenerales.GET_DEPARTAMENTO
   )
   const { data: tiposRol } = useSWR(GQLconsultasGenerales.GET_ROLES)
+
+  const { data: tiposZonas } = useSWR(GQLconsultasGenerales.GET_TIPO_ZONAS)
+
+  const { data: tiposVias } = useSWR(GQLconsultasGenerales.GET_TIPO_VIAS)
+
+  const { data: tiposViviendas } = useSWR(GQLconsultasGenerales.GET_TIPO_VIVIENDA)
 
   const crearPersonal = (variables) => {
     return request(
@@ -117,11 +125,24 @@ const DialogRegPersonal = ({
       profesion: parseInt(tpProfesion),
       sexo: parseInt(tpSexo),
       civil: parseInt(tpCivil),
-      departamento: parseInt(tpDepartamento)
+      departamento: parseInt(tpDepartamento),
+      pais: parseInt(pais?.id) || null,
+      estado: parseInt(estado?.id) || null,
+      municipio: parseInt(municipio?.id) || null,
+      parroquia: parseInt(parroquia?.id) || null,
+      zona: parseInt(tipoDeZona?.id) || null,
+      nbzona: nombreDeVia,
+      zonapostal: parseInt(nombreDeZona?.codigo_postal) || null,
+      via: parseInt(tipoDeVia?.id) || null,
+      nbvia: nombreDeVia,
+      vivienda: parseInt(tipoDeVivienda?.id) || null,
+      nbvivienda: numeroDeVivienda,
+      ciudad: parseInt(ciudad?.id) || null
     }
     crearPersonal({ InputPersonal }).then(
-      ({ crearPersonal: { status, message, type } }) => {
-        setTpNacionalidad('')
+      ({ crearPersonal: { status, message, type, response } }) => {
+        setIdUserPesonal(response)
+        /* setTpNacionalidad('')
         setCedulaPersonal('')
         setNombrePersonal('')
         setApellidoPersonal('')
@@ -134,16 +155,29 @@ const DialogRegPersonal = ({
         setTpSexo('')
         setTpCivil('')
         setTpDepartamento('')
-        setTpRol(null)
+        setTpRol(null) */
         toast.current.show({
           severity: type,
           summary: '¡ Atención !',
           detail: message
         })
+        setTimeout(() => {
+          toast.current.show({
+            severity: 'warn',
+            summary: '¡ Atención !',
+            detail: 'Debe Cargar la imagen del personal para finalizar el registro'
+          })
+          setTimeout(() => {
+            setDisabledLoadImage(false)
+            adjuntarArchivo()
+          }, 1000);
+        }, 1000);
         mutatePersonal()
       }
     )
   }
+
+  const { data: paises } = useSWR(GQLconsultasGenerales.GET_PAISES)
 
   // DIRECCION DE HABITACION
   const { data: estadosPorPais } = useSWR(
@@ -340,6 +374,7 @@ const DialogRegPersonal = ({
             setDialogConfirmEliminarFotoPerfil(true)
             setIdImagenPerfil(idImagenPerfil)
           }}
+          disabled={disabledLoadImage}
         />
         <Button
           icon="pi pi-paperclip"
@@ -347,6 +382,7 @@ const DialogRegPersonal = ({
           tooltipOptions={{ position: 'top' }}
           onClick={() => adjuntarArchivo()}
           className="ml-2"
+          disabled={disabledLoadImage}
         />
         <input
           type="file"
@@ -589,7 +625,7 @@ const DialogRegPersonal = ({
             <Dropdown
               className="w-full"
               id="pais"
-              /* options={data?.paises.obtenerPaises.response} */
+              options={paises?.obtenerPaises.response}
               value={pais}
               onChange={(e) => {
                 setPais(e.value)
@@ -671,7 +707,7 @@ const DialogRegPersonal = ({
             <Dropdown
               className="w-full"
               id="tipoDeZona"
-              /* options={data?.tipos_zona.obtenerTipoZona.response} */
+              options={tiposZonas?.obtenerTipoZona.response}
               value={tipoDeZona}
               onChange={(e) => setTipoDeZona(e.target.value)}
               optionLabel="nombre"
@@ -711,7 +747,7 @@ const DialogRegPersonal = ({
             <Dropdown
               className="w-full"
               id="tipoDeVia"
-              /* options={data?.tipos_via.obtenerTipoVia.response} */
+              options={tiposVias?.obtenerTipoVia.response}
               value={tipoDeVia}
               onChange={(e) => setTipoDeVia(e.target.value)}
               optionLabel="nombre"
@@ -732,7 +768,7 @@ const DialogRegPersonal = ({
             <Dropdown
               className="w-full"
               id="tipoDeVivienda"
-              /* options={data?.tipos_vivienda.obtenerTipoVivienda.response} */
+              options={tiposViviendas?.obtenerTipoVivienda.response}
               value={tipoDeVivienda}
               onChange={(e) => setTipoDeVivienda(e.target.value)}
               optionLabel="nombre"

@@ -7,6 +7,7 @@ export default {
         status
         message
         type
+        response
       }
     }
   `,
