@@ -65,22 +65,38 @@ const DialogCargarDocumentos = ({
     setConfirmPostulacion(false)
   }
 
-  const onChange = (e) => {
-    console.log('file uploaded: ', e.target.files[0])
-    const file = e.target.files[0]
-
-    if (file) {
+  const fileToBase64 = (file) =>
+    new Promise((resolve, reject) => {
       const reader = new FileReader()
-      reader.onload = handleReaderLoaded.bind(this)
-      reader.readAsBinaryString(file)
-    }
-  }
+      reader.readAsDataURL(file)
+      reader.onload = () => resolve(reader.result)
+      reader.onerror = (error) => reject(error)
+    })
 
-  const handleReaderLoaded = (e) => {
-    console.log('file uploaded 2: ', e)
-    const binaryString = e.target.result
-    setImagen(btoa(binaryString))
-    console.log(imagen)
+  const cargarArchivo = async ({ files, options: { props } }) => {
+    const archivoBlop = files[0]
+    const ultimo_punto = archivoBlop?.name?.lastIndexOf('.')
+    const extension = archivoBlop?.name?.slice(
+      ultimo_punto,
+      archivoBlop?.name?.length
+    )
+    const extenciones_permitidas = props.accept
+    const tamano = archivoBlop.size
+    const tamanoPermitido = 3072
+
+    if (extenciones_permitidas.indexOf(extension) === -1) {
+      console.log('error de tipo de extension')
+    }
+
+    if (tamano / 1024 > tamanoPermitido) {
+      console.log('error de tamaño permitido')
+    }
+
+    const archivo = await fileToBase64(archivoBlop)
+
+    // mutation
+
+    console.log(archivoBlop)
   }
 
   const accionBodyTemplate = (rowData) => {
@@ -88,11 +104,11 @@ const DialogCargarDocumentos = ({
       <div>
         <FileUpload
           id="file"
-          accept=".jpg, .jpeg, .png"
+          accept=".pdf"
           name="files[]"
+          auto
           customUpload
-          /* uploadHandler={(e) => cargarArchivo(e)} */
-          onChange={(e) => onChange(e)}
+          uploadHandler={cargarArchivo}
           style={{ display: 'none' }}
           maxFileSize={1000000}
         />
