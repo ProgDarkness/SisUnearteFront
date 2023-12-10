@@ -1,6 +1,36 @@
 import { gql } from 'graphql-request'
 
 export default {
+  ELIMINAR_DOCUMENTO_USUARIO: gql`
+    mutation eliminarArchivoUsuario($inputDatosArchivo: inputDatosArchivo!) {
+      eliminarArchivoUsuario(inputDatosArchivo: $inputDatosArchivo) {
+        message
+        status
+        type
+      }
+    }
+  `,
+  BUSCAR_ARCHIVO_USUARIO: gql`
+    mutation obtenerArchivoUsuario($inputDatosArchivo: inputDatosArchivo!) {
+      obtenerArchivoUsuario(inputDatosArchivo: $inputDatosArchivo) {
+        message
+        status
+        type
+        response
+      }
+    }
+  `,
+  CREAR_DOCUMENTO_POSTULACION: gql`
+    mutation crearDocumentoPostulacion(
+      $InputDocPostulacion: InputDocPostulacion!
+    ) {
+      crearDocumentoPostulacion(input: $InputDocPostulacion) {
+        message
+        status
+        type
+      }
+    }
+  `,
   GET_FOTO: gql`
     mutation obtenerFotoPerfilUsuario($idUser: Int!) {
       obtenerFotoPerfilUsuario(idUser: $idUser) {

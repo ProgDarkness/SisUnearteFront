@@ -4,11 +4,14 @@ import { Button } from 'primereact/button'
 import { FileUpload } from 'primereact/fileupload'
 import { ConfirmDialog } from 'primereact/confirmdialog'
 import GQLpostulaciones from 'graphql/postulaciones'
+import GQLdocumentoFoto from 'graphql/documentoFoto'
 import { useSesion } from 'hooks/useSesion'
-import { useEffect, useRef, useState } from 'react'
+import { useRef, useState } from 'react'
+import GQLconsultasGenerales from 'graphql/consultasGenerales'
 import request from 'graphql-request'
 import { Toast } from 'primereact/toast'
 import { Dialog } from 'primereact/dialog'
+import useSWR from 'swr'
 
 const DialogCargarDocumentos = ({
   activeDialogCargarDocumentos,
@@ -16,14 +19,42 @@ const DialogCargarDocumentos = ({
   datosPostularse,
   mutatePostu
 }) => {
-  const [datosEstudiantes, setDatosEstudiantes] = useState([])
   const toast = useRef(null)
-  const [imagen, setImagen] = useState(null)
   const [confirmPostulacion, setConfirmPostulacion] = useState(false)
-  const { idUser } = useSesion()
+  const [datosRowData, setDatosRowData] = useState(null)
+  const { idUser, userName, cedUsuario } = useSesion()
 
-  const adjuntarArchivo = () => {
+  const { data: datosRequisitos } = useSWR(
+    GQLconsultasGenerales.GET_TIPO_DOCUMENTO
+  )
+
+  const adjuntarArchivo = (rowData) => {
+    setDatosRowData(rowData)
     document.querySelector('#file input').click()
+  }
+
+  const eliminarArchivo = (variables) => {
+    return request(
+      process.env.NEXT_PUBLIC_URL_BACKEND,
+      GQLdocumentoFoto.ELIMINAR_DOCUMENTO_USUARIO,
+      variables
+    )
+  }
+
+  const buscarArchivo = (variables) => {
+    return request(
+      process.env.NEXT_PUBLIC_URL_BACKEND,
+      GQLdocumentoFoto.BUSCAR_ARCHIVO_USUARIO,
+      variables
+    )
+  }
+
+  const subirArchivo = (variables) => {
+    return request(
+      process.env.NEXT_PUBLIC_URL_BACKEND,
+      GQLdocumentoFoto.CREAR_DOCUMENTO_POSTULACION,
+      variables
+    )
   }
 
   const crearPostulacion = (variables) => {
@@ -61,6 +92,83 @@ const DialogCargarDocumentos = ({
     )
   }
 
+  const deleteArchivo = (rowData) => {
+    const inputDatosArchivo = { idUser, id_tp_documento: parseInt(rowData.id) }
+    eliminarArchivo({ inputDatosArchivo }).then(
+      ({ eliminarArchivoUsuario: { message, status, type } }) => {
+        toast.current.show({
+          severity: type,
+          summary: '¡ Atención !',
+          detail: message,
+          life: 3000
+        })
+      }
+    )
+  }
+
+  const dataURLtoBlob = (dataurl) => {
+    const arr = dataurl.split(',')
+    const mime = arr[0].match(/:(.*?);/)[1]
+    const bstr = atob(arr[1])
+    let n = bstr.length
+    const u8arr = new Uint8Array(n)
+    while (n--) {
+      u8arr[n] = bstr.charCodeAt(n)
+    }
+    return new Blob([u8arr], { type: mime })
+  }
+
+  const verArchivo = (rowData) => {
+    const inputDatosArchivo = { idUser, id_tp_documento: parseInt(rowData.id) }
+    buscarArchivo({ inputDatosArchivo })
+      .then(({ obtenerArchivoUsuario: { message, type, response } }) => {
+        if (response !== null) {
+          const documentoBase64 = response
+          const nombreDocumento = `${userName}-${cedUsuario}_${rowData.id}`
+          const documentoBlob = dataURLtoBlob(documentoBase64)
+          const documento = URL.createObjectURL(documentoBlob)
+          const htmlDocumento = `<iframe src="${documento}" width="70%" height="90%"/>`
+
+          const ventana = window?.open()
+          ventana.document.write(`
+                          <html lang="es">
+                              <head>
+                                  <title>${nombreDocumento}</title>
+                              </head>
+                              <body style="text-align: center; height: 98%; width: 99%">
+                                  <a download="${nombreDocumento}" href="${documento}" style="display: block;">Descargar ${nombreDocumento}</a><br/>
+                                  ${htmlDocumento}
+                              </body>
+                          </html>`)
+        } else {
+          toast.current.show({
+            severity: type,
+            summary: '¡ Atención !',
+            detail: message,
+            life: 3000
+          })
+        }
+      })
+      .catch((e) => {
+        if (e.toString()?.includes('TypeError')) {
+          toast.current.show({
+            severity: 'error',
+            summary: '¡ Atención !',
+            detail:
+              'Error: El navegador no permite ventanas emergentes. Por favor otorgue permisos al sistema para ver Documentos.',
+            life: 3000
+          })
+        } else {
+          toast.current.show({
+            severity: 'error',
+            summary: '¡ Atención !',
+            detail: 'Error: ' + e,
+            life: 3000
+          })
+        }
+      })
+  }
+
   const rechazarPostu = () => {
     setConfirmPostulacion(false)
   }
@@ -74,6 +182,7 @@ const DialogCargarDocumentos = ({
     })
 
   const cargarArchivo = async ({ files, options: { props } }) => {
+    let archivo = null
     const archivoBlop = files[0]
     const ultimo_punto = archivoBlop?.name?.lastIndexOf('.')
     const extension = archivoBlop?.name?.slice(
@@ -82,21 +191,46 @@ const DialogCargarDocumentos = ({
     )
     const extenciones_permitidas = props.accept
     const tamano = archivoBlop.size
-    const tamanoPermitido = 3072
+    const tamanoPermitido = 2048
+    const id_tp_documento = datosRowData.id
 
     if (extenciones_permitidas.indexOf(extension) === -1) {
-      console.log('error de tipo de extension')
+      toast.current.show({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Error de tipo de extension',
+        life: 3000
+      })
+    } else if (tamano / 1024 > tamanoPermitido) {
+      toast.current.show({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Error de exceso de tamaño permitido',
+        life: 3000
+      })
+    } else {
+      archivo = await fileToBase64(archivoBlop)
     }
-
-    if (tamano / 1024 > tamanoPermitido) {
-      console.log('error de tamaño permitido')
-    }
-
-    const archivo = await fileToBase64(archivoBlop)
 
     // mutation
-
-    console.log(archivoBlop)
+    if (archivo) {
+      const InputDocPostulacion = {
+        id_tp_documento,
+        archivo,
+        extension,
+        idUser
+      }
+      subirArchivo({ InputDocPostulacion }).then(
+        ({ crearDocumentoPostulacion: { message, status, type } }) => {
+          toast.current.show({
+            severity: type,
+            summary: '¡ Atención !',
+            detail: message,
+            life: 3000
+          })
+        }
+      )
+    }
   }
 
   const accionBodyTemplate = (rowData) => {
@@ -116,36 +250,25 @@ const DialogCargarDocumentos = ({
           icon="pi pi-paperclip"
           tooltip="Adjuntar"
           tooltipOptions={{ position: 'top' }}
-          onClick={() => adjuntarArchivo()}
+          onClick={() => adjuntarArchivo(rowData)}
         />
         <Button
           icon="pi pi-minus-circle"
           className="p-button-danger ml-2 mr-2"
           tooltip="Eliminar"
           tooltipOptions={{ position: 'top' }}
+          onClick={() => deleteArchivo(rowData)}
         />
         <Button
           icon="pi pi-search"
           className="p-button-info mr-1"
           tooltip="Ver"
           tooltipOptions={{ position: 'top' }}
-          /* onClick={() => {
-            setDatosVerMalla(rowData)
-            setActiveDialogVerMalla(true)
-          }} */
+          onClick={() => verArchivo(rowData)}
         />
       </div>
     )
   }
-
-  useEffect(() => {
-    setDatosEstudiantes([
-      { tipoDocumento: 'PARTIDA DE NACIMIENTO', estatus: 'Cargado' },
-      { tipoDocumento: 'ANVERSO NOTAS CERITIFCADAS', estatus: 'Aprobado' },
-      { tipoDocumento: 'REVERSO NOTAS CERITIFCADAS', estatus: 'Rechazado' },
-      { tipoDocumento: 'TITULO BACHILLERATO', estatus: 'Cargado' }
-    ])
-  }, [])
 
   return (
     <Dialog
@@ -176,10 +299,10 @@ const DialogCargarDocumentos = ({
         </p>
       </div>
       <DataTable
-        value={datosEstudiantes}
-        emptyMessage="No hay estudiantes registrados."
+        value={datosRequisitos?.obtenerTipoDocumento.response}
+        emptyMessage="No hay documentos habilitados."
       >
-        <Column field="tipoDocumento" header="Tipo de Documento" />
+        <Column field="nombre" header="Tipo de Documento" />
         <Column field="estatus" header="Estatus" />
         <Column body={accionBodyTemplate} header="Acción" />
       </DataTable>
