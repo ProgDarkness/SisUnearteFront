@@ -24,8 +24,10 @@ const DialogCargarDocumentos = ({
   const [datosRowData, setDatosRowData] = useState(null)
   const { idUser, userName, cedUsuario } = useSesion()
 
-  const { data: datosRequisitos } = useSWR(
-    GQLconsultasGenerales.GET_TIPO_DOCUMENTO
+  const { data: datosRequisitos, mutate } = useSWR(
+    idUser
+      ? [GQLconsultasGenerales.GET_TIPO_DOCUMENTO, { id_usuario: idUser }]
+      : null
   )
 
   const adjuntarArchivo = (rowData) => {
@@ -102,6 +104,7 @@ const DialogCargarDocumentos = ({
           detail: message,
           life: 3000
         })
+        mutate()
       }
     )
   }
@@ -228,6 +231,7 @@ const DialogCargarDocumentos = ({
             detail: message,
             life: 3000
           })
+          mutate()
         }
       )
     }
@@ -303,7 +307,7 @@ const DialogCargarDocumentos = ({
         emptyMessage="No hay documentos habilitados."
       >
         <Column field="nombre" header="Tipo de Documento" />
-        <Column field="estatus" header="Estatus" />
+        <Column field="nb_estatus_doc" header="Estatus" />
         <Column body={accionBodyTemplate} header="Acción" />
       </DataTable>
       <div className="w-full flex justify-center mt-5">

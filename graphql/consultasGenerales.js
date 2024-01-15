@@ -325,11 +325,17 @@ export default {
     }
   `,
   GET_TIPO_DOCUMENTO: gql`
-    query obtenerTipoDocumento {
-      obtenerTipoDocumento {
+    query obtenerTipoDocumento($id_usuario: Int!) {
+      obtenerTipoDocumento(id_usuario: $id_usuario) {
+        status
+        message
+        type
         response {
           id
           nombre
+          id_documento
+          id_estatus_doc
+          nb_estatus_doc
         }
       }
     }
