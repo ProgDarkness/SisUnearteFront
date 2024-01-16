@@ -10,6 +10,24 @@ export default {
       }
     }
   `,
+  APROBAR_DOCUMENTO_USUARIO: gql`
+    mutation aprobarArchivoUsuario($inputDatosArchivo: inputDatosArchivo!) {
+      aprobarArchivoUsuario(inputDatosArchivo: $inputDatosArchivo) {
+        message
+        status
+        type
+      }
+    }
+  `,
+  RECHAZAR_DOCUMENTO_USUARIO: gql`
+    mutation rechazarArchivoUsuario($inputDatosArchivo: inputDatosArchivo!) {
+      rechazarArchivoUsuario(inputDatosArchivo: $inputDatosArchivo) {
+        message
+        status
+        type
+      }
+    }
+  `,
   BUSCAR_ARCHIVO_USUARIO: gql`
     mutation obtenerArchivoUsuario($inputDatosArchivo: inputDatosArchivo!) {
       obtenerArchivoUsuario(inputDatosArchivo: $inputDatosArchivo) {

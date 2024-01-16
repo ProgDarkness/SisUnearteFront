@@ -1,16 +1,19 @@
 import { InputText } from 'primereact/inputtext'
 import { Dropdown } from 'primereact/dropdown'
+import { DataTable } from 'primereact/datatable'
+import { Column } from 'primereact/column'
 import { useEffect, useRef, useState } from 'react'
 import { Dialog } from 'primereact/dialog'
 import GQLconsultasGenerales from 'graphql/consultasGenerales'
 import GQLusuarios from 'graphql/usuarios'
 import GQLpostulaciones from 'graphql/postulaciones'
-import { Checkbox } from 'primereact/checkbox'
+import GQLdocumentoFoto from 'graphql/documentoFoto'
 import useSWR from 'swr'
 import { Divider } from 'primereact/divider'
 import { Button } from 'primereact/button'
 import request from 'graphql-request'
 import { Toast } from 'primereact/toast'
+import { useSesion } from 'hooks/useSesion'
 
 const DialogDatosEstudiantes = ({
   activeDialogVerDatosEstudiantes,
@@ -44,6 +47,7 @@ const DialogDatosEstudiantes = ({
   const [municipioHab, setMunicipio] = useState('')
   const [parroquiaHab, setParroquia] = useState('')
   const [zonaPostal, setZonaPostal] = useState('')
+  const { userName, cedUsuario } = useSesion()
   const [objectDocumentos, setObjectDocumentos] = useState({
     cedula: null,
     rif: null,
@@ -85,6 +89,15 @@ const DialogDatosEstudiantes = ({
       ? [
           GQLpostulaciones.GET_DOCS_ESTUDIANTE,
           { idEstudiante: parseInt(datosVerPostulado?.idusuario) }
+        ]
+      : null
+  )
+
+  const { data: datosRequisitos } = useSWR(
+    datosVerPostulado?.idusuario
+      ? [
+          GQLconsultasGenerales.GET_TIPO_DOCUMENTO,
+          { id_usuario: parseInt(datosVerPostulado?.idusuario) }
         ]
       : null
   )
@@ -156,6 +169,160 @@ const DialogDatosEstudiantes = ({
           detail: message
         })
       }
+    )
+  }
+
+  const aprobaArchivo = (variables) => {
+    return request(
+      process.env.NEXT_PUBLIC_URL_BACKEND,
+      GQLdocumentoFoto.APROBAR_DOCUMENTO_USUARIO,
+      variables
+    )
+  }
+
+  const rechazaArchivo = (variables) => {
+    return request(
+      process.env.NEXT_PUBLIC_URL_BACKEND,
+      GQLdocumentoFoto.RECHAZAR_DOCUMENTO_USUARIO,
+      variables
+    )
+  }
+
+  const buscarArchivo = (variables) => {
+    return request(
+      process.env.NEXT_PUBLIC_URL_BACKEND,
+      GQLdocumentoFoto.BUSCAR_ARCHIVO_USUARIO,
+      variables
+    )
+  }
+
+  const aprobarArchivo = (rowData) => {
+    const inputDatosArchivo = {
+      idUser: parseInt(datosVerPostulado?.idusuario),
+      id_tp_documento: parseInt(rowData.id)
+    }
+    aprobaArchivo({ inputDatosArchivo }).then(
+      ({ aprobarArchivoUsuario: { message, status, type } }) => {
+        toast.current.show({
+          severity: type,
+          summary: '¡ Atención !',
+          detail: message,
+          life: 3000
+        })
+        /* mutate() */
+      }
+    )
+  }
+
+  const rechazarArchivo = (rowData) => {
+    const inputDatosArchivo = {
+      idUser: parseInt(datosVerPostulado?.idusuario),
+      id_tp_documento: parseInt(rowData.id)
+    }
+    rechazaArchivo({ inputDatosArchivo }).then(
+      ({ rechazarArchivoUsuario: { message, status, type } }) => {
+        toast.current.show({
+          severity: type,
+          summary: '¡ Atención !',
+          detail: message,
+          life: 3000
+        })
+        /* mutate() */
+      }
+    )
+  }
+
+  const dataURLtoBlob = (dataurl) => {
+    const arr = dataurl.split(',')
+    const mime = arr[0].match(/:(.*?);/)[1]
+    const bstr = atob(arr[1])
+    let n = bstr.length
+    const u8arr = new Uint8Array(n)
+    while (n--) {
+      u8arr[n] = bstr.charCodeAt(n)
+    }
+    return new Blob([u8arr], { type: mime })
+  }
+
+  const verArchivo = (rowData) => {
+    const inputDatosArchivo = {
+      idUser: parseInt(datosVerPostulado?.idusuario),
+      id_tp_documento: parseInt(rowData.id)
+    }
+    buscarArchivo({ inputDatosArchivo })
+      .then(({ obtenerArchivoUsuario: { message, type, response } }) => {
+        if (response !== null) {
+          const documentoBase64 = response
+          const nombreDocumento = `${userName}-${cedUsuario}_${rowData.id}`
+          const documentoBlob = dataURLtoBlob(documentoBase64)
+          const documento = URL.createObjectURL(documentoBlob)
+          const htmlDocumento = `<iframe src="${documento}" width="70%" height="90%"/>`
+
+          const ventana = window?.open()
+          ventana.document.write(`
+                          <html lang="es">
+                              <head>
+                                  <title>${nombreDocumento}</title>
+                              </head>
+                              <body style="text-align: center; height: 98%; width: 99%">
+                                  <a download="${nombreDocumento}" href="${documento}" style="display: block;">Descargar ${nombreDocumento}</a><br/>
+                                  ${htmlDocumento}
+                              </body>
+                          </html>`)
+        } else {
+          toast.current.show({
+            severity: type,
+            summary: '¡ Atención !',
+            detail: message,
+            life: 3000
+          })
+        }
+      })
+      .catch((e) => {
+        if (e.toString()?.includes('TypeError')) {
+          toast.current.show({
+            severity: 'error',
+            summary: '¡ Atención !',
+            detail:
+              'Error: El navegador no permite ventanas emergentes. Por favor otorgue permisos al sistema para ver Documentos.',
+            life: 3000
+          })
+        } else {
+          toast.current.show({
+            severity: 'error',
+            summary: '¡ Atención !',
+            detail: 'Error: ' + e,
+            life: 3000
+          })
+        }
+      })
+  }
+
+  const accionBodyTemplate = (rowData) => {
+    return (
+      <div>
+        <Button
+          icon="pi pi-check"
+          className="p-button-success mr-1"
+          tooltip="Aprobar"
+          onClick={() => aprobarArchivo(rowData)}
+          tooltipOptions={{ position: 'top' }}
+        />
+        <Button
+          icon="pi pi-minus-circle"
+          className="p-button-danger ml-2 mr-2"
+          tooltip="Rechazar"
+          tooltipOptions={{ position: 'top' }}
+          onClick={() => rechazarArchivo(rowData)}
+        />
+        <Button
+          icon="pi pi-search"
+          className="p-button-info mr-1"
+          tooltip="Ver"
+          tooltipOptions={{ position: 'top' }}
+          onClick={() => verArchivo(rowData)}
+        />
+      </div>
     )
   }
 
@@ -499,99 +666,20 @@ const DialogDatosEstudiantes = ({
           </span>
         </div>
         <Divider layout="vertical" />
-        <div className="basis-2/4 grid grid-cols-3 gap-4 content-start">
+        <div className="basis-2/4 content-start">
           <div className="col-span-3 text-center">
             <h1 className="text-2xl font-semibold text-white">
               Lista de Documentos
             </h1>
           </div>
-          <div className="flex col-span-3">
-            <Checkbox
-              inputId="docCedula"
-              name="docCedula"
-              onChange={(e) =>
-                setObjectDocumentos({
-                  ...objectDocumentos,
-                  cedula: objectDocumentos.cedula ? null : true
-                })
-              }
-              checked={objectDocumentos.cedula}
-            />
-            <label htmlFor="docCedula" className="-mt-[2px] ml-2">
-              Cédula de Identidad (2 Copias y original)
-            </label>
-          </div>
-          <div className="flex col-span-3">
-            <Checkbox
-              inputId="docRif"
-              name="docRif"
-              onChange={(e) =>
-                setObjectDocumentos({
-                  ...objectDocumentos,
-                  rif: objectDocumentos.rif ? null : true
-                })
-              }
-              checked={objectDocumentos.rif}
-            />
-            <label htmlFor="docRif" className="-mt-[2px] ml-2">
-              RIF actualizado (2 Copias)
-            </label>
-          </div>
-          <div className="flex col-span-3">
-            <Checkbox
-              inputId="city1"
-              name="city"
-              value="Chicago"
-              onChange={(e) =>
-                setObjectDocumentos({
-                  ...objectDocumentos,
-                  tituloBachiller: objectDocumentos.tituloBachiller
-                    ? null
-                    : true
-                })
-              }
-              checked={objectDocumentos.tituloBachiller}
-            />
-            <label htmlFor="city1" className="-mt-[2px] ml-2">
-              Titulo de Bachiller (2 Copias y Original)
-            </label>
-          </div>
-          <div className="flex col-span-3">
-            <Checkbox
-              inputId="city1"
-              name="city"
-              value="Chicago"
-              onChange={(e) =>
-                setObjectDocumentos({
-                  ...objectDocumentos,
-                  notasCertificadas: objectDocumentos.notasCertificadas
-                    ? null
-                    : true
-                })
-              }
-              checked={objectDocumentos.notasCertificadas}
-            />
-            <label htmlFor="city1" className="-mt-[2px] ml-2">
-              Notas Certificadas (2 copias y Original)
-            </label>
-          </div>
-          <div className="flex col-span-3">
-            <Checkbox
-              inputId="city1"
-              name="city"
-              value="Chicago"
-              onChange={(e) =>
-                setObjectDocumentos({
-                  ...objectDocumentos,
-                  fondoNegro: objectDocumentos.fondoNegro ? null : true
-                })
-              }
-              checked={objectDocumentos.fondoNegro}
-            />
-            <label htmlFor="city1" className="-mt-[2px] ml-2">
-              Fondo Negro del Titulo de Bachiller
-            </label>
-          </div>
+          <DataTable
+            value={datosRequisitos?.obtenerTipoDocumento.response}
+            emptyMessage="No hay documentos habilitados."
+          >
+            <Column field="nombre" header="Tipo de Documento" />
+            <Column field="nb_estatus_doc" header="Estatus" />
+            <Column body={accionBodyTemplate} header="Acción" />
+          </DataTable>
           <div className="flex justify-center col-span-3">
             <Button
               label="Guardar"
