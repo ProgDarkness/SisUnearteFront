@@ -93,7 +93,7 @@ const DialogDatosEstudiantes = ({
       : null
   )
 
-  const { data: datosRequisitos } = useSWR(
+  const { data: datosRequisitos, mutate } = useSWR(
     datosVerPostulado?.idusuario
       ? [
           GQLconsultasGenerales.GET_TIPO_DOCUMENTO,
@@ -209,7 +209,7 @@ const DialogDatosEstudiantes = ({
           detail: message,
           life: 3000
         })
-        /* mutate() */
+        mutate()
       }
     )
   }
@@ -227,7 +227,7 @@ const DialogDatosEstudiantes = ({
           detail: message,
           life: 3000
         })
-        /* mutate() */
+        mutate()
       }
     )
   }
