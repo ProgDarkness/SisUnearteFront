@@ -55,6 +55,8 @@ const DialogDatosEstudiantes = ({
     notasCertificadas: null,
     fondoNegro: null
   })
+  const [observacion, setObservacion] = useState('')
+  const [activeDialogRechazarDoc, setActiveDialogRechazarDoc] = useState(false)
 
   const { data: tiposNacionalidad } = useSWR(
     GQLconsultasGenerales.GET_NACIONALIDADES
@@ -147,6 +149,12 @@ const DialogDatosEstudiantes = ({
     }
   }, [infoUsuario])
 
+  useEffect(() => {
+    if (observacion) {
+      setObservacion(observacion)
+    }
+  }, [observacion])
+
   const guardarDocs = (variables) => {
     return request(
       process.env.NEXT_PUBLIC_URL_BACKEND,
@@ -215,11 +223,12 @@ const DialogDatosEstudiantes = ({
   }
 
   const rechazarArchivo = (rowData) => {
-    const inputDatosArchivo = {
+    const inputRechazarArchivo = {
       idUser: parseInt(datosVerPostulado?.idusuario),
-      id_tp_documento: parseInt(rowData.id)
+      id_tp_documento: parseInt(rowData.id),
+      observacion: observacion.toString()
     }
-    rechazaArchivo({ inputDatosArchivo }).then(
+    rechazaArchivo({ inputRechazarArchivo }).then(
       ({ rechazarArchivoUsuario: { message, status, type } }) => {
         toast.current.show({
           severity: type,
@@ -308,12 +317,21 @@ const DialogDatosEstudiantes = ({
           onClick={() => aprobarArchivo(rowData)}
           tooltipOptions={{ position: 'top' }}
         />
-        <Button
+        {/* <Button
           icon="pi pi-minus-circle"
           className="p-button-danger ml-2 mr-2"
           tooltip="Rechazar"
           tooltipOptions={{ position: 'top' }}
           onClick={() => rechazarArchivo(rowData)}
+        /> */}
+        <Button
+          icon="pi pi-minus-circle"
+          className="p-button-danger ml-2 mr-2"
+          tooltip="Rechazar"
+          onClick={() => {
+            setActiveDialogRechazarDoc(true)
+          }}
+          tooltipOptions={{ position: 'top' }}
         />
         <Button
           icon="pi pi-search"
@@ -338,6 +356,33 @@ const DialogDatosEstudiantes = ({
       draggable={false}
       className="m-2 -mt-2"
     >
+      <Dialog
+        header="Rechazar Documento"
+        visible={activeDialogRechazarDoc}
+        onHide={() => setActiveDialogRechazarDoc(false)}
+      >
+        <div className="grid grid-cols-4 gap-4 p-2">
+          <span className="p-float-label field col-span-3">
+            <InputText
+              className="w-full"
+              id="observacion"
+              value={observacion}
+              maxLength={60}
+              onChange={(e) => setObservacion(e.target.value)}
+              autoComplete="off"
+            />
+            <label htmlFor="observacion">Observación</label>
+          </span>
+          <div className="my-auto flex justify-center col-span-4">
+            <Button
+              label="Guardar"
+              icon="pi pi-plus"
+              onClick={() => rechazarArchivo(rowData)}
+              disabled={!observacion}
+            />
+          </div>
+        </div>
+      </Dialog>
       <Toast ref={toast} />
       <div className="w-full text-center">
         <h1 className="text-3xl font-semibold text-white">

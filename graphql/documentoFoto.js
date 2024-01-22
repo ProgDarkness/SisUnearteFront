@@ -20,8 +20,10 @@ export default {
     }
   `,
   RECHAZAR_DOCUMENTO_USUARIO: gql`
-    mutation rechazarArchivoUsuario($inputDatosArchivo: inputDatosArchivo!) {
-      rechazarArchivoUsuario(inputDatosArchivo: $inputDatosArchivo) {
+    mutation rechazarArchivoUsuario(
+      $inputRechazarArchivo: inputRechazarArchivo!
+    ) {
+      rechazarArchivoUsuario(inputRechazarArchivo: $inputRechazarArchivo) {
         message
         status
         type
