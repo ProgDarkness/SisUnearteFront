@@ -231,6 +231,7 @@ const DialogDatosEstudiantes = ({
     }
     rechazaArchivo({ inputRechazarArchivo }).then(
       ({ rechazarArchivoUsuario: { message, status, type } }) => {
+        setActiveDialogRechazarDoc(false)
         toast.current.show({
           severity: type,
           summary: '¡ Atención !',
@@ -363,8 +364,8 @@ const DialogDatosEstudiantes = ({
         visible={activeDialogRechazarDoc}
         onHide={() => setActiveDialogRechazarDoc(false)}
       >
-        <div className="grid grid-cols-4 gap-4 p-2">
-          <span className="p-float-label field col-span-3">
+        <div className="grid grid-cols-10 gap-10 p-2">
+          <span className="p-float-label field col-span-10">
             <InputText
               className="w-full"
               id="observacion"
@@ -375,7 +376,7 @@ const DialogDatosEstudiantes = ({
             />
             <label htmlFor="observacion">Observación</label>
           </span>
-          <div className="my-auto flex justify-center col-span-4">
+          <div className="my-auto flex justify-center col-span-10">
             <Button
               label="Guardar"
               icon="pi pi-plus"
