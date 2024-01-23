@@ -57,6 +57,7 @@ const DialogDatosEstudiantes = ({
   })
   const [observacion, setObservacion] = useState('')
   const [activeDialogRechazarDoc, setActiveDialogRechazarDoc] = useState(false)
+  const [rowDataDocRechazado, setRowDataDocRechazado] = useState(null)
 
   const { data: tiposNacionalidad } = useSWR(
     GQLconsultasGenerales.GET_NACIONALIDADES
@@ -330,6 +331,7 @@ const DialogDatosEstudiantes = ({
           tooltip="Rechazar"
           onClick={() => {
             setActiveDialogRechazarDoc(true)
+            setRowDataDocRechazado(rowData)
           }}
           tooltipOptions={{ position: 'top' }}
         />
@@ -377,7 +379,7 @@ const DialogDatosEstudiantes = ({
             <Button
               label="Guardar"
               icon="pi pi-plus"
-              onClick={() => rechazarArchivo(rowData)}
+              onClick={() => rechazarArchivo(rowDataDocRechazado)}
               disabled={!observacion}
             />
           </div>
