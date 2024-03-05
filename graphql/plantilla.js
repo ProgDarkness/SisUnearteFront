@@ -50,5 +50,32 @@ export default {
         message
       }
     }
+  `,
+  OBTENER_USUARIO_REGISTRADO: gql`
+    mutation obtenerUsuarioRecuperaCuenta($input: InputDatoUsuario) {
+      obtenerUsuarioRecuperaCuenta(input: $input) {
+        status
+        type
+        message
+        response {
+          id
+          cedula
+          primer_nombre
+          segundo_nombre
+          primer_apellido
+          segundo_apellido
+          correo
+        }
+      }
+    }
+  `,
+  SAVE_RECUPERA_CUENTA: gql`
+    mutation recuperarCuenta($input: InputRecuperaUser!) {
+      recuperarCuenta(input: $input) {
+        status
+        type
+        message
+      }
+    }
   `
 }
